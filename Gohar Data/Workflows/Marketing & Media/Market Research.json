@@ -1,0 +1,2779 @@
+{
+  "name": "Market Research",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Please analyze the following combined dataset and generate the Strategic Global Report:\n\n{{ JSON.stringify($json.combined_data) }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=Role: You are a Senior Global Strategy Consultant and Business Intelligence Architect. Your mission is to perform a high-level strategic synthesis for the provided \"Subject Brand\" against its \"Competitor Data.\"\n\nInstructions:\n\nData-Driven Analysis: Use the provided JSON data of competitors and the internal audit of the subject brand to identify non-obvious patterns.\n\nDynamic Adaptation: Do not use pre-fixed assumptions. Analyze the industry, pricing models, and tech-stacks specifically provided in the input.\n\nThe \"Winning Gap\": Your primary goal is to find the \"Blue Ocean\"—a market space where the subject brand can offer what competitors are fundamentally missing (e.g., speed, full autonomy, creative-tech blend).\n\nNo Generic Content: Avoid corporate jargon. Every field in the schema must provide a concrete, aggressive, and visionary roadmap.\n\nTone: Visionary, Authoritative, and Aggressive. Speak to a C-suite audience looking for a market takeover."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        3552,
+        1312
+      ],
+      "id": "b7f14e6c-ec81-4ee8-978f-f2149f874c0a",
+      "name": "Master Strategist"
+    },
+    {
+      "parameters": {
+        "jsCode": "const answerBox = $input.item.json.answerBox ? [$input.item.json.answerBox] : [];\nconst organic = $input.item.json.organic || [];\nreturn {\n  json: {\n    all_results: answerBox.concat(organic)\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2048,
+        1504
+      ],
+      "id": "dd4340eb-b6b4-4be8-96ae-e984cb7ad2f4",
+      "name": "Merge Search Results1"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Input Data:\n{{ JSON.stringify($json.all_results) }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "Analyze the search results. Extract items into JSON. Identify real 'Agencies' vs 'Directories/Blogs'. Set is_agency: true for real service providers only."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        2272,
+        1504
+      ],
+      "id": "1418846a-c82f-4a45-9881-321454030093",
+      "name": "AI Filter Agent1"
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"competitors\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"name\": { \"type\": \"string\" },\n          \"url\": { \"type\": \"string\" },\n          \"is_agency\": { \"type\": \"boolean\" }\n        },\n        \"required\": [\"name\", \"url\", \"is_agency\"],\n        \"additionalProperties\": false\n      }\n    }\n  },\n  \"required\": [\"competitors\"],\n  \"additionalProperties\": false\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        2416,
+        1728
+      ],
+      "id": "14e7abef-108f-475a-b3a7-dcf0e0732447",
+      "name": "Structured Output1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const allItems = $input.first().json.output.competitors;\nreturn allItems.filter(item => item.is_agency === true);"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2624,
+        1504
+      ],
+      "id": "09702480-3f30-4dbe-94ff-0c0e9ba7814a",
+      "name": "Get Clean Agencies1"
+    },
+    {
+      "parameters": {
+        "resource": "Agent",
+        "operation": "agent",
+        "prompt": "Analyze this agency's website and extract: 1. Their main services. 2. Their target audience. 3. Their unique selling proposition (USP). 4. Any pricing info if available. 5. Their content style.",
+        "specifyUrls": true,
+        "urls": "={{ $json.url }}",
+        "requestOptions": {}
+      },
+      "type": "@mendable/n8n-nodes-firecrawl.firecrawl",
+      "typeVersion": 1,
+      "position": [
+        3072,
+        1504
+      ],
+      "id": "a72751a6-d4e3-4719-a0de-a567466325f9",
+      "name": "Deep Scrape Agent1",
+      "credentials": {
+        "firecrawlApi": {
+          "id": "NMrYdZYgUbLpZTg9",
+          "name": "Hackathon"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1mOapyC4f4VFJMpAgG0SVv9WCAqsPkH8k9YZjoSWz2Tw",
+          "mode": "list",
+          "cachedResultName": "New Company",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1mOapyC4f4VFJMpAgG0SVv9WCAqsPkH8k9YZjoSWz2Tw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Competitor Analysis",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1mOapyC4f4VFJMpAgG0SVv9WCAqsPkH8k9YZjoSWz2Tw/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "data": "={{ JSON.stringify($json.data) }}"
+          },
+          "matchingColumns": [
+            "data"
+          ],
+          "schema": [
+            {
+              "id": "data",
+              "displayName": "data",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        3296,
+        1584
+      ],
+      "id": "6790f053-49d4-4996-8bad-4adeda340957",
+      "name": "Save to Sheets1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jy58BxClZutdZdvF",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://google.serper.dev/search",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-API-KEY",
+              "value": "784fc4b751c1747c515e9c048aedcf8cd5fd841b"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "q",
+              "value": "={{ $json.output.google_search_query }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1824,
+        1504
+      ],
+      "id": "5e6af77c-543d-44df-9ecc-4120ac7f5499",
+      "name": "HTTP Request2"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        2848,
+        1504
+      ],
+      "id": "3b3f4685-de70-441a-9959-fac10ff95869",
+      "name": "Loop Over Items2",
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "model": "qwen/qwen3-32b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        2288,
+        1728
+      ],
+      "id": "6f84e9c5-910d-4cb5-a893-e23fa1cef0a5",
+      "name": "Groq Chat Model2",
+      "credentials": {
+        "groqApi": {
+          "id": "sUaxWBZcp4YFdgw2",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "Agent",
+        "operation": "agent",
+        "prompt": "# Role\nYou are a Senior Market Research Analyst and Business Intelligence Specialist. Your task is to perform a comprehensive digital audit of the provided website.\n\n# Objective\nExtract and analyze the core business DNA of this company to help build a competitive marketing strategy.\n\n# Extraction Requirements\nPlease provide a detailed report covering the following points:\n\n1. **Service/Product Architecture:** List the main services or products offered. Describe the problem they solve for the customer.\n2. **Target Audience Profile:** Identify who this company is speaking to. Include industry focus, business size, and the specific \"pain points\" they address.\n3. **Unique Selling Proposition (USP):** What is their \"unfair advantage\"? Why would a customer choose them over others? (Look for keywords like \"Only we\", \"First\", \"Guaranteed\", \"Unlike others\").\n4. **Brand Personality & Tone:** Analyze the writing style and visual cues. Is it professional/corporate, bold/disruptive, or friendly/accessible?\n5. **Pricing & Business Model:** Search for any pricing tiers, \"starting at\" rates, or calls to action that indicate their sales model (e.g., Book a demo, Get a quote, Free trial).\n6. **Market Positioning:** Based on the content, where do they sit in the market? (e.g., Luxury/Premium, Budget-friendly, High-tech/Innovation-led).\n\n# Output Instructions\n- Provide the analysis in a clear, structured format.\n- If specific data (like pricing) is not found, state \"Not publicly disclosed\" but infer the likely model based on the industry.\n- Highlight any \"Gaps\" or \"Weaknesses\" you notice in their messaging.",
+        "specifyUrls": true,
+        "urls": "=https://{{ $json.URL }}",
+        "requestOptions": {}
+      },
+      "type": "@mendable/n8n-nodes-firecrawl.firecrawl",
+      "typeVersion": 1,
+      "position": [
+        1136,
+        1504
+      ],
+      "id": "0d0f52bb-5399-4ff9-841b-51ad06c60ad5",
+      "name": "Analysis My Business",
+      "credentials": {
+        "firecrawlApi": {
+          "id": "NMrYdZYgUbLpZTg9",
+          "name": "Hackathon"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1mOapyC4f4VFJMpAgG0SVv9WCAqsPkH8k9YZjoSWz2Tw",
+          "mode": "list",
+          "cachedResultName": "New Company",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1mOapyC4f4VFJMpAgG0SVv9WCAqsPkH8k9YZjoSWz2Tw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Competitor Analysis",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1mOapyC4f4VFJMpAgG0SVv9WCAqsPkH8k9YZjoSWz2Tw/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        3072,
+        1312
+      ],
+      "id": "17f94494-f2eb-4204-a85f-d82a03a8426f",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jy58BxClZutdZdvF",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"executive_strategic_vision\": {\n      \"type\": \"string\",\n      \"description\": \"A high-level synthesis of the brand's future position as a market leader, moving beyond traditional models.\"\n    },\n    \"competitive_landscape_matrix\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"tier\": { \"type\": \"string\", \"description\": \"Category: e.g., Enterprise Giants, Boutique Specialized, or Tech-Disruptors.\" },\n          \"competitor_names\": { \"type\": \"array\", \"items\": { \"type\": \"string\" } },\n          \"primary_weakness\": { \"type\": \"string\", \"description\": \"The specific strategic or technical flaw found in this group.\" }\n        }\n      },\n      \"description\": \"Categorization and deep-dive analysis of all analyzed competitors.\"\n    },\n    \"the_winning_gap_analysis\": {\n      \"type\": \"string\",\n      \"description\": \"Identification of the 'Blue Ocean'—the specific unmet market need this brand will dominate.\"\n    },\n    \"technical_competitive_moat\": {\n      \"type\": \"string\",\n      \"description\": \"Analysis of the brand's technical advantages (infrastructure, AI capabilities, or workflows) compared to rivals.\"\n    },\n    \"strategic_marketing_moat\": {\n      \"type\": \"string\",\n      \"description\": \"How the brand's unique strategy and positioning will penetrate the market more effectively than competitors.\"\n    },\n    \"optimized_product_service_map\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"offering_name\": { \"type\": \"string\" },\n          \"value_proposition\": { \"type\": \"string\" },\n          \"strategic_importance\": { \"type\": \"string\", \"description\": \"Why this specific service is vital for capturing the market gap.\" }\n        }\n      }\n    },\n    \"execution_roadmap_90d\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"phase_1_foundation\": { \"type\": \"string\", \"description\": \"Month 1: Establishing identity and core infrastructure.\" },\n        \"phase_2_validation\": { \"type\": \"string\", \"description\": \"Month 2: Launching pilot projects and proof of concept.\" },\n        \"phase_3_dominance\": { \"type\": \"string\", \"description\": \"Month 3: Aggressive scaling and market capture.\" }\n      }\n    },\n    \"brand_authority_pillars\": {\n      \"type\": \"array\",\n      \"items\": { \"type\": \"string\" },\n      \"description\": \"The 4 core content themes required to build market trust and perceived expertise.\"\n    },\n    \"the_killer_hook\": {\n      \"type\": \"string\",\n      \"description\": \"The ultimate one-sentence value proposition to convert high-value clients instantly.\"\n    },\n    \"roi_and_value_engineering\": {\n      \"type\": \"string\",\n      \"description\": \"Strategic justification for pricing and how the brand delivers clear financial return to its clients.\"\n    }\n  },\n  \"required\": [\n    \"executive_strategic_vision\",\n    \"competitive_landscape_matrix\",\n    \"the_winning_gap_analysis\",\n    \"technical_competitive_moat\",\n    \"strategic_marketing_moat\",\n    \"execution_roadmap_90d\",\n    \"the_killer_hook\"\n  ]\n}",
+        "autoFix": true
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        3648,
+        1536
+      ],
+      "id": "5d4926d3-9625-4a19-a690-31f71b12a877",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 1. جلب كل صفوف المنافسين باستخدام الـ Syntax الجديد\nconst competitors = $('Get row(s) in sheet').all().map(item => {\n  try {\n    // التأكد من أن الحقل data موجود فعلاً\n    return item.json.data ? JSON.parse(item.json.data) : null;\n  } catch (e) {\n    return null;\n  }\n}).filter(i => i !== null);\n\n// 2. جلب بيانات تحليل شركة كيانوفا (أول نتيجة فقط)\n// لاحظ استخدام $('...') هنا أيضاً لضمان الاستقرار\nconst myBusiness = $('Analysis My Business').item.json.data;\n\n// 3. دمج البيانات في آيتم واحد يروح للايجنت\nreturn {\n  combined_data: {\n    target_brand: myBusiness,\n    competitors_market_data: competitors,\n    total_competitors_analyzed: competitors.length\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3296,
+        1312
+      ],
+      "id": "f3d071a9-ae92-4b08-9974-92d67d7f9130",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1mOapyC4f4VFJMpAgG0SVv9WCAqsPkH8k9YZjoSWz2Tw",
+          "mode": "list",
+          "cachedResultName": "New Company",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1mOapyC4f4VFJMpAgG0SVv9WCAqsPkH8k9YZjoSWz2Tw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 660145604,
+          "mode": "list",
+          "cachedResultName": "Report",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1mOapyC4f4VFJMpAgG0SVv9WCAqsPkH8k9YZjoSWz2Tw/edit#gid=660145604"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Analysis_Date": "={{ $now.format('yyyy-MM-dd HH:mm') }}",
+            "Strategic_Vision": "={{ $json.output.executive_strategic_vision }}",
+            "Market_Gap": "={{ $json.output.the_winning_gap_analysis }}",
+            "Technical_Moat": "={{ $json.output.technical_competitive_moat }}",
+            "Strategic_Moat": "={{ $json.output.strategic_marketing_moat }}",
+            "Competitive_Matrix": "={{ $json.output.competitive_landscape_matrix.map(c => \"[\" + c.tier + \"]: \" + c.competitor_names.join(\", \") + \"\\n⚠️ Weakness: \" + c.primary_weakness).join(\"\\n\\n\") }}",
+            "Roadmap_90D": "={{ \"📅 Phase 1 (Foundation):\\n\" + $json.output.execution_roadmap_90d.phase_1_foundation + \"\\n\\n📅 Phase 2 (Validation):\\n\" + $json.output.execution_roadmap_90d.phase_2_validation + \"\\n\\n📅 Phase 3 (Dominance):\\n\" + $json.output.execution_roadmap_90d.phase_3_dominance }}",
+            "Killer_Hook": "={{ $json.output.the_killer_hook }}",
+            "ROI_Engineering": "={{ $json.output.roi_and_value_engineering }}",
+            "Authority_Pillars": "={{ $json.output.brand_authority_pillars.map(p => \"• \" + p).join(\"\\n\") }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Analysis_Date",
+              "displayName": "Analysis_Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Brand_Name",
+              "displayName": "Brand_Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Strategic_Vision",
+              "displayName": "Strategic_Vision",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Market_Gap",
+              "displayName": "Market_Gap",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Technical_Moat",
+              "displayName": "Technical_Moat",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Strategic_Moat",
+              "displayName": "Strategic_Moat",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Competitive_Matrix",
+              "displayName": "Competitive_Matrix",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Service_Map",
+              "displayName": "Service_Map",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Roadmap_90D",
+              "displayName": "Roadmap_90D",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Killer_Hook",
+              "displayName": "Killer_Hook",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ROI_Engineering",
+              "displayName": "ROI_Engineering",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Authority_Pillars",
+              "displayName": "Authority_Pillars",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        4016,
+        1312
+      ],
+      "id": "3f5c407b-3161-4efb-8109-ba649262b93e",
+      "name": "Append row in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jy58BxClZutdZdvF",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "market-research",
+        "responseMode": "responseNode",
+        "options": {
+          "rawBody": true
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        672,
+        2432
+      ],
+      "id": "410008ab-12ca-45b5-a9b7-835a3289a326",
+      "name": "Webhook Trigger1",
+      "webhookId": "market-research-webhook",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Input Validation and Routing Logic\nconst rawInput = $input.item.json;\n\n// Webhook wraps POST body in 'body' property\n// Support both direct input and body-wrapped input\nconst input = rawInput.body || rawInput;\n\n// Determine input type\nlet inputType = 'unknown';\nlet inputData = null;\nlet isValid = false;\nlet errorMessage = null;\n\n// Check for URL input\nif (input.url && typeof input.url === 'string') {\n  const urlPattern = /^https?:\\/\\/.+/i;\n  if (urlPattern.test(input.url.trim())) {\n    inputType = 'url';\n    inputData = input.url.trim();\n    isValid = true;\n  } else {\n    errorMessage = 'Invalid URL format. URL must start with http:// or https://';\n  }\n}\n// Check for document/file input (base64 encoded)\nelse if (input.fileData || input.documentData || input.pdfData) {\n  const fileData = input.fileData || input.documentData || input.pdfData;\n  inputType = 'document';\n  inputData = fileData;\n  isValid = true;\n}\n// Check for raw text input (for pre-extracted content)\nelse if (input.textContent && typeof input.textContent === 'string') {\n  inputType = 'text';\n  inputData = input.textContent;\n  isValid = true;\n}\nelse {\n  errorMessage = 'No valid input provided. Please provide either a URL or document data.';\n}\n\nreturn {\n  inputType,\n  inputData,\n  isValid,\n  errorMessage,\n  searchQuery: input.searchQuery || input.industry || 'AI Automation Agency',\n  brandName: input.brandName || 'Subject Brand',\n  originalInput: input\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        896,
+        2432
+      ],
+      "id": "7aec54c7-5921-4e72-9971-4a0c0681b361",
+      "name": "Input Validator1",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.isValid }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              },
+              "id": "9dca496c-e7be-4f5c-9549-4ddc9e288a7c"
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1120,
+        2432
+      ],
+      "id": "122756fa-14b8-4001-9f7d-1d1b81a99d70",
+      "name": "Is Valid Input?1",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "leftValue": "={{ $json.inputType }}",
+              "rightValue": "url",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1344,
+        2336
+      ],
+      "id": "c9521d37-577b-4a27-a36c-c1e7bbe72914",
+      "name": "Is URL Input?1",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "resource": "Agent",
+        "operation": "agent",
+        "prompt": "# Role\nYou are a Senior Market Research Analyst and Business Intelligence Specialist. Your task is to perform a comprehensive digital audit of the provided website.\n\n# Objective\nExtract and analyze the core business DNA of this company to help build a competitive marketing strategy.\n\n# Extraction Requirements\nPlease provide a detailed report covering the following points:\n\n1. **Service/Product Architecture:** List the main services or products offered. Describe the problem they solve for the customer.\n2. **Target Audience Profile:** Identify who this company is speaking to. Include industry focus, business size, and the specific \"pain points\" they address.\n3. **Unique Selling Proposition (USP):** What is their \"unfair advantage\"? Why would a customer choose them over others? (Look for keywords like \"Only we\", \"First\", \"Guaranteed\", \"Unlike others\").\n4. **Brand Personality & Tone:** Analyze the writing style and visual cues. Is it professional/corporate, bold/disruptive, or friendly/accessible?\n5. **Pricing & Business Model:** Search for any pricing tiers, \"starting at\" rates, or calls to action that indicate their sales model (e.g., Book a demo, Get a quote, Free trial).\n6. **Market Positioning:** Based on the content, where do they sit in the market? (e.g., Luxury/Premium, Budget-friendly, High-tech/Innovation-led).\n\n# Output Instructions\n- Provide the analysis in a clear, structured format.\n- If specific data (like pricing) is not found, state \"Not publicly disclosed\" but infer the likely model based on the industry.\n- Highlight any \"Gaps\" or \"Weaknesses\" you notice in their messaging.",
+        "specifyUrls": true,
+        "urls": "={{ $json.inputData }}",
+        "requestOptions": {}
+      },
+      "type": "@mendable/n8n-nodes-firecrawl.firecrawl",
+      "typeVersion": 1,
+      "position": [
+        1856,
+        2096
+      ],
+      "id": "ff667ad8-1a70-4e60-a267-1793e6c3bae5",
+      "name": "Analyze Website (Firecrawl)1",
+      "credentials": {
+        "firecrawlApi": {
+          "id": "HA83NnoPwhSik3qg",
+          "name": "Firecrawl account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract and clean text from document input\nconst input = $input.item.json;\nlet cleanedText = '';\n\nif (input.inputType === 'document') {\n  // If base64 encoded, decode and extract text\n  // For now, we'll assume the text has been pre-extracted\n  cleanedText = input.inputData;\n} else if (input.inputType === 'text') {\n  cleanedText = input.inputData;\n}\n\n// Clean the text\ncleanedText = cleanedText\n  .replace(/\\s+/g, ' ')  // Normalize whitespace\n  .replace(/[\\r\\n]+/g, '\\n')  // Normalize line breaks\n  .trim();\n\nreturn {\n  extractedText: cleanedText,\n  inputType: input.inputType,\n  searchQuery: input.searchQuery,\n  brandName: input.brandName\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1568,
+        2400
+      ],
+      "id": "f7489847-6d9a-41c2-86e5-d6904ef92701",
+      "name": "Extract Document Text1",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=# Role\nYou are a Senior Market Research Analyst. Analyze the following business content and extract key strategic insights.\n\n# Content to Analyze:\n{{ $json.extractedText }}\n\n# Extract:\n1. Main services/products offered\n2. Target audience profile\n3. Unique selling proposition\n4. Brand personality and tone\n5. Pricing model (if available)\n6. Market positioning\n7. Gaps or weaknesses in messaging",
+        "options": {
+          "systemMessage": "You are a Senior Business Analyst. Extract structured business intelligence from the provided content. Be thorough and insightful."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        1792,
+        2400
+      ],
+      "id": "ae7b757e-9f3b-49e2-9ae0-91cfed6e240c",
+      "name": "Analyze Document Content1",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineAll",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.1,
+      "position": [
+        2144,
+        2336
+      ],
+      "id": "4be126da-e77f-474f-97f8-d60e96904c18",
+      "name": "Merge Analysis Results1",
+      "alwaysOutputData": true,
+      "disabled": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Standardize analysis output from either URL or Document path\nconst items = $input.all();\nlet analysisData = null;\nlet inputType = 'unknown';\nlet brandName = 'Subject Brand';\nlet searchQuery = 'AI Automation Agency';\n\nfor (const item of items) {\n  if (item.json.data) {\n    // From Firecrawl URL analysis\n    analysisData = item.json.data;\n    inputType = 'url';\n  } else if (item.json.output) {\n    // From Document analysis agent\n    analysisData = item.json.output;\n    inputType = 'document';\n  }\n  \n  if (item.json.searchQuery) searchQuery = item.json.searchQuery;\n  if (item.json.brandName) brandName = item.json.brandName;\n}\n\nreturn {\n  business_analysis: analysisData,\n  inputType,\n  searchQuery,\n  brandName\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2368,
+        2336
+      ],
+      "id": "0753ed72-1743-4125-bab3-a35680b59374",
+      "name": "Standardize Analysis Output1",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://google.serper.dev/search",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-API-KEY",
+              "value": "784fc4b751c1747c515e9c048aedcf8cd5fd841b"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ q: $json.searchQuery + \" in Egypt\" }) }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        2592,
+        2336
+      ],
+      "id": "7e2ae3ce-59af-46f0-be80-6d0ad2c956e7",
+      "name": "Search Competitors (Serper)1",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const answerBox = $input.item.json.answerBox ? [$input.item.json.answerBox] : [];\nconst organic = $input.item.json.organic || [];\nreturn {\n  json: {\n    all_results: answerBox.concat(organic)\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2816,
+        2336
+      ],
+      "id": "caf08725-c27e-4890-bb80-1a093a352247",
+      "name": "Merge Search Results2",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Input Data:\n{{ JSON.stringify($json.all_results) }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "Analyze the search results. Extract items into JSON. Identify real 'Agencies' vs 'Directories/Blogs'. Set is_agency: true for real service providers only."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        3040,
+        2336
+      ],
+      "id": "3898e000-bee0-4af1-86a7-111656b04dab",
+      "name": "AI Filter Agent2",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"competitors\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"name\": { \"type\": \"string\" },\n          \"url\": { \"type\": \"string\" },\n          \"is_agency\": { \"type\": \"boolean\" }\n        },\n        \"required\": [\"name\", \"url\", \"is_agency\"],\n        \"additionalProperties\": false\n      }\n    }\n  },\n  \"required\": [\"competitors\"],\n  \"additionalProperties\": false\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        3184,
+        2560
+      ],
+      "id": "f95415a1-2b2d-4133-8716-c198ea28082c",
+      "name": "Competitor Schema Parser1",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "model": "qwen/qwen3-32b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        3056,
+        2560
+      ],
+      "id": "a41bce76-e30e-4048-917f-a82d045a599d",
+      "name": "Groq Chat Model (Filter)1",
+      "credentials": {
+        "groqApi": {
+          "id": "sUaxWBZcp4YFdgw2",
+          "name": "Groq account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const allItems = $input.first().json.output.competitors;\nreturn allItems.filter(item => item.is_agency === true);"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3392,
+        2336
+      ],
+      "id": "cff5a823-b9e5-40e5-9ce9-5fe4b65ecc87",
+      "name": "Get Clean Agencies2",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        3616,
+        2336
+      ],
+      "id": "d34f739d-d81c-43ad-8519-0fb6a156bd29",
+      "name": "Loop Over Agencies1",
+      "executeOnce": true,
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "resource": "Agent",
+        "operation": "agent",
+        "prompt": "Analyze this agency's website and extract: 1. Their main services. 2. Their target audience. 3. Their unique selling proposition (USP). 4. Any pricing info if available. 5. Their content style.",
+        "specifyUrls": true,
+        "urls": "=https://www.bell-integration.com/ai-agencies-in-egypt/",
+        "requestOptions": {}
+      },
+      "type": "@mendable/n8n-nodes-firecrawl.firecrawl",
+      "typeVersion": 1,
+      "position": [
+        3840,
+        2336
+      ],
+      "id": "ace219c5-d5bf-4c05-b8ad-c693de0ba69c",
+      "name": "Deep Scrape Competitor1",
+      "credentials": {
+        "firecrawlApi": {
+          "id": "HA83NnoPwhSik3qg",
+          "name": "Firecrawl account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Collect all competitor analysis data\nconst items = $input.all();\nconst competitorData = items.map(item => {\n  return {\n    name: item.json.name || 'Unknown',\n    url: item.json.url || '',\n    analysis: item.json.data || item.json\n  };\n});\n\nreturn {\n  competitors_analyzed: competitorData,\n  total_count: competitorData.length\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3840,
+        2144
+      ],
+      "id": "a4c62282-a3c7-4b4b-b60f-fb1f98e6c9c8",
+      "name": "Aggregate Competitor Data1",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Combine business analysis with competitor data for Master Strategist\nconst businessAnalysis = $('Standardize Analysis Output1').first().json;\nconst competitorData = $input.item.json;\n\nreturn {\n  combined_data: {\n    target_brand: businessAnalysis.business_analysis,\n    brand_name: businessAnalysis.brandName,\n    competitors_market_data: competitorData.competitors_analyzed,\n    total_competitors_analyzed: competitorData.total_count\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4064,
+        2144
+      ],
+      "id": "df1aa790-a3b2-4b48-ac52-bf5857192494",
+      "name": "Combine All Data1",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Please analyze the following combined dataset and generate the Strategic Global Report:\n\n{{ JSON.stringify($json.combined_data) }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "Role: You are a Senior Global Strategy Consultant and Business Intelligence Architect. Your mission is to perform a high-level strategic synthesis for the provided \"Subject Brand\" against its \"Competitor Data.\"\n\nInstructions:\n\nData-Driven Analysis: Use the provided JSON data of competitors and the internal audit of the subject brand to identify non-obvious patterns.\n\nDynamic Adaptation: Do not use pre-fixed assumptions. Analyze the industry, pricing models, and tech-stacks specifically provided in the input.\n\nThe \"Winning Gap\": Your primary goal is to find the \"Blue Ocean\"—a market space where the subject brand can offer what competitors are fundamentally missing (e.g., speed, full autonomy, creative-tech blend).\n\nNo Generic Content: Avoid corporate jargon. Every field in the schema must provide a concrete, aggressive, and visionary roadmap.\n\nTone: Visionary, Authoritative, and Aggressive. Speak to a C-suite audience looking for a market takeover."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        4320,
+        2144
+      ],
+      "id": "443d6f3e-25a2-4930-8c62-ded3007cb6b4",
+      "name": "Master Strategist2",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        4288,
+        2368
+      ],
+      "id": "d96db5a2-bc08-44c7-bfcc-ef6a9d0b3900",
+      "name": "Google Gemini Chat Model2",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "2oe6nreVlfGHRk0g",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"executive_strategic_vision\": {\n      \"type\": \"string\",\n      \"description\": \"A high-level synthesis of the brand's future position as a market leader, moving beyond traditional models.\"\n    },\n    \"competitive_landscape_matrix\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"tier\": { \"type\": \"string\", \"description\": \"Category: e.g., Enterprise Giants, Boutique Specialized, or Tech-Disruptors.\" },\n          \"competitor_names\": { \"type\": \"array\", \"items\": { \"type\": \"string\" } },\n          \"primary_weakness\": { \"type\": \"string\", \"description\": \"The specific strategic or technical flaw found in this group.\" }\n        }\n      },\n      \"description\": \"Categorization and deep-dive analysis of all analyzed competitors.\"\n    },\n    \"the_winning_gap_analysis\": {\n      \"type\": \"string\",\n      \"description\": \"Identification of the 'Blue Ocean'—the specific unmet market need this brand will dominate.\"\n    },\n    \"technical_competitive_moat\": {\n      \"type\": \"string\",\n      \"description\": \"Analysis of the brand's technical advantages (infrastructure, AI capabilities, or workflows) compared to rivals.\"\n    },\n    \"strategic_marketing_moat\": {\n      \"type\": \"string\",\n      \"description\": \"How the brand's unique strategy and positioning will penetrate the market more effectively than competitors.\"\n    },\n    \"optimized_product_service_map\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"offering_name\": { \"type\": \"string\" },\n          \"value_proposition\": { \"type\": \"string\" },\n          \"strategic_importance\": { \"type\": \"string\", \"description\": \"Why this specific service is vital for capturing the market gap.\" }\n        }\n      }\n    },\n    \"execution_roadmap_90d\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"phase_1_foundation\": { \"type\": \"string\", \"description\": \"Month 1: Establishing identity and core infrastructure.\" },\n        \"phase_2_validation\": { \"type\": \"string\", \"description\": \"Month 2: Launching pilot projects and proof of concept.\" },\n        \"phase_3_dominance\": { \"type\": \"string\", \"description\": \"Month 3: Aggressive scaling and market capture.\" }\n      }\n    },\n    \"brand_authority_pillars\": {\n      \"type\": \"array\",\n      \"items\": { \"type\": \"string\" },\n      \"description\": \"The 4 core content themes required to build market trust and perceived expertise.\"\n    },\n    \"the_killer_hook\": {\n      \"type\": \"string\",\n      \"description\": \"The ultimate one-sentence value proposition to convert high-value clients instantly.\"\n    },\n    \"roi_and_value_engineering\": {\n      \"type\": \"string\",\n      \"description\": \"Strategic justification for pricing and how the brand delivers clear financial return to its clients.\"\n    }\n  },\n  \"required\": [\n    \"executive_strategic_vision\",\n    \"competitive_landscape_matrix\",\n    \"the_winning_gap_analysis\",\n    \"technical_competitive_moat\",\n    \"strategic_marketing_moat\",\n    \"execution_roadmap_90d\",\n    \"the_killer_hook\"\n  ]\n}",
+        "autoFix": true
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        4416,
+        2368
+      ],
+      "id": "e8ba0b0f-8635-451c-863c-dd0b04efd825",
+      "name": "Strategic Report Schema1",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Prepare final response for webhook\nconst output = $input.item.json.output;\nconst timestamp = new Date().toISOString();\n\nreturn {\n  success: true,\n  timestamp,\n  analysis_report: output,\n  metadata: {\n    generated_by: 'Market Research Automation System',\n    version: '1.0.0'\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4784,
+        2144
+      ],
+      "id": "ffd18c0a-cf0e-445c-a2d0-0c821df20f0f",
+      "name": "Prepare Response1",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {
+          "responseCode": 200,
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        5008,
+        2144
+      ],
+      "id": "5526ee77-805d-4d8b-b01b-b40d64bd482a",
+      "name": "Respond Success1",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Prepare error response\nconst input = $input.item.json;\n\nreturn {\n  success: false,\n  error: {\n    message: input.errorMessage || 'An error occurred during processing',\n    code: 'VALIDATION_ERROR'\n  },\n  timestamp: new Date().toISOString()\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1344,
+        2592
+      ],
+      "id": "231f3ee0-3b24-48cd-986b-739df1f46269",
+      "name": "Prepare Error Response1",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {
+          "responseCode": 400,
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1568,
+        2592
+      ],
+      "id": "0a3ceccb-6f94-40f9-8510-a41179cfd4a2",
+      "name": "Respond Error1",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "## Market Research Webhook Workflow\n\n### Input Handling:\n- **URL Input**: Website URLs are processed via Firecrawl\n- **Document Input**: Text extracted from PDFs/documents\n\n### Flow:\n1. Webhook receives request\n2. Input validated and routed\n3. Business analyzed (URL or Document)\n4. Competitors searched and scraped\n5. Master Strategist generates report\n6. JSON response returned",
+        "height": 456,
+        "width": 340
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        224,
+        1568
+      ],
+      "id": "1104b0f1-aa85-4b9e-b6c1-967b0498ea9a",
+      "name": "Workflow Documentation1",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "## Error Handling\n\nInvalid inputs are caught and returned with proper error messages and 400 status code.",
+        "height": 312,
+        "width": 504,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1264,
+        2432
+      ],
+      "id": "8a2d5f5a-437a-4e12-9fea-2df4fe26f219",
+      "name": "Error Flow Note1",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "model": "qwen/qwen3-32b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        1872,
+        2624
+      ],
+      "id": "e5573405-848e-46b5-8123-4f0fbbee8f96",
+      "name": "Groq Chat Model1",
+      "credentials": {
+        "groqApi": {
+          "id": "sUaxWBZcp4YFdgw2",
+          "name": "Groq account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "model": "qwen/qwen3-32b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        4496,
+        2576
+      ],
+      "id": "8052fa99-e798-44ce-ba25-eea9314bde62",
+      "name": "Groq Chat Model3",
+      "credentials": {
+        "groqApi": {
+          "id": "sUaxWBZcp4YFdgw2",
+          "name": "Groq account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "url",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        672,
+        1504
+      ],
+      "id": "60e311ac-ed36-4a19-bca6-7ba9db31d35a",
+      "name": "Webhook",
+      "webhookId": "3fe4fb1e-0fec-47bb-84fb-9a9cef5786c6"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ JSON.stringify($json.data) }}",
+        "hasOutputParser": true,
+        "messages": {
+          "messageValues": [
+            {
+              "message": "=You are a Competitive Research and SEO expert.\n\nYou will receive a **pre-written analysis of a company** (NOT a URL).  \nThe analysis may describe the company’s industry, services, and type of business.\n\nYour ONLY task is to:\n\n- Generate **one professional Google Search Query** that can be used directly to find **direct competitors**.\n- Act as an SEO and market research professional.\n- Use strong commercial and industry-relevant terms (e.g., agency, company, services, solutions).\n- Assume the geographic location is **Egypt** unless another country is explicitly mentioned.\n- Do NOT analyze, summarize, or rewrite the company analysis.\n- Do NOT output more than one query.\n\n### Output Rules:\n- Output **JSON only**\n- No explanations\n- No Markdown in the output\n- One search query only\n\n### Output Format (strict):\n```json\n{\n  \"google_search_query\": \"Professional Google search query\"\n}\n"
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        1360,
+        1504
+      ],
+      "id": "14297bc2-a3bc-4565-b5e3-f94319f247e9",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"google_search_query\": {\n      \"type\": \"string\",\n      \"description\": \"A single professional Google search query used to find direct competitors based on the provided company analysis. Must include industry-relevant terms and Egypt as the default location.\"\n    }\n  },\n  \"required\": [\"google_search_query\"],\n  \"additionalProperties\": false\n}",
+        "autoFix": true
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        1456,
+        1728
+      ],
+      "id": "b9acc4dc-1bdb-4142-bcb6-afc37a9c4fc3",
+      "name": "Structured Output Parser1"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        1104,
+        1792
+      ],
+      "id": "5a74515e-58ec-4076-84a3-814030569f24",
+      "name": "Google Gemini Chat Model1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "VSRbk69EWdjWsb45",
+          "name": "Hackathon"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1_HMkqCX2Sslj2E9QdIZMLYjLiIV1T6IlPhCEhlyPqnk",
+          "mode": "list",
+          "cachedResultName": "Market Research",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_HMkqCX2Sslj2E9QdIZMLYjLiIV1T6IlPhCEhlyPqnk/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 660145604,
+          "mode": "list",
+          "cachedResultName": "Report",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_HMkqCX2Sslj2E9QdIZMLYjLiIV1T6IlPhCEhlyPqnk/edit#gid=660145604"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Analysis_Date": "={{ $now.format('yyyy-MM-dd HH:mm') }}",
+            "Brand_Name": "Kayanova Agency",
+            "Strategic_Vision": "={{ $json.output.executive_strategic_vision }}",
+            "Competitive_Matrix": "={{ $json.output.competitive_landscape_matrix.map(c => \"[\" + c.tier + \"]: \" + c.competitor_names.join(\", \") + \"\\n⚠️ Weakness: \" + c.primary_weakness).join(\"\\n\\n\") }}",
+            "Market_Gap": "={{ $json.output.the_winning_gap_analysis }}",
+            "Technical_Moat": "={{ $json.output.technical_competitive_moat }}",
+            "Strategic_Moat": "={{ $json.output.strategic_marketing_moat }}",
+            "Service_Map": "={{ $json.output.optimized_product_service_map.map(s => \"🚀 \" + s.offering_name + \":\\n\" + s.value_proposition + \"\\n\\n💡 Importance: \" + s.strategic_importance).join(\"\\n\\n\") }}",
+            "Roadmap_90D": "={{ \"📅 Phase 1 (Foundation):\\n\" + $json.output.execution_roadmap_90d.phase_1_foundation + \"\\n\\n📅 Phase 2 (Validation):\\n\" + $json.output.execution_roadmap_90d.phase_2_validation + \"\\n\\n📅 Phase 3 (Dominance):\\n\" + $json.output.execution_roadmap_90d.phase_3_dominance }}",
+            "Authority_Pillars": "={{ $json.output.brand_authority_pillars.map(p => \"• \" + p).join(\"\\n\") }}",
+            "Killer_Hook": "={{ $json.output.the_killer_hook }}",
+            "ROI_Engineering": "={{ $json.output.roi_and_value_engineering }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Analysis_Date",
+              "displayName": "Analysis_Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Brand_Name",
+              "displayName": "Brand_Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Strategic_Vision",
+              "displayName": "Strategic_Vision",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Market_Gap",
+              "displayName": "Market_Gap",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Technical_Moat",
+              "displayName": "Technical_Moat",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Strategic_Moat",
+              "displayName": "Strategic_Moat",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Competitive_Matrix",
+              "displayName": "Competitive_Matrix",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Service_Map",
+              "displayName": "Service_Map",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Roadmap_90D",
+              "displayName": "Roadmap_90D",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Killer_Hook",
+              "displayName": "Killer_Hook",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ROI_Engineering",
+              "displayName": "ROI_Engineering",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Authority_Pillars",
+              "displayName": "Authority_Pillars",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        672,
+        2816
+      ],
+      "id": "ffbbd18a-b5d9-469b-8595-2d1f91113a1b",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jy58BxClZutdZdvF",
+          "name": "Google Sheets account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        4240,
+        1312
+      ],
+      "id": "95eb500f-c9dd-472d-b704-26ecdf28efe7",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-4o-mini",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        1536,
+        1936
+      ],
+      "id": "3d532549-fcc1-444a-adc4-9bcbe2825689",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "4EX4QFWKTRgupXJH",
+          "name": "Hackathon"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-4o-mini",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        3728,
+        1744
+      ],
+      "id": "41a29d7e-3630-4052-b059-e81ae4c42e14",
+      "name": "OpenRouter Chat Model1",
+      "credentials": {
+        "openRouterApi": {
+          "id": "4EX4QFWKTRgupXJH",
+          "name": "Hackathon"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "Eleven-Labs",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        672,
+        1680
+      ],
+      "id": "006411a2-e782-45b4-a7fd-d063e526b32a",
+      "name": "Webhook1",
+      "webhookId": "9cb0c6f5-55e9-46b4-8813-9ba6317312c5"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "57043a33-8aa7-4a69-9188-82e942f91e6d",
+              "name": "URL",
+              "value": "={{ $json.body.url }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        928,
+        1504
+      ],
+      "id": "a8bbf44f-0699-44fc-88d0-36fcd7d2946e",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "57043a33-8aa7-4a69-9188-82e942f91e6d",
+              "name": "URL",
+              "value": "={{ $json.body.website_url }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        928,
+        1680
+      ],
+      "id": "46dbddce-e98a-4b59-a05c-8a2adcf62e16",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "model": "google/gemini-2.5-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        1296,
+        1760
+      ],
+      "id": "0608f784-b057-4192-b960-b0d38306134d",
+      "name": "OpenRouter Chat Model2",
+      "credentials": {
+        "openRouterApi": {
+          "id": "4EX4QFWKTRgupXJH",
+          "name": "Hackathon"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "google/gemini-2.5-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        3488,
+        1520
+      ],
+      "id": "f8fe2d79-65be-47b1-af4f-44de04c23737",
+      "name": "OpenRouter Chat Model3",
+      "credentials": {
+        "openRouterApi": {
+          "id": "4EX4QFWKTRgupXJH",
+          "name": "Hackathon"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "Webhook": [
+      {
+        "json": {
+          "headers": {
+            "host": "n8n-n8n.vwe4kq.easypanel.host",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+            "content-length": "28",
+            "accept": "*/*",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "accept-language": "en-US,en;q=0.9",
+            "content-type": "application/json",
+            "origin": "http://localhost:5173",
+            "priority": "u=1, i",
+            "referer": "http://localhost:5173/",
+            "sec-ch-ua": "\"Google Chrome\";v=\"143\", \"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "sec-fetch-dest": "empty",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-site": "cross-site",
+            "x-forwarded-for": "156.194.174.35",
+            "x-forwarded-host": "n8n-n8n.vwe4kq.easypanel.host",
+            "x-forwarded-port": "443",
+            "x-forwarded-proto": "https",
+            "x-forwarded-server": "3a9bb3fc4644",
+            "x-real-ip": "156.194.174.35"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "url": "kayanovagency.com/"
+          },
+          "webhookUrl": "https://n8n-n8n.vwe4kq.easypanel.host/webhook/url",
+          "executionMode": "production"
+        }
+      }
+    ],
+    "Merge Search Results1": [
+      {
+        "json": {
+          "all_results": [
+            {
+              "title": "Leading AI & Automation Solutions Agency - AL Master",
+              "link": "https://almaster.tech/ai-agency",
+              "snippet": "AL Master is a forward-thinking artificial intelligence agency delivering high-impact services and solutions across the Middle East.",
+              "position": 1
+            },
+            {
+              "title": "AI Agencies in Egypt – Bell Integration the AI ...",
+              "link": "https://www.bell-integration.com/ai-agencies-in-egypt/",
+              "snippet": "Partner with Bell Integration, one of the leading AI agencies in Egypt, to design, deploy, and manage AI systems and solutions that move beyond pilots into ...",
+              "position": 2
+            },
+            {
+              "title": "Egypt's Omar Maher builds AI solutions for businesses",
+              "link": "https://www.wearetech.africa/en/fils-uk/tech-stars/egypt-s-omar-maher-builds-ai-solutions-for-businesses",
+              "snippet": "Omar Maher is co-founder and CEO of enterprise AI firm Monta AI. The company designs LLM- and RAG-based tools to enhance corporate efficiency.",
+              "position": 3
+            },
+            {
+              "title": "IAS Egypt and DevisionX Partner for AI-Powered Industrial ...",
+              "link": "https://www.linkedin.com/posts/industrial-automation-systems_ai-digitaltransformation-industrialautomation-activity-7370852767382474752-7pwe",
+              "snippet": "Strategic Partnership Between IAS Egypt and DevisionX to Drive AI-Powered Transformation in Industry and IT We're excited to announce a ...",
+              "date": "4 months ago",
+              "position": 4
+            },
+            {
+              "title": "AI & Automation Company in Egypt - AL Master",
+              "link": "https://almaster.tech/eg-en/ai-agency",
+              "snippet": "We bring enterprise-grade Digital Transformation expertise from Riyadh to Cairo, offering Egyptian businesses access to advanced Machine Learning strategies and ...",
+              "position": 5
+            },
+            {
+              "title": "Why Forward-Thinking Companies in Egypt Are Turning to AI ...",
+              "link": "https://exology.co/ai-automation-solutions-in-egypt-2025",
+              "snippet": "Find out why 2025 is the turning point for AI automation solutions in Egypt. Explore how early adopters secure efficiency, growth, ...",
+              "date": "Sep 28, 2025",
+              "position": 6
+            },
+            {
+              "title": "Top Artificial Intelligence Companies in Egypt",
+              "link": "https://www.goodfirms.co/artificial-intelligence/egypt",
+              "snippet": "Krazimo is a top AI development company with expertise in equipping businesses of all sizes with emerging AI solutions. A cohesive team of world-class ...",
+              "position": 7
+            },
+            {
+              "title": "The 10 Best Digital Transformation Agencies in Egypt",
+              "link": "https://www.sortlist.com/s/digital-transformation/egypt-eg",
+              "snippet": "Find & hire the best Digital Transformation Agencies in Egypt. Here are the best ones listed just for you based on verified client reviews.",
+              "position": 8
+            },
+            {
+              "title": "AI Solutions Egypt: Complete Ai Infrastructure and Training",
+              "link": "https://aisolutionsegypt.com/",
+              "snippet": "Transform your business with our complete AI infrastructure and training. Experience seamless AI integration into your personal and professional life.",
+              "position": 9
+            },
+            {
+              "title": "Ai Everything MEA Egypt | 11-12 Feb 2026",
+              "link": "https://www.aieverythingegypt.com/",
+              "snippet": "At novomind MEA, we believe Agentic AI, automation, and Omnichannel Communication will redefine customer engagement and accelerate digital transformation.",
+              "position": 10
+            }
+          ]
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ],
+    "AI Filter Agent1": [
+      {
+        "json": {
+          "output": {
+            "competitors": [
+              {
+                "name": "AL Master",
+                "url": "https://almaster.tech/ai-agency",
+                "is_agency": true
+              },
+              {
+                "name": "Bell Integration",
+                "url": "https://www.bell-integration.com/ai-agencies-in-egypt/",
+                "is_agency": true
+              },
+              {
+                "name": "Monta AI",
+                "url": "https://www.wearetech.africa/en/fils-uk/tech-stars/egypt-s-omar-maher-builds-ai-solutions-for-businesses",
+                "is_agency": true
+              },
+              {
+                "name": "IAS Egypt and DevisionX Partnership",
+                "url": "https://www.linkedin.com/posts/industrial-automation-systems_ai-digitaltransformation-industrialautomation-activity-7370852767382474752-7pwe",
+                "is_agency": false
+              },
+              {
+                "name": "AL Master (Egypt)",
+                "url": "https://almaster.tech/eg-en/ai-agency",
+                "is_agency": true
+              },
+              {
+                "name": "Why Forward-Thinking Companies in Egypt Are Turning to AI...",
+                "url": "https://exology.co/ai-automation-solutions-in-egypt-2025",
+                "is_agency": false
+              },
+              {
+                "name": "Top Artificial Intelligence Companies in Egypt",
+                "url": "https://www.goodfirms.co/artificial-intelligence/egypt",
+                "is_agency": false
+              },
+              {
+                "name": "The 10 Best Digital Transformation Agencies in Egypt",
+                "url": "https://www.sortlist.com/s/digital-transformation/egypt-eg",
+                "is_agency": false
+              },
+              {
+                "name": "AI Solutions Egypt",
+                "url": "https://aisolutionsegypt.com/",
+                "is_agency": true
+              },
+              {
+                "name": "Ai Everything MEA Egypt",
+                "url": "https://www.aieverythingegypt.com/",
+                "is_agency": false
+              }
+            ]
+          }
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ],
+    "Get Clean Agencies1": [
+      {
+        "json": {
+          "name": "AL Master",
+          "url": "https://almaster.tech/ai-agency",
+          "is_agency": true
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      },
+      {
+        "json": {
+          "name": "Bell Integration",
+          "url": "https://www.bell-integration.com/ai-agencies-in-egypt/",
+          "is_agency": true
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      },
+      {
+        "json": {
+          "name": "Monta AI",
+          "url": "https://www.wearetech.africa/en/fils-uk/tech-stars/egypt-s-omar-maher-builds-ai-solutions-for-businesses",
+          "is_agency": true
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      },
+      {
+        "json": {
+          "name": "AL Master (Egypt)",
+          "url": "https://almaster.tech/eg-en/ai-agency",
+          "is_agency": true
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      },
+      {
+        "json": {
+          "name": "AI Solutions Egypt",
+          "url": "https://aisolutionsegypt.com/",
+          "is_agency": true
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ],
+    "HTTP Request2": [
+      {
+        "json": {
+          "searchParameters": {
+            "q": "AI automation solutions agency Egypt OR strategic digital transformation firm Egypt OR full-stack development and marketing services Egypt OR agentic AI company Egypt",
+            "type": "search",
+            "engine": "google"
+          },
+          "organic": [
+            {
+              "title": "Leading AI & Automation Solutions Agency - AL Master",
+              "link": "https://almaster.tech/ai-agency",
+              "snippet": "AL Master is a forward-thinking artificial intelligence agency delivering high-impact services and solutions across the Middle East.",
+              "position": 1
+            },
+            {
+              "title": "AI Agencies in Egypt – Bell Integration the AI ...",
+              "link": "https://www.bell-integration.com/ai-agencies-in-egypt/",
+              "snippet": "Partner with Bell Integration, one of the leading AI agencies in Egypt, to design, deploy, and manage AI systems and solutions that move beyond pilots into ...",
+              "position": 2
+            },
+            {
+              "title": "Egypt's Omar Maher builds AI solutions for businesses",
+              "link": "https://www.wearetech.africa/en/fils-uk/tech-stars/egypt-s-omar-maher-builds-ai-solutions-for-businesses",
+              "snippet": "Omar Maher is co-founder and CEO of enterprise AI firm Monta AI. The company designs LLM- and RAG-based tools to enhance corporate efficiency.",
+              "position": 3
+            },
+            {
+              "title": "IAS Egypt and DevisionX Partner for AI-Powered Industrial ...",
+              "link": "https://www.linkedin.com/posts/industrial-automation-systems_ai-digitaltransformation-industrialautomation-activity-7370852767382474752-7pwe",
+              "snippet": "Strategic Partnership Between IAS Egypt and DevisionX to Drive AI-Powered Transformation in Industry and IT We're excited to announce a ...",
+              "date": "4 months ago",
+              "position": 4
+            },
+            {
+              "title": "AI & Automation Company in Egypt - AL Master",
+              "link": "https://almaster.tech/eg-en/ai-agency",
+              "snippet": "We bring enterprise-grade Digital Transformation expertise from Riyadh to Cairo, offering Egyptian businesses access to advanced Machine Learning strategies and ...",
+              "position": 5
+            },
+            {
+              "title": "Why Forward-Thinking Companies in Egypt Are Turning to AI ...",
+              "link": "https://exology.co/ai-automation-solutions-in-egypt-2025",
+              "snippet": "Find out why 2025 is the turning point for AI automation solutions in Egypt. Explore how early adopters secure efficiency, growth, ...",
+              "date": "Sep 28, 2025",
+              "position": 6
+            },
+            {
+              "title": "Top Artificial Intelligence Companies in Egypt",
+              "link": "https://www.goodfirms.co/artificial-intelligence/egypt",
+              "snippet": "Krazimo is a top AI development company with expertise in equipping businesses of all sizes with emerging AI solutions. A cohesive team of world-class ...",
+              "position": 7
+            },
+            {
+              "title": "The 10 Best Digital Transformation Agencies in Egypt",
+              "link": "https://www.sortlist.com/s/digital-transformation/egypt-eg",
+              "snippet": "Find & hire the best Digital Transformation Agencies in Egypt. Here are the best ones listed just for you based on verified client reviews.",
+              "position": 8
+            },
+            {
+              "title": "AI Solutions Egypt: Complete Ai Infrastructure and Training",
+              "link": "https://aisolutionsegypt.com/",
+              "snippet": "Transform your business with our complete AI infrastructure and training. Experience seamless AI integration into your personal and professional life.",
+              "position": 9
+            },
+            {
+              "title": "Ai Everything MEA Egypt | 11-12 Feb 2026",
+              "link": "https://www.aieverythingegypt.com/",
+              "snippet": "At novomind MEA, we believe Agentic AI, automation, and Omnichannel Communication will redefine customer engagement and accelerate digital transformation.",
+              "position": 10
+            }
+          ],
+          "peopleAlsoAsk": [
+            {
+              "question": "Who are the big 4 AI agents?",
+              "title": "Can you break down who the big 4 AI agents are and what they do?",
+              "snippet": "The big four AI agents—OpenAI, Google DeepMind, Microsoft, and IBM Watson—play pivotal roles in shaping the future of artificial intelligence. Understanding their unique offerings and pricing models is essential for organizations looking to leverage AI effectively.Dec 29, 2025",
+              "link": "https://superagi.com/can-you-break-down-who-the-big-4-ai-agents-are-and-what-they-do/#:~:text=The%20big%20four%20AI%20agents%E2%80%94OpenAI%2C%20Google%20DeepMind%2C%20Microsoft,looking%20to%20leverage%20AI%20effectively."
+            },
+            {
+              "question": "Does Egypt have AI?",
+              "title": "Egypt AI Regulation: PDPL, Strategy, AI Act Plans | Nemko Digital",
+              "snippet": "Egypt's evolving AI landscape reflects a decisive shift from vision to implementation. The country's updated National AI Strategy 2025–2030 and accompanying legislative reforms mark the beginning of a new era, one defined by responsible innovation, digital sovereignty, and regional leadership.",
+              "link": "https://digital.nemko.com/regulations/ai-policy-egypt#:~:text=Egypt's%20evolving%20AI%20landscape%20reflects,digital%20sovereignty%2C%20and%20regional%20leadership."
+            },
+            {
+              "question": "What is Egypt National AI Strategy second edition?",
+              "title": "Egypt's national AI strategy – Second edition 2025-2030",
+              "snippet": "The National Artificial Intelligence Strategy of Egypt (Second Edition, 2025–2030) outlines the country's renewed vision to position AI as a key driver for sustainable development, economic transformation, and regional leadership.",
+              "link": "https://dig.watch/resource/egypts-national-ai-strategy-second-edition-2025-2030#:~:text=The%20National%20Artificial%20Intelligence%20Strategy,economic%20transformation%2C%20and%20regional%20leadership."
+            }
+          ],
+          "credits": 1
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ],
+    "Analysis My Business": [
+      {
+        "json": {
+          "success": true,
+          "status": "completed",
+          "data": {
+            "service_product_architecture": {
+              "main_services": [
+                {
+                  "service": "Marketing Services",
+                  "description": "Full, customized marketing strategies tailored to client needs with engaging content and campaign management",
+                  "problem_solved": "Lack of brand visibility, weak market presence, and ineffective customer acquisition strategies"
+                },
+                {
+                  "service": "Technology Solutions",
+                  "description": "End-to-end development including full-stack (Frontend/Backend), UI/UX design, and mobile app development (Android & iOS)",
+                  "problem_solved": "Need for digital products, technical infrastructure gaps, outdated systems requiring modernization"
+                },
+                {
+                  "service": "Media Production",
+                  "description": "Brand identity creation, graphic design, video editing (promotional videos, reels, ads), and motion graphics",
+                  "problem_solved": "Weak visual identity, lack of engaging multimedia content for marketing and brand recognition"
+                },
+                {
+                  "service": "Media Buying",
+                  "description": "Strategic planning and purchasing of advertising space across digital platforms (Meta, Google, TikTok) with campaign optimization",
+                  "problem_solved": "Inefficient ad spending, low reach and ROI on digital advertising campaigns"
+                },
+                {
+                  "service": "AI Automation",
+                  "description": "Design and implement intelligent workflows to automate repetitive tasks and enhance operational efficiency using cutting-edge AI",
+                  "problem_solved": "Manual, time-consuming business processes that drain productivity and resources"
+                },
+                {
+                  "service": "Agentic AI Solutions",
+                  "description": "Autonomous AI agents that think, plan, and execute tasks independently for proactive, adaptive business processes",
+                  "problem_solved": "Need for intelligent, self-managing systems that can make decisions and execute complex tasks without constant human intervention"
+                }
+              ],
+              "specialized_solutions": [
+                {
+                  "solution": "Agentic System — Multi-Expert AI",
+                  "description": "Next-generation AI framework with specialized agents collaborating through an Orchestrator for unified responses",
+                  "impact": "80% faster customer service"
+                },
+                {
+                  "solution": "AI Twin — Personal Business Consultant",
+                  "description": "Personalized digital consultant trained on client data and communication style",
+                  "impact": "60% reduction in decision-making time"
+                },
+                {
+                  "solution": "Omnichannel Customer Service",
+                  "description": "Unified AI platform across WhatsApp, Instagram, Facebook, Email, and Website Chat",
+                  "impact": "85% faster response times"
+                },
+                {
+                  "solution": "Smart HR System — Intelligent Hiring",
+                  "description": "End-to-end automated recruitment with AI resume analysis and automated scheduling",
+                  "impact": "70% reduction in recruitment time"
+                },
+                {
+                  "solution": "Smart Restaurant System",
+                  "description": "AI-powered restaurant management with smart ordering, inventory, and analytics",
+                  "impact": "25-40% revenue increase, 30% waste reduction"
+                }
+              ]
+            },
+            "target_audience_profile": {
+              "primary_segments": [
+                {
+                  "segment": "Startups & Solo Entrepreneurs",
+                  "indicators": "Pricing tier 'Core' at $19/month, testimonials from founders, emphasis on 'launching first product'",
+                  "business_size": "Solo creators, early-stage startups",
+                  "pain_points": [
+                    "Limited budget but need professional digital presence",
+                    "Need to establish brand identity from scratch",
+                    "Require fast time-to-market for MVPs"
+                  ]
+                },
+                {
+                  "segment": "SMEs (Small to Medium Enterprises)",
+                  "indicators": "Team pricing tier, 'Overdrive' plan popularity, portfolio shows local Egyptian/Saudi businesses",
+                  "business_size": "10-200 employees",
+                  "pain_points": [
+                    "Need to scale digital operations",
+                    "Struggling with outdated systems and manual processes",
+                    "Looking to compete with larger enterprises through technology"
+                  ]
+                },
+                {
+                  "segment": "Established Enterprises & Large Organizations",
+                  "indicators": "'Digital transformation' emphasis, enterprise solutions 12-24 week timelines, cloud integration mentions",
+                  "business_size": "200+ employees",
+                  "pain_points": [
+                    "Legacy system modernization needed",
+                    "Require AI/automation to maintain competitive advantage",
+                    "Need for comprehensive digital transformation strategy"
+                  ]
+                }
+              ],
+              "industry_focus": [
+                "Healthcare (Doctor Booking Platform, Victoria Hospital)",
+                "Education (LMS platforms, Taw3ya Islamic education, EduLearn)",
+                "E-commerce & Retail (StyleBoutique success story, restaurant platforms)",
+                "Technology & SaaS (TechStart Egypt, FinanceFlow)",
+                "Hospitality (Atsha Restaurant, Smart Restaurant System)",
+                "Construction (Diyar Al-Malumat)",
+                "HR & Recruitment (Smart HR System)"
+              ],
+              "geographic_focus": "Egypt (headquartered in Cairo), Saudi Arabia, broader Middle East with global client reach (North America - Minnesota client mentioned)",
+              "decision_maker_profile": "CTOs, Marketing Directors, CEOs, Founders - tech-forward business leaders seeking comprehensive digital partners"
+            },
+            "unique_selling_proposition": {
+              "core_usp": "Comprehensive one-stop digital transformation partner combining strategic consulting, development, marketing, and cutting-edge AI automation under one roof",
+              "unfair_advantages": [
+                {
+                  "advantage": "Emerging Technology Leadership",
+                  "evidence": "Specialization in Agentic AI Solutions - autonomous AI agents that 'think, plan, and execute independently' - positioning ahead of traditional agencies"
+                },
+                {
+                  "advantage": "Proven Quantifiable Results",
+                  "evidence": "Specific metrics: 200% sales increase, 80% response time reduction, 70% faster recruitment, 25-40% revenue increase for restaurants"
+                },
+                {
+                  "advantage": "Full-Spectrum Capability",
+                  "evidence": "'One-stop partner for all digital transformation needs' - strategy, development, marketing, AI, media production, and media buying all in-house"
+                },
+                {
+                  "advantage": "Competitive Pricing with Enterprise Quality",
+                  "evidence": "Entry point at $19/month while delivering enterprise-grade solutions (Lighthouse 95+ scores, multilingual platforms with 4000+ translations)"
+                },
+                {
+                  "advantage": "Rapid Delivery with Quality",
+                  "evidence": "'Design Bold. Deliver Fast' - 24-hour response time, 98% client satisfaction, 50+ completed projects since 2020"
+                }
+              ],
+              "key_differentiators": [
+                "AI-first approach with proprietary agentic systems",
+                "Bilingual/multilingual expertise (Arabic/English, RTL support)",
+                "Industry-specific solutions (restaurant, HR, healthcare systems)",
+                "Transparent processes with milestone-based progress",
+                "Post-launch support with 24/7 monitoring"
+              ],
+              "positioning_statements": [
+                "'Grow Smart, Not Hard' - emphasizing intelligent, efficient growth through technology vs. brute-force effort",
+                "'Ideas to Impact' - focus on measurable business outcomes",
+                "'Innovation that Performs' - cutting-edge tech that delivers ROI"
+              ]
+            },
+            "brand_personality_and_tone": {
+              "overall_personality": "Bold, tech-forward, confident with approachable professionalism",
+              "tone_analysis": {
+                "writing_style": "Direct and action-oriented with emphasis on tangible results",
+                "characteristics": [
+                  "Aspirational: 'Transform businesses through innovative digital solutions'",
+                  "Results-focused: Heavy use of metrics (200% increase, 80% faster, 98% satisfaction)",
+                  "Confident but not arrogant: 'Leading creative digital marketing' vs. 'The best agency'",
+                  "Modern and accessible: Casual punctuation ('Grow Smart. Not Hard.'), emoji use (👋, 🚀)",
+                  "Empowering: 'Your vision to life', 'Elevate your business'"
+                ]
+              },
+              "visual_personality": {
+                "design_aesthetic": "Modern, clean, tech-focused with dynamic elements",
+                "color_psychology": "Professional with energetic accents (based on typical agency branding)",
+                "motion_and_interaction": "Animated scrolling text ('Grow Smart, Not Hard' repeating), real-time update notifications, interactive calendar",
+                "social_proof_emphasis": "Heavy use of testimonial cards, project showcases, metric badges (50+ projects, 98% satisfaction)"
+              },
+              "communication_approach": [
+                "B2B professional with startup-friendly warmth",
+                "Educational without being condescending",
+                "Technical credibility (mentions specific tech stacks: Next.js, React 19, TypeScript)",
+                "Customer-centric language: 'your needs', 'tailored to', 'your business'"
+              ],
+              "brand_archetype": "The Magician/Innovator - transforming businesses through cutting-edge technology, making complex digital transformation accessible"
+            },
+            "pricing_and_business_model": {
+              "disclosed_pricing": {
+                "core_plan": {
+                  "price": "$19/month",
+                  "target": "Solo creators",
+                  "features": [
+                    "100MB Cloud storage",
+                    "100+ prompt templates",
+                    "5 projects",
+                    "24/7 support"
+                  ]
+                },
+                "overdrive_plan": {
+                  "price": "$79/month",
+                  "target": "Most popular plan",
+                  "badge": "Most Popular",
+                  "features": [
+                    "All Starter features",
+                    "1TB additional storage",
+                    "Unlimited projects",
+                    "Analytics"
+                  ]
+                },
+                "team_plan": {
+                  "price": "$39/month per member",
+                  "target": "Teams",
+                  "features": [
+                    "All Overdrive features",
+                    "10TB additional storage",
+                    "50% off per member",
+                    "Real-time collaboration"
+                  ]
+                },
+                "note_on_pricing": "These appear to be SaaS platform prices (storage, templates mentioned) rather than custom agency project pricing"
+              },
+              "project_based_pricing": {
+                "structure": "Custom project-based pricing tailored to requirements",
+                "payment_terms": "30-50% deposit to start, with milestone-based payments throughout",
+                "timeline_indicators": {
+                  "standard_websites": "4-8 weeks",
+                  "mobile_applications": "8-16 weeks",
+                  "enterprise_solutions": "12-24 weeks"
+                }
+              },
+              "business_model_analysis": {
+                "primary_model": "Hybrid - Project-based custom development + Recurring subscription SaaS products",
+                "revenue_streams": [
+                  "Custom development projects (websites, apps, AI systems)",
+                  "Monthly/annual SaaS subscriptions (Core/Overdrive/Team plans)",
+                  "Media buying management (likely commission-based or monthly retainer)",
+                  "Ongoing maintenance and support packages (post-launch)"
+                ],
+                "sales_approach": {
+                  "lead_generation": "Inbound content marketing (portfolio, testimonials, SEO)",
+                  "conversion_tactics": [
+                    "Free consultation offer",
+                    "Detailed FAQ addressing objections",
+                    "Social proof (500+ businesses, 98% satisfaction)",
+                    "Multiple CTAs: 'Get Started', 'Schedule Meeting', 'Contact'"
+                  ],
+                  "qualification": "Discovery call to understand needs before detailed proposal"
+                }
+              },
+              "value_indicators": {
+                "positioning": "Mid-market to premium - affordable entry point with scalable enterprise capabilities",
+                "roi_emphasis": "Heavy focus on measurable returns: '$1M in first year', '200% sales increase'",
+                "flexibility": "25% discount for annual commitments, scalable plans, custom enterprise solutions"
+              }
+            },
+            "market_positioning": {
+              "position_in_market": "Innovation-Led Mid-Premium",
+              "positioning_analysis": {
+                "not_budget_friendly_because": [
+                  "Emphasis on 'leading', 'cutting-edge', and 'next-generation' technologies",
+                  "Custom solutions vs. template-based approaches",
+                  "High technical complexity (React 19, Three.js, AI agents)",
+                  "Comprehensive service offering suggesting significant resources"
+                ],
+                "not_luxury_premium_because": [
+                  "$19/month entry point accessible to solo creators",
+                  "Serves startups and SMEs, not just Fortune 500",
+                  "Egypt-based with Middle East focus (lower cost structure than US/EU agencies)",
+                  "Emphasis on 'Grow Smart' and efficiency suggests value consciousness"
+                ],
+                "innovation_led_positioning": [
+                  "Agentic AI as core differentiator (emerging technology)",
+                  "AI automation and AI Twin solutions ahead of market",
+                  "Modern tech stack (Next.js 15, React 19 - latest versions)",
+                  "First-mover advantage in AI-powered business solutions for regional market"
+                ]
+              },
+              "competitive_positioning": {
+                "vs_traditional_agencies": "More technical depth, AI capabilities, full-stack development",
+                "vs_freelancers": "More comprehensive, structured processes, dedicated team, ongoing support",
+                "vs_international_agencies": "Better pricing, regional market understanding (Arabic/English, RTL), responsive communication",
+                "vs_dev_shops": "Strategic consulting, marketing capabilities, not just code-for-hire"
+              },
+              "geographic_positioning": {
+                "regional_leader": "Positioning as leading digital agency in Egypt/MENA region",
+                "global_ambition": "International client capability with North American presence",
+                "localization_strength": "Bilingual expertise as competitive advantage in Middle East"
+              }
+            },
+            "gaps_and_weaknesses": {
+              "messaging_gaps": [
+                {
+                  "gap": "Pricing Confusion",
+                  "description": "SaaS subscription pricing ($19-79/month) shown but most services appear to be custom project-based. Unclear what the monthly plans actually include for agency services.",
+                  "impact": "Medium - May confuse potential clients about actual costs for web development or marketing services",
+                  "recommendation": "Separate SaaS product pricing from agency service pricing, or clarify that subscriptions are for specific platforms/tools"
+                },
+                {
+                  "gap": "Target Audience Dilution",
+                  "description": "Trying to serve everyone: solo creators ($19/month), SMEs, and enterprises simultaneously. Portfolio shows high-complexity projects but pricing suggests accessibility for solopreneurs.",
+                  "impact": "Medium - May struggle with positioning clarity and sales focus",
+                  "recommendation": "Create clearer segmentation: position main brand for SME/Enterprise, create separate product line/brand for solopreneur SaaS offerings"
+                },
+                {
+                  "gap": "Case Study Depth",
+                  "description": "Project portfolio lists technologies and brief descriptions but lacks deep ROI stories, client journey narratives, or problem-solution-result structure",
+                  "impact": "Low-Medium - Misses opportunity to build stronger credibility with detailed success stories",
+                  "recommendation": "Develop 3-5 comprehensive case studies with client interviews, before/after metrics, challenges overcome"
+                },
+                {
+                  "gap": "Service Process Transparency",
+                  "description": "What does working with Kayanova actually look like? Discovery, design sprints, feedback loops, delivery milestones are not explained",
+                  "impact": "Low - FAQ covers basics but detailed process builds trust",
+                  "recommendation": "Add 'How We Work' section with visual timeline of typical engagement"
+                }
+              ],
+              "competitive_weaknesses": [
+                {
+                  "weakness": "Young Company (2020 founding)",
+                  "implication": "Only 5-6 years in business may concern enterprises seeking established partners",
+                  "mitigation": "Strong - Compensated with impressive portfolio, 50+ projects, 500+ businesses claim"
+                },
+                {
+                  "weakness": "Geographic Perception",
+                  "implication": "Egypt base may create concerns about time zones, communication, or quality for Western clients despite global capability",
+                  "mitigation": "Partial - Mentions international work but could emphasize remote collaboration infrastructure, multilingual team more prominently"
+                },
+                {
+                  "weakness": "Generalist Positioning Risk",
+                  "implication": "Offering everything (marketing, dev, AI, media production) may reduce perceived expertise vs. specialized agencies",
+                  "mitigation": "Moderate - Strong technical portfolio and AI specialization help, but could risk 'jack of all trades, master of none' perception"
+                }
+              ],
+              "website_ux_observations": [
+                {
+                  "observation": "Extremely content-heavy single page",
+                  "issue": "May overwhelm visitors; difficult to navigate all sections",
+                  "severity": "Low - Intentional design choice for scrolling experience"
+                },
+                {
+                  "observation": "Contact information buried",
+                  "issue": "Phone (+201272087727) and email (kayanovagency@gmail.com) in footer/FAQ but no prominent 'Talk to Sales' or 'Book Consultation' CTA with calendar integration",
+                  "severity": "Medium - Friction in conversion path"
+                },
+                {
+                  "observation": "Gmail address for business",
+                  "issue": "kayanovagency@gmail.com instead of custom domain email reduces professional perception slightly",
+                  "severity": "Low - Common for agencies but could be upgraded"
+                }
+              ],
+              "opportunity_areas": [
+                "Thought leadership content (blog, whitepapers on AI in business)",
+                "Video testimonials for higher trust vs. text-only",
+                "Live chat/chatbot for immediate engagement (ironic gap given AI focus)",
+                "Partner/integration ecosystem showcase",
+                "Industry-specific landing pages (healthcare, e-commerce, education) for SEO and targeting"
+              ]
+            },
+            "summary_insights": {
+              "core_strength": "Comprehensive digital transformation capability with differentiated AI/automation expertise at competitive pricing for regional market",
+              "ideal_customer": "Growth-stage SMEs (20-200 employees) in MENA region seeking end-to-end digital modernization with emphasis on AI-powered efficiency, or international clients seeking high-quality development at attractive pricing",
+              "competitive_moat": "Early mover in Agentic AI solutions for business applications, combined with full-service capability and bilingual technical expertise",
+              "strategic_risk": "Positioning breadth (everyone from $19 solopreneurs to enterprise) may dilute brand and complicate sales/delivery",
+              "growth_vector": "Productize AI solutions (HR system, restaurant system, etc.) into scalable SaaS offerings while maintaining custom development for complex projects"
+            }
+          },
+          "expiresAt": "2026-01-20T02:41:48.331Z",
+          "creditsUsed": 0
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ],
+    "Basic LLM Chain": [
+      {
+        "json": {
+          "output": {
+            "google_search_query": "AI automation solutions agency Egypt OR strategic digital transformation firm Egypt OR full-stack development and marketing services Egypt OR agentic AI company Egypt"
+          }
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ],
+    "Edit Fields": [
+      {
+        "json": {
+          "URL": "kayanovagency.com/"
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Merge Search Results1": {
+      "main": [
+        [
+          {
+            "node": "AI Filter Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Filter Agent1": {
+      "main": [
+        [
+          {
+            "node": "Get Clean Agencies1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output1": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Filter Agent1",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Clean Agencies1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Deep Scrape Agent1": {
+      "main": [
+        [
+          {
+            "node": "Save to Sheets1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save to Sheets1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request2": {
+      "main": [
+        [
+          {
+            "node": "Merge Search Results1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items2": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Deep Scrape Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Filter Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analysis My Business": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Master Strategist",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Master Strategist",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Master Strategist": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook Trigger1": {
+      "main": [
+        [
+          {
+            "node": "Input Validator1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Input Validator1": {
+      "main": [
+        [
+          {
+            "node": "Is Valid Input?1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Valid Input?1": {
+      "main": [
+        [
+          {
+            "node": "Is URL Input?1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Prepare Error Response1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is URL Input?1": {
+      "main": [
+        [
+          {
+            "node": "Analyze Website (Firecrawl)1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Extract Document Text1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze Website (Firecrawl)1": {
+      "main": [
+        [
+          {
+            "node": "Merge Analysis Results1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Document Text1": {
+      "main": [
+        [
+          {
+            "node": "Analyze Document Content1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze Document Content1": {
+      "main": [
+        [
+          {
+            "node": "Merge Analysis Results1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge Analysis Results1": {
+      "main": [
+        [
+          {
+            "node": "Standardize Analysis Output1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Standardize Analysis Output1": {
+      "main": [
+        [
+          {
+            "node": "Search Competitors (Serper)1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Competitors (Serper)1": {
+      "main": [
+        [
+          {
+            "node": "Merge Search Results2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Search Results2": {
+      "main": [
+        [
+          {
+            "node": "AI Filter Agent2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Filter Agent2": {
+      "main": [
+        [
+          {
+            "node": "Get Clean Agencies2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Competitor Schema Parser1": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Filter Agent2",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model (Filter)1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Filter Agent2",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Clean Agencies2": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Agencies1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Agencies1": {
+      "main": [
+        [
+          {
+            "node": "Aggregate Competitor Data1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Deep Scrape Competitor1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Deep Scrape Competitor1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Agencies1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate Competitor Data1": {
+      "main": [
+        [
+          {
+            "node": "Combine All Data1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Combine All Data1": {
+      "main": [
+        [
+          {
+            "node": "Master Strategist2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Master Strategist2": {
+      "main": [
+        [
+          {
+            "node": "Prepare Response1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Master Strategist2",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Strategic Report Schema1": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Master Strategist2",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Response1": {
+      "main": [
+        [
+          {
+            "node": "Respond Success1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Error Response1": {
+      "main": [
+        [
+          {
+            "node": "Respond Error1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Analyze Document Content1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Strategic Report Schema1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser1": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model1": {
+      "ai_languageModel": [
+        []
+      ]
+    },
+    "Append row in sheet1": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Structured Output Parser1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Structured Output Parser",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Analysis My Business",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Analysis My Business",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Master Strategist",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "566b9006-4c8c-456b-a626-d9e08f7db3b0",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b89dab3f2b0122a80c2f295775dd56db13b5aff073f33e6665bd79933e62cb6d"
+  },
+  "id": "uJGmBWcb4HwlGmBV",
+  "tags": []
+}

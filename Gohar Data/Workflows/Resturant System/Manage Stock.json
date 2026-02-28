@@ -1,0 +1,1724 @@
+{
+  "name": "Manage Stock",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        736,
+        1088
+      ],
+      "id": "f9dcfd80-50d5-42b0-ba5a-068a7acea25e",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1WLsTMlDUBt6GbsP5hGpPWlPk-jwJ4k0wvrhG663i9-Y",
+          "mode": "list",
+          "cachedResultName": "Stock",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WLsTMlDUBt6GbsP5hGpPWlPk-jwJ4k0wvrhG663i9-Y/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WLsTMlDUBt6GbsP5hGpPWlPk-jwJ4k0wvrhG663i9-Y/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "id",
+              "lookupValue": "={{ $json.id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        1072,
+        1104
+      ],
+      "id": "dc5f977c-43c1-4608-a98e-0ead3178ef61",
+      "name": "Read Stock Item",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jy58BxClZutdZdvF",
+          "name": "Google Sheets account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1WLsTMlDUBt6GbsP5hGpPWlPk-jwJ4k0wvrhG663i9-Y",
+          "mode": "list",
+          "cachedResultName": "Stock",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WLsTMlDUBt6GbsP5hGpPWlPk-jwJ4k0wvrhG663i9-Y/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WLsTMlDUBt6GbsP5hGpPWlPk-jwJ4k0wvrhG663i9-Y/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Item": "={{ $('Loop Over Items').item.json.itemName }}",
+            "quantity": "={{$('Loop Over Items').item.json.quantity }}",
+            "price": "={{ $('Loop Over Items').item.json.price }}",
+            "MinThreshold": "={{ $('Loop Over Items').item.json.MinT }}",
+            "unit": "={{ $('Loop Over Items').item.json.unit }}",
+            "id": "={{ $('Loop Over Items').item.json.id }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Item",
+              "displayName": "Item",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "quantity",
+              "displayName": "quantity",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "unit",
+              "displayName": "unit",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "price",
+              "displayName": "price",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "MinThreshold",
+              "displayName": "MinThreshold",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        2016,
+        1328
+      ],
+      "id": "1d01e945-fb52-4169-a589-a52a03159563",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jy58BxClZutdZdvF",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1WLsTMlDUBt6GbsP5hGpPWlPk-jwJ4k0wvrhG663i9-Y",
+          "mode": "list",
+          "cachedResultName": "Stock",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WLsTMlDUBt6GbsP5hGpPWlPk-jwJ4k0wvrhG663i9-Y/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WLsTMlDUBt6GbsP5hGpPWlPk-jwJ4k0wvrhG663i9-Y/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Item": "={{ $('Loop Over Items').item.json.itemName}}",
+            "quantity": "={{ $('Loop Over Items').item.json.quantity }}",
+            "price": "={{ $('Loop Over Items').item.json.price }}",
+            "MinThreshold": "={{ $('Loop Over Items').item.json.MinT }}",
+            "unit": "={{ $('Loop Over Items').item.json.unit }}",
+            "id": "={{$json.id}}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Item",
+              "displayName": "Item",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "quantity",
+              "displayName": "quantity",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "unit",
+              "displayName": "unit",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "price",
+              "displayName": "price",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "MinThreshold",
+              "displayName": "MinThreshold",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        1664,
+        1328
+      ],
+      "id": "9642786e-f210-45db-ade9-482935ad6f35",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jy58BxClZutdZdvF",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Code2').item.json.id }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    },
+                    "id": "9fcfa5f6-3f29-4cb7-aea3-da7900514e12"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Exist"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "42a62069-2977-42f9-801d-b90e76d6d592",
+                    "leftValue": "={{ $('Code2').item.json.id }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "notExists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Does Not Exist"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        1344,
+        1104
+      ],
+      "id": "d302fb50-0ede-4778-b29d-75ffb07171b8",
+      "name": "Switch1"
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              },
+              {
+                "name": "Access-Control-Allow-Methods",
+                "value": "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+              },
+              {
+                "name": "Access-Control-Allow-Headers",
+                "value": "*"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        1344,
+        896
+      ],
+      "id": "e4c7492a-8105-478a-8d56-f2f59a204c5d",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput }} ||{{ $json.body.message }}",
+        "options": {
+          "systemMessage": "You are a smart inventory inquiry assistant. Your sole purpose is to answer questions related to the current stock of products.\n\n**Your Tasks:**\n- Answer clearly and concisely any question about the available stock quantities.\n- Use the provided Google Sheets lookup tool to check the current quantity of any item you are asked about.\n- If the question is about \"when to reorder\" or \"do we need to buy new stock,\" search for the item in the Google Sheet.\n- Compare the item's current quantity with its reorder threshold (`Min thresholds`) from the same sheet.\n- **NEW**: If the current quantity is greater than the reorder threshold, calculate the difference and include it in your response.\n- If the current quantity is less than or equal to the reorder threshold, respond with \"You should place a new order.\"\n- If the current quantity is greater than the reorder threshold, respond with \"The current stock is sufficient. There are [calculate difference] left before the reorder threshold is reached.\"\n\n**Important Guidelines:**\n- Your responses must be clear and direct.\n- Do not store any data or make any changes to the inventory.\n- Do not output any data in JSON or any other structured format. Your responses must be in plain text only.\n- If an item is not found in the sheet, respond with \"The item was not found in the inventory.\""
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        320,
+        1744
+      ],
+      "id": "229b6034-b3e6-462d-abed-366314c8bd4c",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        176,
+        2032
+      ],
+      "id": "ccb7ea9a-2759-42ca-9f0b-304bce7cc0ac",
+      "name": "Google Gemini Chat Model1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "2oe6nreVlfGHRk0g",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Chatbot-Stock').item.json.body.sessionId }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        400,
+        2048
+      ],
+      "id": "92f7f6ad-5bd3-4ca7-a5e1-56db80c26ffb",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1WLsTMlDUBt6GbsP5hGpPWlPk-jwJ4k0wvrhG663i9-Y",
+          "mode": "list",
+          "cachedResultName": "Stock",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WLsTMlDUBt6GbsP5hGpPWlPk-jwJ4k0wvrhG663i9-Y/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WLsTMlDUBt6GbsP5hGpPWlPk-jwJ4k0wvrhG663i9-Y/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.6,
+      "position": [
+        624,
+        2016
+      ],
+      "id": "e70786aa-1f9b-452c-b994-cb87278f5cda",
+      "name": "Get row(s) in sheet in Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jy58BxClZutdZdvF",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "manage-stock-chatbot",
+        "responseMode": "responseNode",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              },
+              {
+                "name": "Access-Control-Allow-Methods",
+                "value": "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+              },
+              {
+                "name": "Access-Control-Allow-Headers",
+                "value": "*"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        64,
+        1744
+      ],
+      "id": "80c5ec60-e4e5-44b0-9032-2d1d642ec90c",
+      "name": "Chatbot-Stock",
+      "webhookId": "1bfb631a-f72d-499d-9d45-902fee402840"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e8a1cc19-85b6-4400-ab0d-ac0517f6a591",
+              "name": "body",
+              "value": "={{ [ $json.body ] }}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        272,
+        1088
+      ],
+      "id": "f06e9456-87f3-4473-baeb-46eb8c9c39d8",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "jsCode": "// This code takes the array from the 'body' key of the first input item\n// and returns it directly, discarding all headers and metadata.\nreturn items[0].json.body;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        480,
+        1088
+      ],
+      "id": "01a0ac93-7bd0-4b92-a421-b9663eb1b97d",
+      "name": "Code2"
+    },
+    {
+      "parameters": {
+        "content": "## Manage Stock",
+        "height": 784,
+        "width": 2192,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        800
+      ],
+      "typeVersion": 1,
+      "id": "7728cc04-5150-45ef-b969-c01edc6cf053",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"Message\": \"{{ $json.output }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        752,
+        1744
+      ],
+      "id": "a361c968-2d00-48d8-8182-cc6cfed3376a",
+      "name": "Respond to Webhook1"
+    },
+    {
+      "parameters": {
+        "content": "## AI-Assistant-Stock",
+        "height": 592,
+        "width": 1008,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        1632
+      ],
+      "typeVersion": 1,
+      "id": "fc7bfcab-5efb-43b2-ab73-b86e61622611",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "httpMethod": "PUT",
+        "path": "update-stock",
+        "responseMode": "responseNode",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              },
+              {
+                "name": "Access-Control-Allow-Methods",
+                "value": "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+              },
+              {
+                "name": "Access-Control-Allow-Headers",
+                "value": "*"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        64,
+        1280
+      ],
+      "id": "48b88dcb-af60-4a8f-9681-be95413f069d",
+      "name": "Update-Stock",
+      "webhookId": "8f81a204-293a-4686-a2a1-50fa71b492a0"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1WLsTMlDUBt6GbsP5hGpPWlPk-jwJ4k0wvrhG663i9-Y",
+          "mode": "list",
+          "cachedResultName": "Stock",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WLsTMlDUBt6GbsP5hGpPWlPk-jwJ4k0wvrhG663i9-Y/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WLsTMlDUBt6GbsP5hGpPWlPk-jwJ4k0wvrhG663i9-Y/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        288,
+        560
+      ],
+      "id": "82a9a8c6-16dd-4a64-9dd3-7c09ae5e5916",
+      "name": "Get Stock",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jy58BxClZutdZdvF",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        496,
+        560
+      ],
+      "id": "495e975e-27db-4bbf-9cab-36a8c52689b3",
+      "name": "Respond Stock"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "manage-stock",
+        "responseMode": "responseNode",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              },
+              {
+                "name": "Access-Control-Allow-Methods",
+                "value": "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+              },
+              {
+                "name": "Access-Control-Allow-Headers",
+                "value": "*"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        64,
+        1088
+      ],
+      "id": "8c722bf5-c976-422e-90a7-e3420ce97e55",
+      "name": "Add-Stock",
+      "webhookId": "bcce95ba-087d-4790-b93e-061872320ee4"
+    },
+    {
+      "parameters": {
+        "content": "## Get All Stock",
+        "height": 256,
+        "width": 752
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        480
+      ],
+      "typeVersion": 1,
+      "id": "0af8dba4-d970-4c64-9b72-8e0c2f26ff4e",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "jsCode": "const summary = items.map(item => {\n  const data = item.json;\n  const name = data.Item || data.itemName || 'Unknown';\n  const quantity = data.quantity;\n  const unit = data.unit ?? '';\n  \n  return `- ${name}: Current quantity ${quantity} ${unit}`;\n}).join('\\n');\n\nreturn [\n  {\n    json: {\n      message: `Inventory updated:\\n${summary}`\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1072,
+        896
+      ],
+      "id": "491d1e89-0475-49f3-8505-d2e2b3c17ae4",
+      "name": "Message"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "43e9a904-e668-40f2-a066-301b066032c5",
+              "name": "id",
+              "value": "={{'Stock-' +$('Loop Over Items').item.json.itemName.toLowerCase().replace(/[^a-z0-9]+/g, '-') +'-' +Date.now().toString().slice(-4)}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1488,
+        1328
+      ],
+      "id": "cc503384-e395-41e2-8c1c-c87b9688da4a",
+      "name": "Set ID"
+    },
+    {
+      "parameters": {
+        "path": "get-stock",
+        "responseMode": "responseNode",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              },
+              {
+                "name": "Access-Control-Allow-Methods",
+                "value": "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+              },
+              {
+                "name": "Access-Control-Allow-Headers",
+                "value": "*"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        64,
+        560
+      ],
+      "id": "06e4c722-b97a-4d3e-bf27-f4d85886dad8",
+      "name": "Get Stock1",
+      "webhookId": "7bc68f06-d134-4e52-bbe5-82c6f413a170"
+    },
+    {
+      "parameters": {
+        "httpMethod": "DELETE",
+        "path": "delete",
+        "responseMode": "responseNode",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              },
+              {
+                "name": "Access-Control-Allow-Methods",
+                "value": "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+              },
+              {
+                "name": "Access-Control-Allow-Headers",
+                "value": "Content-Type, Accept, Authorization, X-Requested-With"
+              },
+              {
+                "name": "Access-Control-Max-Age",
+                "value": "86400"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        48,
+        160
+      ],
+      "id": "16e59025-1af0-4cad-b5be-90e129341919",
+      "name": "Delete Stock",
+      "webhookId": "215adf30-d77c-4e2b-849d-a544415515e4"
+    },
+    {
+      "parameters": {
+        "mode": "expression",
+        "numberOutputs": 2,
+        "output": "={{ Object.keys($json).length > 0 ? 0 : 1 }}"
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        464,
+        160
+      ],
+      "id": "c18582a7-34fa-408c-a3da-14dd744a91c6",
+      "name": "Switch3"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1WLsTMlDUBt6GbsP5hGpPWlPk-jwJ4k0wvrhG663i9-Y",
+          "mode": "list",
+          "cachedResultName": "Stock",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WLsTMlDUBt6GbsP5hGpPWlPk-jwJ4k0wvrhG663i9-Y/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/196iJzQ8FVrBGye_v0n1MbzpxcTG3oxflMDc9ugXT7Dw/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "id",
+              "lookupValue": "={{$json.body.id}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        256,
+        160
+      ],
+      "id": "d7ba899b-f5a5-474b-aab7-247254ab64c1",
+      "name": "Get row(s) in sheet2",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jy58BxClZutdZdvF",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "documentId": {
+          "__rl": true,
+          "value": "1WLsTMlDUBt6GbsP5hGpPWlPk-jwJ4k0wvrhG663i9-Y",
+          "mode": "list",
+          "cachedResultName": "Stock",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WLsTMlDUBt6GbsP5hGpPWlPk-jwJ4k0wvrhG663i9-Y/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/196iJzQ8FVrBGye_v0n1MbzpxcTG3oxflMDc9ugXT7Dw/edit#gid=0"
+        },
+        "startIndex": "={{ $json.row_number }}"
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        704,
+        64
+      ],
+      "id": "776a89de-5460-4341-87b4-dbcf8067eeb6",
+      "name": "Delete-Item1",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jy58BxClZutdZdvF",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"message\": \"Item '{{ $('Get row(s) in sheet2').item.json.Item }}' Deleted successfully.\"\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        880,
+        64
+      ],
+      "id": "53f8ff09-768a-44bb-8968-86d32e76dc89",
+      "name": "Deleted"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"error\": \"Item with ID \"{{ $('Delete Stock').item.json.params.id.slice(1) }}\" not found.\"\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        736,
+        272
+      ],
+      "id": "85fee645-a783-4e31-92e0-5f3a5ec989c5",
+      "name": "Not Found2"
+    },
+    {
+      "parameters": {
+        "content": "## Delete Item From Stock\n",
+        "height": 416,
+        "width": 1136,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "27753002-2e31-48e2-bde8-42d421e71d76",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "## Add-Quantity",
+        "height": 496,
+        "width": 1520,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        2304
+      ],
+      "typeVersion": 1,
+      "id": "7318eaf3-4a49-4d96-a686-eb661eb92ffc",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        704,
+        2544
+      ],
+      "id": "14df54d0-b363-4ee7-a822-9c7a9dbd9ecb",
+      "name": "Loop"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1WLsTMlDUBt6GbsP5hGpPWlPk-jwJ4k0wvrhG663i9-Y",
+          "mode": "list",
+          "cachedResultName": "Stock",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WLsTMlDUBt6GbsP5hGpPWlPk-jwJ4k0wvrhG663i9-Y/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WLsTMlDUBt6GbsP5hGpPWlPk-jwJ4k0wvrhG663i9-Y/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "id",
+              "lookupValue": "={{ $json.id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        1040,
+        2560
+      ],
+      "id": "61f2034d-6c75-4e48-b70b-4c886c2f3f5a",
+      "name": "Read Stock",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jy58BxClZutdZdvF",
+          "name": "Google Sheets account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1WLsTMlDUBt6GbsP5hGpPWlPk-jwJ4k0wvrhG663i9-Y",
+          "mode": "list",
+          "cachedResultName": "Stock",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WLsTMlDUBt6GbsP5hGpPWlPk-jwJ4k0wvrhG663i9-Y/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WLsTMlDUBt6GbsP5hGpPWlPk-jwJ4k0wvrhG663i9-Y/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Item": "={{ $json.Item }}",
+            "quantity": "={{$('Loop').item.json.quantity }}",
+            "price": "={{ $json.price }}",
+            "MinThreshold": "={{ $json.MinThreshold }}",
+            "id": "={{ $('Loop').item.json.id }}",
+            "unit": "={{ $json.unit }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Item",
+              "displayName": "Item",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "quantity",
+              "displayName": "quantity",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "unit",
+              "displayName": "unit",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "price",
+              "displayName": "price",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "MinThreshold",
+              "displayName": "MinThreshold",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        1328,
+        2560
+      ],
+      "id": "b5d3d1e5-0030-4acb-a934-7ab1d6ca8648",
+      "name": "Add Quantity",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jy58BxClZutdZdvF",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              },
+              {
+                "name": "Access-Control-Allow-Methods",
+                "value": "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+              },
+              {
+                "name": "Access-Control-Allow-Headers",
+                "value": "*"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        1264,
+        2352
+      ],
+      "id": "03b073d9-8804-41db-baf4-248bb3fefc2e",
+      "name": "Respond to Stock"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e8a1cc19-85b6-4400-ab0d-ac0517f6a591",
+              "name": "body",
+              "value": "={{ [ $json.body ] }}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        256,
+        2544
+      ],
+      "id": "138fbb76-45cd-45f5-ae3d-abe01ca8abc9",
+      "name": "Edit Fields2"
+    },
+    {
+      "parameters": {
+        "jsCode": "// This code takes the array from the 'body' key of the first input item\n// and returns it directly, discarding all headers and metadata.\nreturn items[0].json.body;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        448,
+        2544
+      ],
+      "id": "e71679e4-2645-49db-bc4e-176569c0dd8a",
+      "name": "Code1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const summary = items.map(item => {\n  const data = item.json;\n  const name = data.Item || data.itemName || 'Unknown';\n  const quantity = data.quantity;\n  const unit = data.unit ?? '';\n  \n  return `- ${name}: Current total ${quantity} ${unit}`;\n}).join('\\n');\n\nreturn [\n  {\n    json: {\n      message: `Inventory updated:\\n${summary}`\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1040,
+        2352
+      ],
+      "id": "4905dc62-96de-43d6-baa0-f6ce8157ac16",
+      "name": "Message2"
+    },
+    {
+      "parameters": {
+        "httpMethod": "PUT",
+        "path": "add-quantity",
+        "responseMode": "responseNode",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              },
+              {
+                "name": "Access-Control-Allow-Methods",
+                "value": "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+              },
+              {
+                "name": "Access-Control-Allow-Headers",
+                "value": "*"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        48,
+        2544
+      ],
+      "id": "95f33e30-d95c-4814-8062-1636f871c1c3",
+      "name": "Add-Quantity",
+      "webhookId": "8f81a204-293a-4686-a2a1-50fa71b492a0"
+    }
+  ],
+  "pinData": {
+    "Delete Stock": [
+      {
+        "json": {
+          "headers": {
+            "host": "primary-production-d29f0.up.railway.app",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+            "content-length": "10",
+            "accept": "*/*",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "accept-language": "en-US,en;q=0.9,la;q=0.8",
+            "content-type": "application/json",
+            "origin": "http://localhost:5173",
+            "priority": "u=1, i",
+            "referer": "http://localhost:5173/",
+            "sec-ch-ua": "\"Not)A;Brand\";v=\"8\", \"Chromium\";v=\"138\", \"Google Chrome\";v=\"138\"",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "sec-fetch-dest": "empty",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-site": "cross-site",
+            "x-forwarded-for": "156.212.185.218",
+            "x-forwarded-host": "primary-production-d29f0.up.railway.app",
+            "x-forwarded-proto": "https",
+            "x-railway-edge": "railway/europe-west4-drams3a",
+            "x-railway-request-id": "0f0j7YuZSbWry9_N5nX1uw",
+            "x-real-ip": "156.212.185.218",
+            "x-request-start": "1754903446743"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "id": "3"
+          },
+          "webhookUrl": "https://primary-production-d29f0.up.railway.app/webhook/delete",
+          "executionMode": "production"
+        }
+      }
+    ],
+    "Update-Stock": [
+      {
+        "json": {
+          "headers": {
+            "host": "primary-production-c413.up.railway.app",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+            "content-length": "90",
+            "accept": "*/*",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "accept-language": "en-US,en;q=0.9,la;q=0.8",
+            "content-type": "application/json",
+            "origin": "http://localhost:5173",
+            "priority": "u=1, i",
+            "referer": "http://localhost:5173/",
+            "sec-ch-ua": "\"Not)A;Brand\";v=\"8\", \"Chromium\";v=\"138\", \"Google Chrome\";v=\"138\"",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "sec-fetch-dest": "empty",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-site": "cross-site",
+            "x-forwarded-for": "156.212.185.218",
+            "x-forwarded-host": "primary-production-c413.up.railway.app",
+            "x-forwarded-proto": "https",
+            "x-railway-edge": "railway/europe-west4-drams3a",
+            "x-railway-request-id": "Xtigi6nRTPa_Fxop5nX1uw",
+            "x-real-ip": "156.212.185.218",
+            "x-request-start": "1754924515597"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "itemName": "Beef Pattyyy",
+            "quantity": 200,
+            "unit": "piece",
+            "price": 25,
+            "MinT": 40,
+            "id": "S-02"
+          },
+          "webhookUrl": "https://primary-production-c413.up.railway.app/webhook/update-stock",
+          "executionMode": "production"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "Message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Read Stock Item",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Stock Item": {
+      "main": [
+        [
+          {
+            "node": "Switch1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch1": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet in Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chatbot-Stock": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Code2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code2": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update-Stock": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Stock": {
+      "main": [
+        [
+          {
+            "node": "Respond Stock",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add-Stock": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set ID": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Stock1": {
+      "main": [
+        [
+          {
+            "node": "Get Stock",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch3": {
+      "main": [
+        [
+          {
+            "node": "Delete-Item1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Not Found2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet2": {
+      "main": [
+        [
+          {
+            "node": "Switch3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete-Item1": {
+      "main": [
+        [
+          {
+            "node": "Deleted",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete Stock": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop": {
+      "main": [
+        [
+          {
+            "node": "Message2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Read Stock",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Stock": {
+      "main": [
+        [
+          {
+            "node": "Add Quantity",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add Quantity": {
+      "main": [
+        [
+          {
+            "node": "Loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "Loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message2": {
+      "main": [
+        [
+          {
+            "node": "Respond to Stock",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add-Quantity": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "d35e3d51-9b71-4b46-b28f-afe98ade640d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b89dab3f2b0122a80c2f295775dd56db13b5aff073f33e6665bd79933e62cb6d"
+  },
+  "id": "p8jyW7tUKm4UN891",
+  "tags": [
+    {
+      "updatedAt": "2025-09-05T11:48:13.033Z",
+      "createdAt": "2025-09-05T11:48:13.033Z",
+      "id": "An6DoUL1HecfXE7E",
+      "name": "Restaurant"
+    }
+  ]
+}

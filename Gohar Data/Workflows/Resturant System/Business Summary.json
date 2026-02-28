@@ -1,0 +1,417 @@
+{
+  "name": "Business Summary",
+  "nodes": [
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1AwtIox0nUjHVfOVHHFeWqF6WywbNb5aOuTUuR2HlCOc",
+          "mode": "list",
+          "cachedResultName": "Orders",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1AwtIox0nUjHVfOVHHFeWqF6WywbNb5aOuTUuR2HlCOc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1AwtIox0nUjHVfOVHHFeWqF6WywbNb5aOuTUuR2HlCOc/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        416,
+        64
+      ],
+      "id": "2e41e08b-ea94-4f76-ba92-70ecdb4904dd",
+      "name": "Get-All-Orders",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jy58BxClZutdZdvF",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1jZ59Ty6N9W0-COIwvn42yToSBqSFyQuDkr3PveTF_aU",
+          "mode": "list",
+          "cachedResultName": "Menu Components",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jZ59Ty6N9W0-COIwvn42yToSBqSFyQuDkr3PveTF_aU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jZ59Ty6N9W0-COIwvn42yToSBqSFyQuDkr3PveTF_aU/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        416,
+        240
+      ],
+      "id": "13e8011c-c824-4ef0-babb-04178a50eb91",
+      "name": "Get-Menu-Components",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jy58BxClZutdZdvF",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1WLsTMlDUBt6GbsP5hGpPWlPk-jwJ4k0wvrhG663i9-Y",
+          "mode": "list",
+          "cachedResultName": "Stock",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WLsTMlDUBt6GbsP5hGpPWlPk-jwJ4k0wvrhG663i9-Y/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WLsTMlDUBt6GbsP5hGpPWlPk-jwJ4k0wvrhG663i9-Y/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        416,
+        432
+      ],
+      "id": "97e86806-a1a1-40dc-8d78-c0526986cb00",
+      "name": "Get-All-Stock",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jy58BxClZutdZdvF",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Business Summary",
+        "height": 624,
+        "width": 1392,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "59802ddf-d275-4639-90c2-0bb216141270",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "path": "revenue-summary",
+        "responseMode": "responseNode",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              },
+              {
+                "name": "Access-Control-Allow-Methods",
+                "value": "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+              },
+              {
+                "name": "Access-Control-Allow-Headers",
+                "value": "*"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        64,
+        240
+      ],
+      "id": "6005c16b-aec0-4cea-8d21-2bc338d60b97",
+      "name": "Business Summary",
+      "webhookId": "e3cb7e2d-ec2b-4e31-a24f-4dcb4690940e"
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        1136,
+        240
+      ],
+      "id": "74df9e01-81cc-4348-acc6-9142f4d9ad09",
+      "name": "Respond to Business Summary"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Restaurant Business Analyzer for N8N - FIXED VERSION\n// Input: JSON data with orders, menu components, and inventory\n\n// Get all input data\nconst inputData = $input.all();\n\n// Helper function to parse items string\nfunction parseOrderItems(itemsString) {\n    if (!itemsString) return [];\n    const lines = itemsString.split('\\\\n');\n    return lines.map(line => {\n        const match = line.match(/(\\d+)x\\s+(.+)/);\n        if (match) {\n            return {\n                quantity: parseInt(match[1]),\n                name: match[2].trim()\n            };\n        }\n        return null;\n    }).filter(item => item !== null);\n}\n\n// Extract all items from input data\nlet allItems = [];\ninputData.forEach(item => {\n    if (item.json) {\n        allItems.push(item.json);\n    }\n});\n\n// If input is directly the array, use it\nif (allItems.length === 0) {\n    allItems = inputData;\n}\n\nconsole.log(`Total input items: ${allItems.length}`);\n\n// Separate data types\nconst orders = [];\nconst menuComponents = [];\nconst inventory = [];\n\nallItems.forEach(item => {\n    if (item.order_ID) {\n        orders.push(item);\n    } else if (item.menuItem) {\n        menuComponents.push(item);\n    } else if (item.Item) {\n        inventory.push(item);\n    }\n});\n\nconsole.log(`Orders: ${orders.length}, Menu: ${menuComponents.length}, Inventory: ${inventory.length}`);\n\n// Filter successful orders (exclude cancelled)\nconst successfulOrders = orders.filter(order => \n    order.status && order.status.toLowerCase() !== 'cancelled'\n);\n\n// Filter cancelled orders\nconst cancelledOrders = orders.filter(order => \n    order.status && order.status.toLowerCase() === 'cancelled'\n);\n\nconsole.log(`Total orders: ${orders.length}`);\nconsole.log(`Successful orders: ${successfulOrders.length}`);\nconsole.log(`Cancelled orders: ${cancelledOrders.length}`);\n\n// Calculate gross sales (before discounts)\nlet grossSales = 0;\nlet totalDiscounts = 0;\n\nsuccessfulOrders.forEach(order => {\n    const price = parseFloat(order.totalPrice) || 0;\n    const discount = parseFloat(order.discount) || 0;\n    \n    grossSales += price;\n    totalDiscounts += discount;\n});\n\nconsole.log(`Gross Sales: ${grossSales}`);\nconsole.log(`Total Discounts: ${totalDiscounts}`);\n\n// Net sales = gross sales - discounts\nconst netSales = grossSales - totalDiscounts;\n\n// Analyze orders by type\nconst dineInOrders = successfulOrders.filter(order => \n    order.orderType && order.orderType.toLowerCase() === 'dine-in'\n);\nconst deliveryOrders = successfulOrders.filter(order => \n    order.orderType && order.orderType.toLowerCase() === 'delivery'\n);\n\nconst dineInRevenue = dineInOrders.reduce((sum, order) => \n    sum + (parseFloat(order.totalPrice) || 0), 0\n);\nconst deliveryRevenue = deliveryOrders.reduce((sum, order) => \n    sum + (parseFloat(order.totalPrice) || 0), 0\n);\n\nconsole.log(`Dine-in: ${dineInOrders.length} orders, ${dineInRevenue} EGP`);\nconsole.log(`Delivery: ${deliveryOrders.length} orders, ${deliveryRevenue} EGP`);\n\n// Calculate cancelled orders revenue (potential lost revenue)\nlet cancelledRevenue = 0;\nconst cancelledOrdersByType = {\n    dineIn: 0,\n    delivery: 0\n};\n\ncancelledOrders.forEach(order => {\n    const revenue = parseFloat(order.totalPrice) || 0;\n    cancelledRevenue += revenue;\n    \n    if (order.orderType && order.orderType.toLowerCase() === 'dine-in') {\n        cancelledOrdersByType.dineIn++;\n    } else if (order.orderType && order.orderType.toLowerCase() === 'delivery') {\n        cancelledOrdersByType.delivery++;\n    }\n});\n\nconsole.log(`Cancelled orders: ${cancelledOrders.length} orders, ${cancelledRevenue} EGP potential lost revenue`);\n\n// Count items sold\nconst itemCounts = {};\nconst itemRevenue = {};\n\nsuccessfulOrders.forEach(order => {\n    const items = parseOrderItems(order.items);\n    const orderTotal = parseFloat(order.totalPrice) || 0;\n    const orderDiscount = parseFloat(order.discount) || 0;\n    const orderNetTotal = orderTotal - orderDiscount; // Use net total for item revenue calculation\n    const itemsInOrder = items.reduce((sum, item) => sum + item.quantity, 0);\n    \n    items.forEach(item => {\n        if (!itemCounts[item.name]) {\n            itemCounts[item.name] = 0;\n            itemRevenue[item.name] = 0;\n        }\n        itemCounts[item.name] += item.quantity;\n        \n        // Estimate revenue per item (proportional to order net total)\n        if (itemsInOrder > 0) {\n            const itemProportion = item.quantity / itemsInOrder;\n            itemRevenue[item.name] += orderNetTotal * itemProportion;\n        }\n    });\n});\n\nconsole.log(`Item types found: ${Object.keys(itemCounts).length}`);\n\n// Calculate COGS\nfunction calculateCOGS() {\n    let totalCOGS = 0;\n    \n    // Create inventory lookup\n    const inventoryLookup = {};\n    inventory.forEach(item => {\n        inventoryLookup[item.Item] = parseFloat(item.price) || 0;\n    });\n    \n    // Create menu components lookup\n    const menuLookup = {};\n    menuComponents.forEach(item => {\n        if (item.components) {\n            const components = item.components.split(', ').map(comp => {\n                const match = comp.match(/(\\d+(?:\\.\\d+)?)([a-zA-Z]+)\\s+(.+)/);\n                if (match) {\n                    return {\n                        quantity: parseFloat(match[1]),\n                        unit: match[2],\n                        ingredient: match[3]\n                    };\n                }\n                // Handle simple format like \"1x Burger Bun\"\n                const simpleMatch = comp.match(/(\\d+)x\\s+(.+)/);\n                if (simpleMatch) {\n                    return {\n                        quantity: parseInt(simpleMatch[1]),\n                        unit: 'piece',\n                        ingredient: simpleMatch[2]\n                    };\n                }\n                return null;\n            }).filter(comp => comp !== null);\n            \n            menuLookup[item.menuItem] = components;\n        }\n    });\n    \n    // Calculate COGS for each sold item\n    Object.keys(itemCounts).forEach(itemName => {\n        const quantitySold = itemCounts[itemName];\n        const components = menuLookup[itemName];\n        \n        if (components) {\n            components.forEach(component => {\n                const ingredientPrice = inventoryLookup[component.ingredient];\n                if (ingredientPrice) {\n                    let costPerUnit = 0;\n                    \n                    // Simple cost calculation based on component quantity\n                    if (component.unit === 'piece' || component.unit === 'can' || component.unit === 'bottle') {\n                        costPerUnit = ingredientPrice * component.quantity;\n                    } else if (component.unit === 'g' && component.quantity <= 200) {\n                        // Convert grams to kg pricing\n                        costPerUnit = (ingredientPrice / 1000) * component.quantity;\n                    } else if (component.unit === 'ml' && component.quantity <= 100) {\n                        // Convert ml to liter pricing  \n                        costPerUnit = (ingredientPrice / 1000) * component.quantity;\n                    } else {\n                        // Default calculation\n                        costPerUnit = ingredientPrice * (component.quantity / 100);\n                    }\n                    \n                    totalCOGS += costPerUnit * quantitySold;\n                }\n            });\n        }\n    });\n    \n    return Math.round(totalCOGS * 100) / 100; // Round to 2 decimal places\n}\n\nconst totalCOGS = calculateCOGS();\n\n// FIXED CALCULATIONS\nconst grossProfit = netSales - totalCOGS; // Should be based on net sales, not gross\nconst netProfit = grossProfit; // Since we already deducted discounts\n\nconsole.log(`COGS: ${totalCOGS}`);\nconsole.log(`Net Sales: ${netSales}`);\nconsole.log(`Gross Profit (corrected): ${grossProfit}`);\nconsole.log(`Net Profit: ${netProfit}`);\n\n// Order status analysis\nconst orderStatuses = {};\norders.forEach(order => {\n    const status = order.status || 'unknown';\n    orderStatuses[status] = (orderStatuses[status] || 0) + 1;\n});\n\n// Top selling items (based on corrected revenue calculation)\nconst topItems = Object.keys(itemCounts)\n    .map(item => ({\n        name: item,\n        quantity: itemCounts[item],\n        revenue: Math.round(itemRevenue[item] * 100) / 100\n    }))\n    .sort((a, b) => b.revenue - a.revenue)\n    .slice(0, 10);\n\n// Calculate FIXED percentages and averages\nconst avgOrderValue = successfulOrders.length > 0 ? Math.round((netSales / successfulOrders.length) * 100) / 100 : 0;\nconst dineInNetRevenue = dineInRevenue - (dineInOrders.reduce((sum, order) => sum + (parseFloat(order.discount) || 0), 0));\nconst deliveryNetRevenue = deliveryRevenue - (deliveryOrders.reduce((sum, order) => sum + (parseFloat(order.discount) || 0), 0));\nconst dineInAOV = dineInOrders.length > 0 ? Math.round((dineInNetRevenue / dineInOrders.length) * 100) / 100 : 0;\nconst deliveryAOV = deliveryOrders.length > 0 ? Math.round((deliveryNetRevenue / deliveryOrders.length) * 100) / 100 : 0;\nconst successRate = orders.length > 0 ? Math.round((successfulOrders.length / orders.length) * 100 * 100) / 100 : 0;\nconst profitMargin = netSales > 0 ? Math.round((netProfit / netSales) * 100 * 100) / 100 : 0;\n\n// FIXED: Revenue efficiency based on net sales\nconst potentialNetRevenue = netSales + (cancelledRevenue - cancelledOrders.reduce((sum, order) => sum + (parseFloat(order.discount) || 0), 0));\nconst revenueEfficiency = potentialNetRevenue > 0 ? Math.round((netSales / potentialNetRevenue) * 100 * 100) / 100 : 0;\n\n// Prepare final output with CORRECTED values\nconst businessSummary = {\n    reportDate: new Date().toISOString().split('T')[0],\n    totalOrders: orders.length,\n    successfulOrders: successfulOrders.length,\n    cancelledOrders: cancelledOrders.length,\n    \n    // Financial Summary - CORRECTED\n    financial: {\n        grossSales: Math.round(grossSales * 100) / 100,\n        totalDiscounts: Math.round(totalDiscounts * 100) / 100,\n        netSales: Math.round(netSales * 100) / 100,\n        costOfGoodsSold: totalCOGS,\n        grossProfit: Math.round(grossProfit * 100) / 100, // FIXED: Now based on net sales\n        netProfit: Math.round(netProfit * 100) / 100,\n        profitMarginPercent: profitMargin, // FIXED: Now correctly calculated\n        cancelledRevenue: Math.round(cancelledRevenue * 100) / 100,\n        potentialTotalRevenue: Math.round((grossSales + cancelledRevenue) * 100) / 100\n    },\n    \n    // Order Type Analysis - CORRECTED\n    orderTypes: {\n        dineIn: {\n            count: dineInOrders.length,\n            revenue: Math.round(dineInNetRevenue * 100) / 100, // FIXED: Net revenue\n            percentage: orders.length > 0 ? Math.round((dineInOrders.length / orders.length) * 100 * 100) / 100 : 0,\n            averageOrderValue: dineInAOV // FIXED: Based on net revenue\n        },\n        delivery: {\n            count: deliveryOrders.length,\n            revenue: Math.round(deliveryNetRevenue * 100) / 100, // FIXED: Net revenue\n            percentage: orders.length > 0 ? Math.round((deliveryOrders.length / orders.length) * 100 * 100) / 100 : 0,\n            averageOrderValue: deliveryAOV // FIXED: Based on net revenue\n        }\n    },\n    \n    // Performance Metrics - CORRECTED\n    performance: {\n        averageOrderValue: avgOrderValue, // FIXED: Based on net sales\n        successRate: successRate,\n        cancellationRate: Math.round((cancelledOrders.length / orders.length) * 100 * 100) / 100,\n        revenueEfficiency: revenueEfficiency // FIXED: Based on net sales\n    },\n    \n    // Order Status Breakdown\n    orderStatuses: orderStatuses,\n    \n    // Cancelled Orders Analysis\n    cancelledAnalysis: {\n        totalCancelledOrders: cancelledOrders.length,\n        cancelledRevenue: Math.round(cancelledRevenue * 100) / 100,\n        cancelledPercentage: orders.length > 0 ? Math.round((cancelledOrders.length / orders.length) * 100 * 100) / 100 : 0,\n        cancelledByType: {\n            dineIn: cancelledOrdersByType.dineIn,\n            delivery: cancelledOrdersByType.delivery\n        },\n        averageCancelledOrderValue: cancelledOrders.length > 0 ? Math.round((cancelledRevenue / cancelledOrders.length) * 100) / 100 : 0,\n        cancelledOrderDetails: cancelledOrders.map(order => ({\n            orderId: order.order_ID,\n            orderType: order.orderType,\n            customerName: order.customerName,\n            totalPrice: parseFloat(order.totalPrice) || 0,\n            items: order.items,\n            createdAt: order.createdAt,\n            updatedAt: order.updatedAt\n        }))\n    },\n    \n    // Top Selling Items - Now based on net revenue\n    topSellingItems: topItems,\n    \n    // All Items Summary - CORRECTED\n    itemsSummary: Object.keys(itemCounts).map(item => ({\n        name: item,\n        quantitySold: itemCounts[item],\n        estimatedRevenue: Math.round(itemRevenue[item] * 100) / 100,\n        revenuePercentage: netSales > 0 ? Math.round((itemRevenue[item] / netSales) * 100 * 100) / 100 : 0 // FIXED: Based on net sales\n    })).sort((a, b) => b.estimatedRevenue - a.estimatedRevenue),\n    \n    // Debug info\n    debug: {\n        totalInputItems: allItems.length,\n        ordersFound: orders.length,\n        menuItemsFound: menuComponents.length,\n        inventoryItemsFound: inventory.length\n    }\n};\n\n// Add discount analysis\nif (totalDiscounts > 0) {\n    const discountedOrders = successfulOrders.filter(order => \n        parseFloat(order.discount || 0) > 0\n    );\n    \n    businessSummary.discounts = {\n        totalAmount: Math.round(totalDiscounts * 100) / 100,\n        ordersCount: discountedOrders.length,\n        percentage: Math.round((totalDiscounts / grossSales) * 100 * 100) / 100,\n        averageDiscountPerOrder: discountedOrders.length > 0 ? \n            Math.round((totalDiscounts / discountedOrders.length) * 100) / 100 : 0\n    };\n}\n\nconsole.log('Analysis completed successfully with CORRECTED calculations');\n\n// Return the analysis results\nreturn businessSummary;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        928,
+        240
+      ],
+      "id": "8b062de6-96c7-4eb1-8948-5b3ef7b57450",
+      "name": "Calculate"
+    },
+    {
+      "parameters": {
+        "numberInputs": 3
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        720,
+        224
+      ],
+      "id": "a842a481-cd91-40fb-a419-4e5137148996",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "path": "low-stock",
+        "responseMode": "responseNode",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              },
+              {
+                "name": "Access-Control-Allow-Methods",
+                "value": "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+              },
+              {
+                "name": "Access-Control-Allow-Headers",
+                "value": "*"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        48,
+        752
+      ],
+      "id": "29a16a9f-1c92-4a6c-8beb-109bb49a251e",
+      "name": "Low Stock",
+      "webhookId": "797fd7b1-075b-4fa4-aca8-7b256fc5a00d"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1WLsTMlDUBt6GbsP5hGpPWlPk-jwJ4k0wvrhG663i9-Y",
+          "mode": "list",
+          "cachedResultName": "Stock",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WLsTMlDUBt6GbsP5hGpPWlPk-jwJ4k0wvrhG663i9-Y/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WLsTMlDUBt6GbsP5hGpPWlPk-jwJ4k0wvrhG663i9-Y/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "status",
+              "lookupValue": "Low"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        288,
+        752
+      ],
+      "id": "9c2ff2e8-35e1-47a0-8df5-e883ada260d9",
+      "name": "Get row(s) in sheet",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jy58BxClZutdZdvF",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        496,
+        752
+      ],
+      "id": "856662c5-d101-496c-b530-5f293af775f9",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "content": "## Low Stock\n",
+        "height": 256,
+        "width": 736,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        672
+      ],
+      "typeVersion": 1,
+      "id": "9aeb2a70-a973-42c3-a8d0-c78c9bc0a031",
+      "name": "Sticky Note1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Get-All-Orders": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get-Menu-Components": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Get-All-Stock": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Business Summary": {
+      "main": [
+        [
+          {
+            "node": "Get-All-Orders",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get-Menu-Components",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get-All-Stock",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculate": {
+      "main": [
+        [
+          {
+            "node": "Respond to Business Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Calculate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Low Stock": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "e54b648f-ad84-4626-9f94-38576eeb3815",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b89dab3f2b0122a80c2f295775dd56db13b5aff073f33e6665bd79933e62cb6d"
+  },
+  "id": "eRf5d7GIoaQ6pUwh",
+  "tags": [
+    {
+      "updatedAt": "2025-09-05T11:48:13.033Z",
+      "createdAt": "2025-09-05T11:48:13.033Z",
+      "id": "An6DoUL1HecfXE7E",
+      "name": "Restaurant"
+    }
+  ]
+}

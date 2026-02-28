@@ -1,0 +1,884 @@
+{
+  "name": "Design Brief to AI Image - Hugging Face Edition",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a world-class graphic designer and AI image generation prompt expert with 15+ years of experience in branding, visual identity, and AI-assisted design. Your expertise spans Midjourney, DALL-E 3, Stable Diffusion XL, and FLUX models.\n\n**YOUR MISSION:** Transform the following design brief into an exceptionally detailed, professional-grade prompt optimized for state-of-the-art AI image generation.\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n**DESIGN BRIEF:**\n{{ $json.briefSummary }}\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n**PROMPT ENGINEERING REQUIREMENTS:**\n\n**1. DESIGN FUNDAMENTALS:**\n   - Precisely specify the design type (logo, social media post, brand identity, etc.)\n   - Define exact dimensions or aspect ratios\n   - Establish the primary design purpose and target audience context\n   - Include file format implications (vector-style, high-resolution raster, etc.)\n\n**2. VISUAL AESTHETIC & STYLE:**\n   - Translate brand personality into specific visual descriptors\n   - Detail color palette with precision (hex codes, color theory, emotional impact)\n   - Specify typography characteristics (weight, style, readability, hierarchy)\n   - Define artistic style with industry-standard references (minimalist, luxury, tech, organic, geometric, etc.)\n   - Establish mood and atmosphere using sensory language\n   - Reference specific design movements or era aesthetics if relevant\n\n**3. COMPOSITION & LAYOUT:**\n   - Detail spatial arrangement and visual hierarchy\n   - Specify element placement and proportions\n   - Define negative space usage and breathing room\n   - Establish focal points and visual flow patterns\n   - Include balance principles (symmetrical, asymmetrical, radial)\n   - Specify text placement zones if applicable\n\n**4. TECHNICAL SPECIFICATIONS:**\n   - List all MUST-HAVE elements with exact descriptions\n   - Explicitly state FORBIDDEN elements or styles\n   - Define quality parameters (ultra-detailed, sharp, crisp, professional-grade)\n   - Specify rendering style (flat design, 3D render, photorealistic, illustrated, etc.)\n   - Include lighting conditions if relevant (studio lighting, natural light, dramatic shadows)\n   - Define texture and material properties\n\n**5. BRAND INTEGRATION:**\n   - Seamlessly incorporate brand name representation\n   - Reflect brand values through visual metaphors\n   - Align with target demographic preferences and cultural context\n   - Reference competitors only for differentiation strategy\n\n**6. AI MODEL OPTIMIZATION:**\n   - Use power keywords that trigger high-quality outputs (\"professional\", \"award-winning\", \"masterpiece\", \"ultra-detailed\", \"8K resolution\")\n   - Structure prompt for maximum clarity and token efficiency\n   - Include negative prompts inline or separately as needed\n   - Specify aspect ratios in standard notation (16:9, 1:1, 4:3, 9:16)\n   - Add technical quality modifiers (\"sharp focus\", \"highly detailed\", \"studio lighting\", \"professional photography\")\n\n**7. ADVANCED TECHNIQUES:**\n   - Use style weight indicators where appropriate (\"primarily modern with subtle vintage elements\")\n   - Include comparative references (\"in the style of [famous designer/brand] but with [unique twist]\")\n   - Specify render engine aesthetics if applicable (\"Octane render\", \"Unreal Engine 5\", \"Cinema 4D quality\")\n   - Add professional context (\"featured on Behance\", \"Dribbble trending\", \"award-winning design\")\n\n**OUTPUT FORMAT:**\nProvide a single, comprehensive, production-ready prompt of 150-300 words that:\n- Flows naturally while being highly descriptive\n- Balances technical precision with creative direction\n- Prioritizes the most important visual elements first\n- Includes strategic negative prompt elements\n- Is immediately usable in FLUX, Midjourney, DALL-E 3, or Stable Diffusion XL\n\n**CRITICAL RULES:**\n- Do NOT include explanations, commentary, or meta-text\n- Do NOT use phrases like \"create an image of\" or \"generate a design\"\n- Do NOT use XML tags, markdown, or formatting\n- Do NOT exceed 400 words\n- ONLY output the final prompt text\n\n**BEGIN PROMPT GENERATION NOW:**",
+        "hasOutputParser": true,
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        4480,
+        5136
+      ],
+      "id": "f2bc10d8-b2c9-4818-a05a-fa5147be643a",
+      "name": "AI: Generate Professional Design Prompt",
+      "notes": "Uses advanced prompt engineering to create world-class AI image generation prompts via Google Gemini"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Prepare and optimize the prompt for ImageFX API\ntry {\n  const promptText = $input.item.json.output;\n  const briefData = $node['Parse and Structure Form Data2'].json;\n  \n  // Clean and optimize the prompt\n  let optimizedPrompt = promptText\n    .replace(/\\n+/g, ' ')  // Remove newlines\n    .replace(/\\r/g, ' ')   // Remove carriage returns\n    .replace(/\\s+/g, ' ')  // Normalize whitespace\n    .trim();\n  \n  // Ensure prompt isn't too long (ImageFX has limits)\n  if (optimizedPrompt.length > 1000) {\n    console.log('⚠️ Prompt too long, truncating to 1000 characters');\n    optimizedPrompt = optimizedPrompt.substring(0, 997) + '...';\n  }\n  \n  console.log('✅ Prompt prepared for ImageFX');\n  console.log('📝 Prompt length:', optimizedPrompt.length);\n  console.log('📝 First 100 chars:', optimizedPrompt.substring(0, 100));\n  \n  return {\n    json: {\n      authList: [\n        {\n          username: \"gogohany56h@gmail.com\",\n          password: \"YOUR_GOOGLE_APP_PASSWORD\"  // App Password here\n        }\n      ],\n      promptList: [\n        {\n          prompt: optimizedPrompt,\n          size: \"1:1\",\n          seed: -1\n        }\n      ],\n      proxyConfiguration: {\n        useApifyProxy: true,\n        apifyProxyGroups: [\"RESIDENTIAL\", \"GOOGLE_SERP\"]\n      },\n      maxRequestRetries: 5,\n      maxConcurrentRequests: 1,\n      navigationTimeoutSecs: 180,\n      pageLoadTimeoutSecs: 120,\n      waitForSelectorTimeoutSecs: 60,\n      metadata: {\n        briefId: briefData.submissionId,\n        brandName: briefData.sectionB.brandName,\n        briefType: briefData.designCategory.isLogoDesign ? 'Logo Design' : \n                   briefData.designCategory.isSocialMedia ? 'Social Media' : 'General'\n      }\n    }\n  };\n} catch (error) {\n  console.error('❌ Prompt preparation error:', error.message);\n  throw new Error(`Failed to prepare prompt for ImageFX: ${error.message}`);\n}"
+      },
+      "id": "53f04d55-fee1-4b04-8d5f-93675b437abc",
+      "name": "Prepare ImageFX Input",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4752,
+        5136
+      ],
+      "notes": "Prepares and optimizes the AI-generated prompt for ImageFX API with proper authentication"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.apify.com/v2/acts/ib4ngz~imagefx-api/run-sync-get-dataset-items",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "token",
+              "value": "YOUR_APIFY_API_TOKEN"
+            },
+            {
+              "name": "timeout",
+              "value": "600"
+            },
+            {
+              "name": "memory",
+              "value": "4096"
+            },
+            {
+              "name": "build",
+              "value": "latest"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json) }}",
+        "options": {
+          "redirect": {
+            "redirect": {
+              "maxRedirects": 5
+            }
+          },
+          "timeout": 600000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4976,
+        5136
+      ],
+      "id": "1588f1ec-2e82-4c9b-b08f-06a354be3547",
+      "name": "Generate Image via ImageFX",
+      "retryOnFail": true,
+      "maxTries": 2,
+      "waitBetweenTries": 5000,
+      "continueOnFail": true,
+      "notes": "Calls Google ImageFX via Apify Actor to generate high-quality design images"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "check-error",
+              "leftValue": "={{ $json.error }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notExists"
+              }
+            },
+            {
+              "id": "check-array",
+              "leftValue": "={{ Array.isArray($json) }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "id": "96cc30b8-b85b-4dd6-90c6-a6e0e8913cf1",
+      "name": "Check ImageFX Response",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        5168,
+        5136
+      ],
+      "notes": "Validates ImageFX API response and routes to success or error handling"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract and process successful ImageFX response\ntry {\n  const response = $input.item.json;\n  const briefData = $node['Parse and Structure Form Data2'].json;\n  const promptData = $node['AI: Generate Professional Design Prompt'].json;\n  \n  console.log('🔍 Processing ImageFX response...');\n  console.log('Response type:', typeof response);\n  console.log('Is array:', Array.isArray(response));\n  \n  // Handle array response\n  const items = Array.isArray(response) ? response : [response];\n  const firstItem = items[0];\n  \n  if (!firstItem) {\n    throw new Error('Empty response from ImageFX');\n  }\n  \n  console.log('First item keys:', Object.keys(firstItem));\n  \n  // Extract image URL (ImageFX returns different field names)\n  let imageUrl = '';\n  \n  if (firstItem.imageUrl) {\n    imageUrl = firstItem.imageUrl;\n  } else if (firstItem.image) {\n    imageUrl = firstItem.image;\n  } else if (firstItem.url) {\n    imageUrl = firstItem.url;\n  } else if (firstItem.imageLink) {\n    imageUrl = firstItem.imageLink;\n  } else if (firstItem.link) {\n    imageUrl = firstItem.link;\n  }\n  \n  if (!imageUrl) {\n    console.error('❌ No image URL found in response');\n    console.error('Available fields:', Object.keys(firstItem));\n    console.error('Full item:', JSON.stringify(firstItem, null, 2));\n    throw new Error('No image URL found in ImageFX response');\n  }\n  \n  console.log('✅ Image URL extracted:', imageUrl);\n  \n  return {\n    json: {\n      success: true,\n      imageUrl: imageUrl,\n      prompt: firstItem.prompt || promptData.output,\n      metadata: {\n        briefId: briefData.submissionId,\n        briefType: briefData.designCategory.isLogoDesign ? 'Logo Design' : \n                   briefData.designCategory.isSocialMedia ? 'Social Media Design' : 'General Design',\n        brandName: briefData.sectionB.brandName,\n        submissionDate: briefData.submissionDate,\n        imageSize: firstItem.size || '1:1',\n        generationTime: new Date().toISOString()\n      },\n      fullResponse: firstItem\n    }\n  };\n} catch (error) {\n  console.error('❌ ImageFX response processing error:', error.message);\n  throw error;\n}"
+      },
+      "id": "a32ae8e3-e905-4c2d-9a8a-24a4a3622099",
+      "name": "Extract ImageFX Result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        5392,
+        5024
+      ],
+      "notes": "Extracts image URL and metadata from successful ImageFX response"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.imageUrl }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file",
+              "outputPropertyName": "generatedImage"
+            }
+          },
+          "timeout": 60000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        5616,
+        5024
+      ],
+      "id": "62d8f889-d74a-45d1-8c33-09d2e940b306",
+      "name": "Download Generated Image",
+      "continueOnFail": true,
+      "notes": "Downloads the generated image from ImageFX URL"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Convert binary image to base64 for JSON response\ntry {\n  const binaryData = $input.item.binary?.generatedImage;\n  const jsonData = $input.item.json;\n  \n  if (!binaryData) {\n    console.log('⚠️ No binary data, returning URL only');\n    return {\n      json: {\n        success: true,\n        message: 'Design brief processed and image generated successfully!',\n        briefId: jsonData.metadata.briefId,\n        briefType: jsonData.metadata.briefType,\n        brandName: jsonData.metadata.brandName,\n        submissionDate: jsonData.metadata.submissionDate,\n        generatedPrompt: jsonData.prompt,\n        imageGenerated: true,\n        imageData: {\n          imageUrl: jsonData.imageUrl,\n          deliveryMethod: 'url',\n          note: 'Image available via URL'\n        }\n      }\n    };\n  }\n\n  // Get the buffer data\n  const imageBuffer = binaryData.data;\n  \n  // Convert to base64\n  const base64Image = imageBuffer.toString('base64');\n  \n  // Get mime type\n  const mimeType = binaryData.mimeType || 'image/png';\n  \n  // Create data URL\n  const imageDataUrl = `data:${mimeType};base64,${base64Image}`;\n  \n  console.log('✅ Image converted to base64');\n  console.log('📊 Image size:', Math.round(imageBuffer.length / 1024), 'KB');\n  \n  return {\n    json: {\n      success: true,\n      message: 'Design brief processed and image generated successfully! 🎨✨',\n      briefId: jsonData.metadata.briefId,\n      briefType: jsonData.metadata.briefType,\n      brandName: jsonData.metadata.brandName,\n      submissionDate: jsonData.metadata.submissionDate,\n      generatedPrompt: jsonData.prompt,\n      imageGenerated: true,\n      imageData: {\n        base64: base64Image,\n        dataUrl: imageDataUrl,\n        imageUrl: jsonData.imageUrl,\n        mimeType: mimeType,\n        sizeBytes: imageBuffer.length,\n        sizeKB: Math.round(imageBuffer.length / 1024),\n        deliveryMethod: 'base64+url'\n      },\n      generationMetadata: jsonData.metadata\n    },\n    binary: {\n      generatedImage: binaryData\n    }\n  };\n} catch (error) {\n  console.error('❌ Image conversion error:', error.message);\n  \n  // Fallback to URL only\n  const jsonData = $input.item.json;\n  return {\n    json: {\n      success: true,\n      message: 'Design brief processed successfully (image via URL)',\n      briefId: jsonData.metadata?.briefId || 'N/A',\n      briefType: jsonData.metadata?.briefType || 'N/A',\n      brandName: jsonData.metadata?.brandName || 'N/A',\n      imageGenerated: true,\n      imageData: {\n        imageUrl: jsonData.imageUrl,\n        deliveryMethod: 'url',\n        note: 'Base64 conversion failed, using URL',\n        error: error.message\n      }\n    }\n  };\n}"
+      },
+      "id": "c73be1b7-701b-456b-ba61-8ce102b52cc7",
+      "name": "Convert Image to Base64",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        5840,
+        5024
+      ],
+      "notes": "Converts downloaded image to base64 for easy frontend display"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Handle ImageFX API failure with detailed analysis\ntry {\n  const errorData = $input.item.json;\n  const briefData = $node['Parse and Structure Form Data2']?.json;\n  const promptData = $node['AI: Generate Professional Design Prompt']?.json;\n  \n  console.error('❌ ImageFX API Failed');\n  console.error('Error data:', JSON.stringify(errorData, null, 2));\n  \n  let errorMessage = 'Image generation failed';\n  let errorDetails = 'Unknown error occurred';\n  let errorType = 'UNKNOWN';\n  let solution = '';\n  \n  const errorString = JSON.stringify(errorData).toLowerCase();\n  \n  // Analyze error type\n  if (errorString.includes('auth') || errorString.includes('401') || errorString.includes('403')) {\n    errorType = 'AUTHENTICATION';\n    errorMessage = 'Authentication failed';\n    errorDetails = 'Google account credentials are invalid or expired';\n    solution = '🔑 Solution: Update your Google App Password in the \"Prepare ImageFX Input\" node. Go to https://myaccount.google.com/apppasswords to create a new one.';\n  } else if (errorString.includes('proxy') || errorString.includes('connection')) {\n    errorType = 'PROXY';\n    errorMessage = 'Proxy or connection error';\n    errorDetails = 'Unable to connect to Google ImageFX through Apify proxy';\n    solution = '🌐 Solution: Check your Apify account balance and proxy settings. You may need to add credits or try a different proxy group.';\n  } else if (errorString.includes('timeout')) {\n    errorType = 'TIMEOUT';\n    errorMessage = 'Request timeout';\n    errorDetails = 'Image generation took too long and exceeded the time limit';\n    solution = '⏱️ Solution: Try again with a simpler prompt or increase the timeout value in the HTTP Request node.';\n  } else if (errorString.includes('rate') || errorString.includes('limit') || errorString.includes('429')) {\n    errorType = 'RATE_LIMIT';\n    errorMessage = 'Rate limit exceeded';\n    errorDetails = 'Too many requests to Google ImageFX API';\n    solution = '🚦 Solution: Wait 15-30 minutes before trying again, or use a different Google account.';\n  } else if (errorString.includes('token') || errorString.includes('apify')) {\n    errorType = 'API_TOKEN';\n    errorMessage = 'Invalid Apify API token';\n    errorDetails = 'The Apify API token is missing or invalid';\n    solution = '🔐 Solution: Get your API token from https://console.apify.com/account/integrations and update it in the \"Generate Image via ImageFX\" node.';\n  } else if (errorString.includes('actor') || errorString.includes('build')) {\n    errorType = 'ACTOR_ERROR';\n    errorMessage = 'Apify Actor error';\n    errorDetails = 'The ImageFX Actor failed to execute properly';\n    solution = '🔧 Solution: The Actor may be temporarily unavailable. Try again in a few minutes or check Apify status.';\n  } else if (errorData.error) {\n    errorDetails = typeof errorData.error === 'string' ? errorData.error : JSON.stringify(errorData.error);\n  }\n  \n  return {\n    json: {\n      success: false,\n      message: errorMessage,\n      errorType: errorType,\n      errorDetails: errorDetails,\n      solution: solution,\n      briefId: briefData?.submissionId || 'N/A',\n      brandName: briefData?.sectionB?.brandName || 'N/A',\n      generatedPrompt: promptData?.output || null,\n      imageGenerated: false,\n      timestamp: new Date().toISOString(),\n      suggestion: 'The design brief was processed successfully and a professional AI prompt was generated. However, image generation failed. You can use the generated prompt with other AI image services like Midjourney, DALL-E 3, or Stable Diffusion.',\n      alternativeServices: [\n        'Midjourney (https://midjourney.com)',\n        'DALL-E 3 via ChatGPT Plus (https://chat.openai.com)',\n        'Leonardo.ai (https://leonardo.ai)',\n        'Ideogram (https://ideogram.ai)'\n      ],\n      debugInfo: {\n        fullError: errorData,\n        nodeExecutionTime: new Date().toISOString()\n      }\n    }\n  };\n} catch (error) {\n  console.error('❌ Error handler itself failed:', error.message);\n  return {\n    json: {\n      success: false,\n      message: 'Critical error in error handling',\n      error: error.message,\n      timestamp: new Date().toISOString()\n    }\n  };\n}"
+      },
+      "id": "d48fbfa2-c17d-4f0a-81b8-f7d729b9b325",
+      "name": "Handle ImageFX Error",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        5392,
+        5248
+      ],
+      "notes": "Comprehensive error analysis with actionable solutions and alternative suggestions"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {
+          "responseCode": 500,
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              },
+              {
+                "name": "Access-Control-Allow-Methods",
+                "value": "POST, GET, OPTIONS"
+              }
+            ]
+          }
+        }
+      },
+      "id": "58f97621-f5c7-4a4e-b364-cdccfb0a1dec",
+      "name": "Send ImageFX Error Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        5616,
+        5248
+      ],
+      "notes": "Returns detailed error response with solutions to frontend"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ {\n  \"success\": false,\n  \"message\": \"Error processing design brief\",\n  \"error\": $json.error || $json.message || \"Unknown error occurred during brief processing\",\n  \"timestamp\": $now,\n  \"suggestion\": \"Please check your form data and try again. Ensure all required fields are filled.\"\n} }}",
+        "options": {
+          "responseCode": 400,
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              }
+            ]
+          }
+        }
+      },
+      "id": "2d9305b5-6278-46ae-8bec-f5c6ddff7f99",
+      "name": "Send Brief Processing Error",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        4672,
+        4560
+      ],
+      "notes": "Returns error response when design brief processing fails"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        4480,
+        5344
+      ],
+      "id": "50318eb9-ac78-4075-a32a-c64a8325671c",
+      "name": "Brain - Google Gemini",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "CMkj9c7qBQj695vD",
+          "name": "Nano b"
+        }
+      },
+      "notes": "Google Gemini Pro model for advanced AI prompt generation"
+    },
+    {
+      "parameters": {
+        "content": "## 🎨 Advanced Design Brief to AI Image Generator\n\n**Workflow Overview:**\nThis professional workflow receives design briefs via webhook, intelligently processes them based on design type (Logo, Social Media, General), generates world-class AI image prompts using Google Gemini, and creates stunning images via Google ImageFX.\n\n**Key Features:**\n✅ Multi-format design brief parsing (Logo, Social Media, General)\n✅ Advanced AI prompt engineering with 15+ optimization techniques\n✅ Google ImageFX integration for premium image generation\n✅ Comprehensive error handling with actionable solutions\n✅ Base64 image encoding for instant frontend display\n✅ Detailed logging and debugging capabilities\n\n**Input:** POST /webhook/design-brief with form data\n**Output:** JSON with base64 image, metadata, and generated prompt",
+        "height": 1168,
+        "width": 3344,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2960,
+        4464
+      ],
+      "typeVersion": 1,
+      "id": "98b7724e-35c3-4c7d-be8a-c05b5dc60b99",
+      "name": "Sticky Note - Workflow Overview"
+    },
+    {
+      "parameters": {
+        "content": "## 📋 Data Preparation & Routing\n\n**Process:**\n1. Parse incoming webhook data\n2. Validate required fields\n3. Structure into sections A-G\n4. Determine design category\n5. Route to appropriate formatter",
+        "height": 720,
+        "width": 848,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3488,
+        4848
+      ],
+      "typeVersion": 1,
+      "id": "56b3ef71-f683-41f6-b30a-b623fd174fd8",
+      "name": "Sticky Note - Data Prep"
+    },
+    {
+      "parameters": {
+        "content": "## 🤖 AI Prompt Generation & Image Creation\n\n**Google Gemini Pro:**\nTransforms design brief into professional-grade AI image generation prompt using advanced prompt engineering\n\n**Google ImageFX:**\nGenerates high-quality design images using state-of-the-art AI\n\n**Processing:**\n- Prompt optimization & cleaning\n- Image generation via Apify\n- Download & base64 conversion\n- Metadata attachment",
+        "height": 656,
+        "width": 1888,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        4368,
+        4896
+      ],
+      "typeVersion": 1,
+      "id": "a76694b4-12c8-4bad-9aaf-147b68a9b3bf",
+      "name": "Sticky Note - AI Generation"
+    },
+    {
+      "parameters": {
+        "content": "## ⚠️ Error Handling\n\n**Comprehensive error analysis:**\n- Authentication failures\n- Rate limits\n- Timeouts\n- API token issues\n- Proxy problems\n\n**Includes:**\n- Detailed error messages\n- Actionable solutions\n- Alternative service suggestions",
+        "height": 288,
+        "width": 352,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        4592,
+        4496
+      ],
+      "typeVersion": 1,
+      "id": "ed39ae59-4d4a-42b1-b99b-6dee5505b913",
+      "name": "Sticky Note - Error Handling"
+    },
+    {
+      "parameters": {
+        "content": "## 📥 Webhook Request\n\n**Endpoint:**\nPOST /webhook/design-brief\n\n**Accepts:**\n- Form data (A1-G1 fields)\n- JSON body\n\n**CORS:** Enabled (*)",
+        "height": 304,
+        "width": 288,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3072,
+        4880
+      ],
+      "typeVersion": 1,
+      "id": "81f6fb5e-c9e0-4ff2-a1f4-04d4e032b240",
+      "name": "Sticky Note - Request"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "design-brief",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "d4944e70-ff7e-4e65-9e04-d17d197c8750",
+      "name": "Webhook - Design Brief Submission2",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        3184,
+        4992
+      ],
+      "webhookId": "design-brief-form",
+      "notes": "Receives POST requests with design brief form data from frontend application"
+    },
+    {
+      "parameters": {
+        "jsCode": "try {\n  const formData = $input.item.json.body || $input.item.json;\n\n  // Validate required fields\n  if (!formData.B1_brand_name) {\n    throw new Error('Brand name is required');\n  }\n\n  // Section A - General Project Data\n  const sectionA = {\n    designType: formData.A1_design_type || [],\n    mainGoal: formData.A2_main_goal || 'Brand Awareness'\n  };\n\n  // Section B - Brand Information\n  const sectionB = {\n    brandName: formData.B1_brand_name || '',\n    slogan: formData.B2_slogan || '',\n    brandDescription: formData.B3_brand_description || '',\n    productsServices: formData.B4_products_services || '',\n    targetAudience: formData.B5_target_audience || '',\n    brandPersonality: formData.B6_brand_personality || [],\n    competitors: formData.B7_competitors || ''\n  };\n\n  // Section C - Visual Identity\n  const sectionC = {\n    hasLogo: formData.C1_has_logo || 'No',\n    logoLikes: formData.C1a_logo_likes || '',\n    logoDislikes: formData.C1b_logo_dislikes || '',\n    brandColors: formData.C2_brand_colors || '#000000',\n    forbiddenColors: formData.C3_forbidden_colors || '',\n    typography: formData.C4_typography || 'Modern Sans-serif',\n    designStyle: formData.C5_design_style || [],\n    mustHave: formData.C6_must_have || '',\n    mustNotHave: formData.C7_must_not_have || ''\n  };\n\n  // Section D - Logo Specific (conditional)\n  const sectionD = {\n    logoType: formData.D1_logo_type || '',\n    logoLanguage: formData.D2_logo_language || '',\n    specificSymbols: formData.D3_specific_symbols || '',\n    logoMessage: formData.D4_logo_message || '',\n    logoUsage: formData.D5_logo_usage || '',\n    logoShape: formData.D6_logo_shape || '',\n    idealLogoDescription: formData.D7_ideal_logo || ''\n  };\n\n  // Section E - Social Media Specific (conditional)\n  const sectionE = {\n    platform: formData.E1_platform || '',\n    designType: formData.E2_design_type || '',\n    dimensions: formData.E3_dimensions || '',\n    postTopic: formData.E4_post_topic || '',\n    mainMessage: formData.E5_main_message || '',\n    headline: formData.E6_headline || '',\n    additionalText: formData.E7_additional_text || '',\n    callToAction: formData.E8_cta || '',\n    mood: formData.E9_mood || ''\n  };\n\n  // Section F - References\n  const sectionF = {\n    references: formData.F1_references || ''\n  };\n\n  // Section G - Additional Notes\n  const sectionG = {\n    additionalNotes: formData.G1_additional_notes || ''\n  };\n\n  // Determine design category with improved logic\n  const designTypeArray = Array.isArray(sectionA.designType) ? sectionA.designType : [sectionA.designType];\n  \n  const isLogoDesign = designTypeArray.some(type => \n    type && type.toLowerCase().includes('logo')\n  );\n\n  const isSocialMedia = designTypeArray.some(type => \n    type && ['instagram', 'facebook', 'linkedin', 'twitter', 'social'].some(social => \n      type.toLowerCase().includes(social)\n    )\n  );\n\n  const submissionId = `BRIEF-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;\n\n  console.log('✅ Form data parsed successfully:', {\n    submissionId,\n    brandName: sectionB.brandName,\n    designTypes: designTypeArray,\n    isLogoDesign,\n    isSocialMedia\n  });\n\n  return {\n    json: {\n      submissionId,\n      submissionDate: new Date().toISOString(),\n      designCategory: {\n        isLogoDesign,\n        isSocialMedia,\n        types: designTypeArray\n      },\n      sectionA,\n      sectionB,\n      sectionC,\n      sectionD: isLogoDesign ? sectionD : null,\n      sectionE: isSocialMedia ? sectionE : null,\n      sectionF,\n      sectionG,\n      rawData: formData\n    }\n  };\n} catch (error) {\n  console.error('❌ Form parsing error:', error.message);\n  throw new Error(`Form data processing failed: ${error.message}`);\n}"
+      },
+      "id": "020b395c-b947-4ac7-a602-b068423192bb",
+      "name": "Parse and Structure Form Data2",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3536,
+        4992
+      ],
+      "onError": "continueErrorOutput",
+      "notes": "Extracts, validates, and structures all form sections (A-G) with improved error handling"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "logo-condition",
+              "leftValue": "={{ $json.designCategory.isLogoDesign }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "6e08d2ba-b017-4d00-b508-a5bfa93d67ae",
+      "name": "Route: Is Logo Design?2",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        3744,
+        4976
+      ],
+      "notes": "Routes to logo-specific formatting if logo design type is selected"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "social-condition",
+              "leftValue": "={{ $json.designCategory.isSocialMedia }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "68f8150a-e4af-4d8d-b089-c1d651fdd56a",
+      "name": "Route: Is Social Media?2",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        3744,
+        5344
+      ],
+      "notes": "Routes to social media-specific formatting if social media type is selected"
+    },
+    {
+      "parameters": {
+        "jsCode": "try {\n  const data = $input.item.json;\n\n  // Enhanced brief summary with better formatting\n  const briefSummary = `\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n📋 LOGO DESIGN BRIEF\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n🎯 PROJECT OVERVIEW:\nDesign Type: ${Array.isArray(data.sectionA.designType) ? data.sectionA.designType.join(', ') : data.sectionA.designType}\nMain Goal: ${data.sectionA.mainGoal}\n\n🏢 BRAND INFORMATION:\nBrand Name: ${data.sectionB.brandName}\nSlogan: ${data.sectionB.slogan || 'N/A'}\nDescription: ${data.sectionB.brandDescription}\nProducts/Services: ${data.sectionB.productsServices || 'N/A'}\nTarget Audience: ${data.sectionB.targetAudience}\nBrand Personality: ${Array.isArray(data.sectionB.brandPersonality) ? data.sectionB.brandPersonality.join(', ') : data.sectionB.brandPersonality}\nCompetitors: ${data.sectionB.competitors || 'N/A'}\n\n🎨 VISUAL IDENTITY:\nBrand Colors: ${data.sectionC.brandColors}\nForbidden Colors: ${data.sectionC.forbiddenColors || 'None'}\nTypography Style: ${data.sectionC.typography}\nDesign Style: ${Array.isArray(data.sectionC.designStyle) ? data.sectionC.designStyle.join(', ') : data.sectionC.designStyle}\nMust Have Elements: ${data.sectionC.mustHave || 'N/A'}\nMust NOT Have: ${data.sectionC.mustNotHave || 'N/A'}\nExisting Logo: ${data.sectionC.hasLogo}\n${data.sectionC.hasLogo === 'Yes' ? `  - Likes: ${data.sectionC.logoLikes}\\n  - Dislikes: ${data.sectionC.logoDislikes}` : ''}\n\n📐 LOGO SPECIFICATIONS:\nLogo Type: ${data.sectionD?.logoType || 'N/A'}\nLanguage: ${data.sectionD?.logoLanguage || 'N/A'}\nSpecific Symbols/Icons: ${data.sectionD?.specificSymbols || 'N/A'}\nCore Message: ${data.sectionD?.logoMessage || 'N/A'}\nUsage Context: ${data.sectionD?.logoUsage || 'N/A'}\nPreferred Shape: ${data.sectionD?.logoShape || 'N/A'}\nIdeal Description: ${data.sectionD?.idealLogoDescription || 'N/A'}\n\n🔗 REFERENCES & INSPIRATION:\n${data.sectionF.references || 'No specific references provided'}\n\n📝 ADDITIONAL NOTES:\n${data.sectionG.additionalNotes || 'No additional notes'}\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;\n\n  console.log('✅ Logo brief formatted successfully');\n\n  return {\n    json: {\n      ...data,\n      briefSummary,\n      briefType: 'Logo Design'\n    }\n  };\n} catch (error) {\n  console.error('❌ Logo brief formatting error:', error.message);\n  throw new Error(`Logo brief formatting failed: ${error.message}`);\n}"
+      },
+      "id": "a18cad42-40b6-4c30-a206-168cc83d65a6",
+      "name": "Format Logo Design Brief2",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3984,
+        4880
+      ],
+      "onError": "continueErrorOutput",
+      "notes": "Creates enhanced formatted text summary for logo design briefs with visual separators"
+    },
+    {
+      "parameters": {
+        "jsCode": "try {\n  const data = $input.item.json;\n\n  const briefSummary = `\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n📱 SOCIAL MEDIA DESIGN BRIEF\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n🎯 PROJECT OVERVIEW:\nDesign Type: ${Array.isArray(data.sectionA.designType) ? data.sectionA.designType.join(', ') : data.sectionA.designType}\nMain Goal: ${data.sectionA.mainGoal}\n\n🏢 BRAND INFORMATION:\nBrand Name: ${data.sectionB.brandName}\nSlogan: ${data.sectionB.slogan || 'N/A'}\nDescription: ${data.sectionB.brandDescription}\nTarget Audience: ${data.sectionB.targetAudience}\nBrand Personality: ${Array.isArray(data.sectionB.brandPersonality) ? data.sectionB.brandPersonality.join(', ') : data.sectionB.brandPersonality}\n\n🎨 VISUAL IDENTITY:\nBrand Colors: ${data.sectionC.brandColors}\nForbidden Colors: ${data.sectionC.forbiddenColors || 'None'}\nTypography: ${data.sectionC.typography}\nDesign Style: ${Array.isArray(data.sectionC.designStyle) ? data.sectionC.designStyle.join(', ') : data.sectionC.designStyle}\nMust Have: ${data.sectionC.mustHave || 'N/A'}\nMust NOT Have: ${data.sectionC.mustNotHave || 'N/A'}\n\n📲 SOCIAL MEDIA SPECIFICATIONS:\nPlatform: ${data.sectionE?.platform || 'N/A'}\nPost Type: ${data.sectionE?.designType || 'N/A'}\nDimensions: ${data.sectionE?.dimensions || 'N/A'}\nPost Topic: ${data.sectionE?.postTopic || 'N/A'}\nMain Message: ${data.sectionE?.mainMessage || 'N/A'}\nHeadline: ${data.sectionE?.headline || 'N/A'}\nAdditional Text: ${data.sectionE?.additionalText || 'N/A'}\nCall to Action: ${data.sectionE?.callToAction || 'N/A'}\nMood/Tone: ${data.sectionE?.mood || 'N/A'}\n\n🔗 REFERENCES & INSPIRATION:\n${data.sectionF.references || 'No specific references provided'}\n\n📝 ADDITIONAL NOTES:\n${data.sectionG.additionalNotes || 'No additional notes'}\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;\n\n  console.log('✅ Social media brief formatted successfully');\n\n  return {\n    json: {\n      ...data,\n      briefSummary,\n      briefType: 'Social Media Design'\n    }\n  };\n} catch (error) {\n  console.error('❌ Social media brief formatting error:', error.message);\n  throw new Error(`Social media brief formatting failed: ${error.message}`);\n}"
+      },
+      "id": "9f6237e9-52a3-4fac-a345-2cef756ac5ac",
+      "name": "Format Social Media Design Brief2",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3984,
+        5328
+      ],
+      "onError": "continueErrorOutput",
+      "notes": "Creates enhanced formatted text summary for social media design briefs"
+    },
+    {
+      "parameters": {
+        "jsCode": "try {\n  const data = $input.item.json;\n\n  const briefSummary = `\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n🎨 GENERAL DESIGN BRIEF\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n🎯 PROJECT OVERVIEW:\nDesign Type: ${Array.isArray(data.sectionA.designType) ? data.sectionA.designType.join(', ') : data.sectionA.designType}\nMain Goal: ${data.sectionA.mainGoal}\n\n🏢 BRAND INFORMATION:\nBrand Name: ${data.sectionB.brandName}\nSlogan: ${data.sectionB.slogan || 'N/A'}\nDescription: ${data.sectionB.brandDescription}\nTarget Audience: ${data.sectionB.targetAudience}\nBrand Personality: ${Array.isArray(data.sectionB.brandPersonality) ? data.sectionB.brandPersonality.join(', ') : data.sectionB.brandPersonality}\n\n🎨 VISUAL IDENTITY:\nBrand Colors: ${data.sectionC.brandColors}\nForbidden Colors: ${data.sectionC.forbiddenColors || 'None'}\nTypography: ${data.sectionC.typography}\nDesign Style: ${Array.isArray(data.sectionC.designStyle) ? data.sectionC.designStyle.join(', ') : data.sectionC.designStyle}\nMust Have: ${data.sectionC.mustHave || 'N/A'}\nMust NOT Have: ${data.sectionC.mustNotHave || 'N/A'}\n\n🔗 REFERENCES & INSPIRATION:\n${data.sectionF.references || 'No specific references provided'}\n\n📝 ADDITIONAL NOTES:\n${data.sectionG.additionalNotes || 'No additional notes'}\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;\n\n  console.log('✅ General brief formatted successfully');\n\n  return {\n    json: {\n      ...data,\n      briefSummary,\n      briefType: 'General Design'\n    }\n  };\n} catch (error) {\n  console.error('❌ General brief formatting error:', error.message);\n  throw new Error(`General brief formatting failed: ${error.message}`);\n}"
+      },
+      "id": "e5e4ee23-82f9-4044-8d33-f279dccb15ef",
+      "name": "Format General Design Brief2",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3984,
+        5104
+      ],
+      "onError": "continueErrorOutput",
+      "notes": "Creates enhanced formatted text summary for general design types"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {
+          "responseCode": 200,
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              },
+              {
+                "name": "Access-Control-Allow-Methods",
+                "value": "POST, GET, OPTIONS"
+              },
+              {
+                "name": "Access-Control-Allow-Headers",
+                "value": "Content-Type, Authorization"
+              },
+              {
+                "name": "Cache-Control",
+                "value": "no-cache, no-store, must-revalidate"
+              }
+            ]
+          }
+        }
+      },
+      "id": "738af298-2040-402e-aa12-0a55ba178cd3",
+      "name": "Send Success Response with Image1",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        6064,
+        5024
+      ],
+      "notes": "Returns success response with base64 encoded image and metadata to frontend"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Prepare and optimize the prompt for ImageFX API\ntry {\n  // Try multiple ways to get the prompt text\n  let promptText = null;\n  \n  // Method 1: Check if output exists in current item\n  if ($input.item.json.output) {\n    promptText = $input.item.json.output;\n  }\n  // Method 2: Check if text exists\n  else if ($input.item.json.text) {\n    promptText = $input.item.json.text;\n  }\n  // Method 3: Check previous node directly\n  else if ($node && $node['AI: Generate Professional Design Prompt'] && $node['AI: Generate Professional Design Prompt'].json) {\n    promptText = $node['AI: Generate Professional Design Prompt'].json.output || \n                 $node['AI: Generate Professional Design Prompt'].json.text;\n  }\n  // Method 4: Check if entire json is the prompt\n  else if (typeof $input.item.json === 'string') {\n    promptText = $input.item.json;\n  }\n  \n  // Validate we have a prompt\n  if (!promptText) {\n    console.error('❌ No prompt found in input');\n    console.error('Available keys:', Object.keys($input.item.json));\n    console.error('Full input:', JSON.stringify($input.item.json, null, 2));\n    throw new Error('No prompt text found. Please check the AI prompt generation node output.');\n  }\n  \n  console.log('✅ Prompt text found:', promptText.substring(0, 100) + '...');\n  \n  // Convert to string if needed\n  promptText = String(promptText);\n  \n  // Clean and optimize the prompt\n  let optimizedPrompt = promptText\n    .replace(/\\n+/g, ' ')     // Remove newlines\n    .replace(/\\r/g, ' ')      // Remove carriage returns\n    .replace(/\\s+/g, ' ')     // Normalize whitespace\n    .replace(/\"/g, '')        // Remove quotes that might break JSON\n    .trim();\n  \n  // Ensure prompt isn't too long (ImageFX has limits)\n  if (optimizedPrompt.length > 1000) {\n    console.log('⚠️ Prompt too long, truncating to 1000 characters');\n    optimizedPrompt = optimizedPrompt.substring(0, 997) + '...';\n  }\n  \n  // Validate prompt is not empty\n  if (optimizedPrompt.length < 10) {\n    throw new Error('Prompt is too short or empty after optimization');\n  }\n  \n  console.log('✅ Prompt prepared for ImageFX');\n  console.log('📝 Prompt length:', optimizedPrompt.length);\n  console.log('📝 First 150 chars:', optimizedPrompt.substring(0, 150));\n  \n  // Get brief data safely\n  let briefData = {};\n  try {\n    briefData = $node['Parse and Structure Form Data'].json || \n                $node['Parse and Structure Form Data2'].json || \n                {};\n  } catch (e) {\n    console.warn('⚠️ Could not find brief data, using defaults');\n  }\n  \n  return {\n    json: {\n      authList: [\n        {\n          username: \"gogohany56h@gmail.com\",\n          password: \"YOUR_GOOGLE_APP_PASSWORD\"\n        }\n      ],\n      promptList: [\n        {\n          prompt: optimizedPrompt,\n          size: \"1:1\",\n          seed: -1\n        }\n      ],\n      proxyConfiguration: {\n        useApifyProxy: true,\n        apifyProxyGroups: [\"RESIDENTIAL\", \"GOOGLE_SERP\"]\n      },\n      maxRequestRetries: 5,\n      maxConcurrentRequests: 1,\n      navigationTimeoutSecs: 180,\n      pageLoadTimeoutSecs: 120,\n      waitForSelectorTimeoutSecs: 60,\n      metadata: {\n        briefId: briefData.submissionId || 'N/A',\n        brandName: briefData.sectionB?.brandName || 'N/A',\n        briefType: briefData.designCategory?.isLogoDesign ? 'Logo Design' : \n                   briefData.designCategory?.isSocialMedia ? 'Social Media' : 'General'\n      },\n      debugInfo: {\n        originalPromptLength: promptText.length,\n        optimizedPromptLength: optimizedPrompt.length,\n        timestamp: new Date().toISOString()\n      }\n    }\n  };\n} catch (error) {\n  console.error('❌ Prompt preparation error:', error.message);\n  console.error('Stack:', error.stack);\n  throw new Error(`Failed to prepare prompt for ImageFX: ${error.message}`);\n}"
+      },
+      "id": "336506c5-1261-44e4-a15f-a0b8f03f7e1e",
+      "name": "Prepare ImageFX Input1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4768,
+        5376
+      ],
+      "notes": "Prepares and optimizes the AI-generated prompt for ImageFX API with improved error handling"
+    }
+  ],
+  "pinData": {
+    "Webhook - Design Brief Submission2": [
+      {
+        "json": {
+          "headers": {
+            "host": "n8n-n8n.vwe4kq.easypanel.host",
+            "user-agent": "PostmanRuntime/7.50.0",
+            "content-length": "2470",
+            "accept": "*/*",
+            "accept-encoding": "gzip, deflate, br",
+            "cache-control": "no-cache",
+            "content-type": "application/json",
+            "postman-token": "1962fe26-da98-42a6-a8ca-6e41fc04b171",
+            "x-forwarded-for": "41.45.12.9",
+            "x-forwarded-host": "n8n-n8n.vwe4kq.easypanel.host",
+            "x-forwarded-port": "443",
+            "x-forwarded-proto": "https",
+            "x-forwarded-server": "3a9bb3fc4644",
+            "x-real-ip": "41.45.12.9"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "A1_design_type": "Logo Design",
+            "A2_main_goal": "Create a memorable and distinctive brand identity",
+            "B1_brand_name": "TechNova Solutions",
+            "B2_slogan": "Innovate. Transform. Succeed.",
+            "B3_brand_description": "AI-powered business automation platform for modern enterprises that streamlines workflows and enhances productivity",
+            "B4_products_services": "Cloud automation, AI integration, workflow optimization, business intelligence",
+            "B5_target_audience": "Tech-savvy business owners, CTOs, IT managers, startup founders, ages 30-50, primarily in North America and Europe",
+            "B6_brand_personality": [
+              "Modern",
+              "Professional",
+              "Innovative",
+              "Trustworthy"
+            ],
+            "B7_competitors": "Zapier, Make.com, Microsoft Power Automate, n8n",
+            "C1_has_logo": "No",
+            "C1a_logo_likes": "",
+            "C1b_logo_dislikes": "",
+            "C2_brand_colors": "#0066FF, #00D9FF, #FFFFFF, #1A1A1A",
+            "C3_forbidden_colors": "#FF0000, #FFFF00, #00FF00",
+            "C4_typography": "Bold, modern sans-serif like Inter or Montserrat, clean and highly readable",
+            "C5_design_style": [
+              "Minimalist",
+              "Tech",
+              "Geometric",
+              "Modern",
+              "Clean"
+            ],
+            "C6_must_have": "Abstract tech symbol, clean lines, scalable design, works in monochrome",
+            "C7_must_not_have": "Gradients, drop shadows, overly complex details, cliché tech imagery like gears or circuits",
+            "D1_logo_type": "Icon / Symbol with Text",
+            "D2_logo_language": "English",
+            "D3_specific_symbols": "Abstract geometric shape suggesting connectivity, automation, or data flow",
+            "D4_logo_message": "Trust, innovation, efficiency, cutting-edge technology, reliability",
+            "D5_logo_usage": "Website header, mobile apps, business cards, presentations, social media profiles, email signatures",
+            "D6_logo_shape": "Geometric, possibly circular, hexagonal, or angular with rounded edges",
+            "D7_ideal_logo": "A sleek, modern logo combining an abstract tech icon with bold typography, conveying innovation and reliability. Should be memorable and work perfectly at any size.",
+            "F1_references": "Apple (simplicity and elegance), IBM (professionalism), Slack (approachability and color), Stripe (minimalism)",
+            "G1_additional_notes": "The logo must work flawlessly on both dark and light backgrounds. It needs to be instantly recognizable even at 16x16px favicon size. Vector format preferred. Should avoid looking too corporate or too playful - aim for the perfect balance of professional and innovative."
+          },
+          "webhookUrl": "https://n8n-n8n.vwe4kq.easypanel.host/webhook/design-brief",
+          "executionMode": "production"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "AI: Generate Professional Design Prompt": {
+      "main": [
+        [
+          {
+            "node": "Prepare ImageFX Input1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare ImageFX Input": {
+      "main": [
+        []
+      ]
+    },
+    "Generate Image via ImageFX": {
+      "main": [
+        [
+          {
+            "node": "Check ImageFX Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check ImageFX Response": {
+      "main": [
+        [
+          {
+            "node": "Handle ImageFX Error",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Extract ImageFX Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract ImageFX Result": {
+      "main": [
+        [
+          {
+            "node": "Download Generated Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Generated Image": {
+      "main": [
+        [
+          {
+            "node": "Convert Image to Base64",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert Image to Base64": {
+      "main": [
+        [
+          {
+            "node": "Send Success Response with Image1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Handle ImageFX Error": {
+      "main": [
+        [
+          {
+            "node": "Send ImageFX Error Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Brain - Google Gemini": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI: Generate Professional Design Prompt",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook - Design Brief Submission2": {
+      "main": [
+        [
+          {
+            "node": "Parse and Structure Form Data2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse and Structure Form Data2": {
+      "main": [
+        [
+          {
+            "node": "Route: Is Logo Design?2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Route: Is Social Media?2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Brief Processing Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route: Is Logo Design?2": {
+      "main": [
+        [
+          {
+            "node": "Format Logo Design Brief2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Format General Design Brief2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route: Is Social Media?2": {
+      "main": [
+        [
+          {
+            "node": "Format Social Media Design Brief2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Logo Design Brief2": {
+      "main": [
+        [
+          {
+            "node": "AI: Generate Professional Design Prompt",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Brief Processing Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Social Media Design Brief2": {
+      "main": [
+        [
+          {
+            "node": "AI: Generate Professional Design Prompt",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Brief Processing Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format General Design Brief2": {
+      "main": [
+        [
+          {
+            "node": "AI: Generate Professional Design Prompt",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Brief Processing Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare ImageFX Input1": {
+      "main": [
+        [
+          {
+            "node": "Generate Image via ImageFX",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "c891bc18-0a85-4daa-b2ff-2eaf65c600e4",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b89dab3f2b0122a80c2f295775dd56db13b5aff073f33e6665bd79933e62cb6d"
+  },
+  "id": "cTYV6cYUPSrkuwuw",
+  "tags": []
+}

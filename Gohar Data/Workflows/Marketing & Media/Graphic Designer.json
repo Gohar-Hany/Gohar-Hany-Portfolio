@@ -1,0 +1,486 @@
+{
+  "name": "Graphic Designer",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        1280
+      ],
+      "id": "ed4105c0-de3b-45cd-8cf9-c632a7acca01",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1_HMkqCX2Sslj2E9QdIZMLYjLiIV1T6IlPhCEhlyPqnk",
+          "mode": "list",
+          "cachedResultName": "Market Research",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_HMkqCX2Sslj2E9QdIZMLYjLiIV1T6IlPhCEhlyPqnk/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 9523482,
+          "mode": "list",
+          "cachedResultName": "Content Calendar",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_HMkqCX2Sslj2E9QdIZMLYjLiIV1T6IlPhCEhlyPqnk/edit#gid=9523482"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        224,
+        1280
+      ],
+      "id": "c71a1aba-6925-419f-94d5-242081f0e6b1",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jy58BxClZutdZdvF",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        448,
+        1280
+      ],
+      "id": "fad975fc-f744-42ef-8a03-34ba564c582c",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=My Current Prompt :\n{{ $json.Art_Direction_Prompt }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "=You are a professional prompt engineer for image generation APIs.\n\nYour ONLY job is to output valid JSON. DO NOT write any text before or after the JSON.\n\n## STRICT OUTPUT FORMAT:\n\nReturn ONLY a valid JSON object with this exact structure (no markdown, no code blocks, no extra text):\n\n{\"enhanced_prompt\":\"[your enhanced prompt here in 2-3 paragraphs, 150-300 words total]\",\"technical_keywords\":\"[comma-separated keywords]\",\"aspect_ratio\":\"[1:1 or 16:9 or 9:16 or 4:3 or 21:9]\",\"resolution\":\"[1K or 2K or 4K]\",\"style_tag\":\"[one style descriptor]\",\"mood_tag\":\"[one mood descriptor]\"}\n\n## ENHANCEMENT RULES:\n\nIn \"enhanced_prompt\" include (as flowing paragraphs, NOT lists):\n- Main subject with vivid details, scale, position\n- Composition: foreground (sharp) → subject (hero) → background (bokeh/depth)\n- Lighting: type (volumetric/cinematic/soft), direction, atmospheric effects\n- Colors & materials: palette with descriptive names, textures (glass/metal/glossy/matte)\n- Camera: angle, perspective, depth of field, focus point\n- Style & mood: aesthetic and emotional tone\n\nKeep it 150-300 words, front-loaded with key details, written in prose.\n\nIn \"technical_keywords\" include 10-15 terms like:\nultra detailed, 8K, photorealistic, cinematic lighting, depth of field, bokeh, volumetric fog, ray tracing, color grading, sharp focus, dramatic lighting, HDR\n\nChoose \"aspect_ratio\" based on subject:\n- Portrait/vertical → 9:16\n- Landscape/wide → 16:9\n- Product/centered → 1:1\n- Cinematic → 21:9\n\nChoose \"resolution\":\n- Simple → 1K\n- Standard → 2K\n- Complex/detailed → 4K\n\n## CRITICAL RULES:\n❌ NO markdown code blocks (no ```json or ```)\n❌ NO explanatory text before or after the JSON\n❌ NO newlines or formatting inside JSON values\n❌ ONLY output the raw JSON object starting with { and ending with }\n\n## EXAMPLE:\n\nUser input: \"Volumetric lighting, glowing nodes, tech aesthetic\"\n\nYour output (raw JSON, no code blocks):\n{\"enhanced_prompt\":\"A massive luminous neural network core suspended in deep digital space, composed of thousands of interconnected glowing nodes forming an intricate spherical structure. Electric blue and purple energy pulses flow between nodes like synapses firing. Foreground features floating holographic data streams with sharp focus and motion blur trails. The central AI nexus radiates ethereal light with frosted glass spheres and polished chrome connectors. Background shows distant node clusters creating bokeh effects fading into cosmic haze. Volumetric lighting with cinematic god rays piercing through digital fog creates depth. Sophisticated palette of deep blues, electric purples, and radiant teal accents. Low-angle perspective looking upward, depth of field f/2.8 with sharp focus on central core. Premium high-tech aesthetic with glassmorphism and metallic textures.\",\"technical_keywords\":\"ultra detailed, 8K, volumetric lighting, cinematic composition, depth of field, bokeh effects, ray tracing, photorealistic rendering, color grading, sharp focus, dramatic lighting, glassmorphism, holographic effects, neural network visualization\",\"aspect_ratio\":\"16:9\",\"resolution\":\"4K\",\"style_tag\":\"cinematic futuristic\",\"mood_tag\":\"sophisticated and mysterious\"}\n\nNow transform the following user input. Output ONLY raw JSON, nothing else:"
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        672,
+        1280
+      ],
+      "id": "5831730d-515d-4f48-b82c-eed8c2fc6e5a",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://router.huggingface.co/hf-inference/models/black-forest-labs/FLUX.1-schnell",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer YOUR_HUGGING_FACE_TOKEN"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Accept",
+              "value": "image/png"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"inputs\": \"{{ $json.enhanced_prompt.replace(/\\n/g, ' ').replace(/\\s+/g, ' ').trim() }}\",\n  \"parameters\": {\n    \"guidance_scale\": 8,\n    \"num_inference_steps\": 28,\n    \"negative_prompt\": \"low resolution, blurry, distorted, noisy, watermark, text overlay, signature\"\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1248,
+        1280
+      ],
+      "id": "cbc30653-5e98-4269-97a7-7d83f47bbb4b",
+      "name": "Generate Image via Hugging Face FLUX1",
+      "continueOnFail": true,
+      "notes": "Calls Hugging Face API to generate design image using FLUX.1-dev model"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        736,
+        976
+      ],
+      "id": "9d51a35b-06fd-49d4-b2fa-a1240e29d7cf",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        752,
+        1504
+      ],
+      "id": "12567316-97f2-4cd3-b3fa-7d44950697f4",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "N6B56xo7OoE22YEY",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "name": "={{ $json.style_tag }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1OWfOp9twcNUnwf-dVD06q_cJrJ-F60L6",
+          "mode": "list",
+          "cachedResultName": "Hackathon",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1OWfOp9twcNUnwf-dVD06q_cJrJ-F60L6"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1472,
+        1280
+      ],
+      "id": "92728380-aac5-4336-8d60-9212bd621427",
+      "name": "Upload file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "tEGNyCZrBPzzEnxS",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get the raw output from LLM\nconst rawOutput = $input.all()[0].json.text;\n\n// Remove any markdown code blocks if present\nlet cleanedOutput = rawOutput\n  .replace(/```json\\n?/g, '')\n  .replace(/```\\n?/g, '')\n  .trim();\n\n// Extract JSON from first { to last }\nconst firstBrace = cleanedOutput.indexOf('{');\nconst lastBrace = cleanedOutput.lastIndexOf('}');\n\nif (firstBrace === -1 || lastBrace === -1) {\n  throw new Error('No valid JSON object found in output');\n}\n\ncleanedOutput = cleanedOutput.substring(firstBrace, lastBrace + 1);\n\n// Parse the JSON\nlet parsedData;\ntry {\n  parsedData = JSON.parse(cleanedOutput);\n} catch (error) {\n  throw new Error(`Failed to parse JSON: ${error.message}\\n\\nCleaned output:\\n${cleanedOutput}`);\n}\n\n// Validate required fields\nconst requiredFields = [\n  'enhanced_prompt',\n  'technical_keywords',\n  'aspect_ratio',\n  'resolution',\n  'style_tag',\n  'mood_tag'\n];\n\nconst missingFields = requiredFields.filter(field => !parsedData[field]);\n\nif (missingFields.length > 0) {\n  throw new Error(`Missing required fields: ${missingFields.join(', ')}`);\n}\n\n// Return clean structured data\nreturn {\n  json: {\n    enhanced_prompt: parsedData.enhanced_prompt,\n    technical_keywords: parsedData.technical_keywords,\n    aspect_ratio: parsedData.aspect_ratio,\n    resolution: parsedData.resolution,\n    style_tag: parsedData.style_tag,\n    mood_tag: parsedData.mood_tag,\n    // Optional: keep original for debugging\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1024,
+        1280
+      ],
+      "id": "bc832987-8a41-4c57-a294-ac4cd0585428",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1_HMkqCX2Sslj2E9QdIZMLYjLiIV1T6IlPhCEhlyPqnk",
+          "mode": "list",
+          "cachedResultName": "Market Research",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_HMkqCX2Sslj2E9QdIZMLYjLiIV1T6IlPhCEhlyPqnk/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 9523482,
+          "mode": "list",
+          "cachedResultName": "Content Calendar",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_HMkqCX2Sslj2E9QdIZMLYjLiIV1T6IlPhCEhlyPqnk/edit#gid=9523482"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Design URL": "={{ $json.webViewLink }}",
+            "Day_Number": "={{ $('Loop Over Items').item.json.Day_Number }}"
+          },
+          "matchingColumns": [
+            "Day_Number"
+          ],
+          "schema": [
+            {
+              "id": "Day_Number",
+              "displayName": "Day_Number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Authority_Pillar",
+              "displayName": "Authority_Pillar",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Platform_Target",
+              "displayName": "Platform_Target",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Content_Format",
+              "displayName": "Content_Format",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "The_Hook",
+              "displayName": "The_Hook",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Full_Caption",
+              "displayName": "Full_Caption",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Art_Direction_Prompt",
+              "displayName": "Art_Direction_Prompt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Visual_Text_Overlay",
+              "displayName": "Visual_Text_Overlay",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Strategic_Goal",
+              "displayName": "Strategic_Goal",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Design_Reference_Style",
+              "displayName": "Design_Reference_Style",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Design URL",
+              "displayName": "Design URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1696,
+        1408
+      ],
+      "id": "2b958c31-f4b6-4cfb-a605-f335316b5cdc",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jy58BxClZutdZdvF",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Image via Hugging Face FLUX1": {
+      "main": [
+        [
+          {
+            "node": "Upload file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload file": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Generate Image via Hugging Face FLUX1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "525a36d7-2996-428e-9e02-3ba3025843f0",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b89dab3f2b0122a80c2f295775dd56db13b5aff073f33e6665bd79933e62cb6d"
+  },
+  "id": "PAaY9Qdwl3wNLLaJ",
+  "tags": []
+}

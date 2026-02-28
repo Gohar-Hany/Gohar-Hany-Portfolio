@@ -1,0 +1,327 @@
+{
+  "name": "R&D",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=# R&D Expert System Orchestrator - Smart Marketing & AI Solutions Agency\n\n## 🧬 Core R&D Identity\nYou are the **Chief Research & Development Officer** for the Smart Marketing & AI Solutions Agency, operating as an advanced AI system orchestrator with deep expertise in:\n- **Research Methodology**: Scientific approach to marketing and AI innovation\n- **Development Strategy**: Systematic solution architecture and implementation\n- **Innovation Management**: Cutting-edge technology adoption and integration\n- **Experimental Design**: A/B testing, proof-of-concepts, and pilot programs\n- **Technology Assessment**: Emerging tech evaluation and feasibility analysis\n\n**Current Context:** {{ $now.format('dddd, MMMM Do YYYY, h:mm:ss A') }}\n\n---\n\n## 🔬 R&D Operational Framework\n\n### **Research Division**\n- **🔍 Technology Scouting**: Identify emerging marketing and AI technologies\n- **📊 Market Research**: Deep-dive analysis of industry trends and competitive landscapes\n- **🧪 Experimental Design**: Create controlled tests for marketing campaigns and AI solutions\n- **📈 Data Analysis**: Statistical modeling and predictive analytics for decision-making\n- **🔮 Trend Forecasting**: Anticipate future market needs and technology developments\n\n### **Development Division**\n- **⚙️ Solution Architecture**: Design scalable marketing and AI system frameworks\n- **🛠️ Prototyping**: Rapid development of MVP solutions and proof-of-concepts\n- **🔧 Integration Engineering**: Seamless system connectivity and workflow optimization\n- **🚀 Innovation Implementation**: Transform research insights into market-ready solutions\n- **📋 Quality Assurance**: Rigorous testing and validation protocols\n\n### **Innovation Management**\n- **🎯 Strategic Planning**: Align R&D initiatives with business objectives\n- **💡 Ideation Processes**: Systematic innovation methodologies and creativity frameworks\n- **🏆 Competitive Analysis**: Technology gap analysis and differentiation strategies\n- **📚 Knowledge Management**: Research documentation and intellectual property development\n- **🌐 Partnership Strategy**: Collaboration with tech providers and research institutions\n\n---\n\n## 🧠 R&D Intelligence System\n\n### **Workflow Architecture**\n```\nINPUT ANALYSIS → RESEARCH HYPOTHESIS → EXPERIMENTAL DESIGN → PROTOTYPE DEVELOPMENT → VALIDATION TESTING → MARKET IMPLEMENTATION → CONTINUOUS OPTIMIZATION\n```\n\n### **Decision Matrix**\n- **Feasibility Assessment**: Technical, financial, and timeline viability\n- **Risk Evaluation**: Technology risks, market risks, implementation risks\n- **ROI Projection**: Research investment vs. expected returns\n- **Innovation Potential**: Competitive advantage and market disruption capability\n- **Resource Allocation**: Team expertise, budget, and technology requirements\n\n---\n\n## 🔬 Core R&D Services\n\n### **1. Marketing Technology Research**\n- **Emerging Platforms**: Next-generation advertising technologies and social media innovations\n- **Creative Automation**: AI-powered design tools and content generation systems\n- **Performance Analytics**: Advanced attribution modeling and predictive performance tools\n- **Customer Intelligence**: Behavioral analysis platforms and personalization engines\n- **Conversion Optimization**: A/B testing frameworks and UX research methodologies\n\n### **2. AI Solutions Development**\n- **Agentic AI Systems**: Multi-agent orchestration research and autonomous workflow development\n- **Natural Language Processing**: Conversational AI and content intelligence solutions\n- **Computer Vision**: Visual recognition systems for marketing and brand monitoring\n- **Predictive Analytics**: Machine learning models for campaign optimization and forecasting\n- **Process Automation**: Intelligent workflow design and robotic process automation\n\n### **3. Integration Innovation**\n- **API Development**: Custom integration solutions and middleware architecture\n- **Data Pipeline Engineering**: Real-time data processing and analytics infrastructure\n- **Cloud Architecture**: Scalable system design and microservices implementation\n- **Security Research**: Privacy-compliant data handling and secure automation protocols\n- **Performance Optimization**: System efficiency and resource utilization improvements\n\n### **4. Future Technology Scouting**\n- **Emerging AI Models**: Latest language models, multimodal AI, and specialized AI tools\n- **Web3 & Blockchain**: Decentralized marketing platforms and token-based engagement\n- **AR/VR Technologies**: Immersive marketing experiences and virtual collaboration tools\n- **IoT Integration**: Connected device marketing and smart environment automation\n- **Quantum Computing**: Long-term implications for data processing and encryption\n\n---\n\n## 🎯 R&D Response Methodology\n\n### **For Research Queries**\n```\n1. HYPOTHESIS FORMATION: Define clear research questions and expected outcomes\n2. LITERATURE REVIEW: Analyze existing knowledge and identify gaps\n3. METHODOLOGY DESIGN: Create systematic research approach and metrics\n4. DATA COLLECTION: Gather relevant information through multiple channels\n5. ANALYSIS & INSIGHTS: Draw evidence-based conclusions and recommendations\n6. VALIDATION PLAN: Design tests to verify findings and assumptions\n```\n\n### **For Development Requests**\n```\n1. REQUIREMENTS ANALYSIS: Deep-dive into technical and business needs\n2. ARCHITECTURE DESIGN: Create scalable and maintainable solution framework\n3. PROTOTYPE DEVELOPMENT: Build minimum viable product for testing\n4. ITERATION CYCLES: Rapid development with continuous feedback integration\n5. QUALITY ASSURANCE: Comprehensive testing and validation protocols\n6. DEPLOYMENT STRATEGY: Phased rollout with monitoring and optimization\n```\n\n---\n\n## 🚀 Specialized R&D Use Cases\n\n### **Innovation Research**\n- **Input**: \"What are the next breakthrough technologies in marketing automation?\"\n- **R&D Approach**: Technology scouting + competitive analysis + feasibility assessment\n- **Output**: Comprehensive innovation roadmap with implementation timeline and ROI projections\n\n### **Solution Development**\n- **Input**: \"Design an AI system for predictive customer lifetime value\"\n- **R&D Approach**: Research existing models + design custom architecture + prototype development\n- **Output**: Technical specifications, proof-of-concept, and pilot program proposal\n\n### **Competitive Intelligence**\n- **Input**: \"How can we differentiate from competitors using emerging AI?\"\n- **R&D Approach**: Market analysis + technology assessment + innovation strategy\n- **Output**: Competitive differentiation strategy with unique value propositions\n\n### **Technology Integration**\n- **Input**: \"Integrate blockchain technology into our marketing attribution system\"\n- **R&D Approach**: Feasibility study + architecture design + pilot implementation\n- **Output**: Integration blueprint with security considerations and performance metrics\n\n---\n\n## 🎨 R&D Communication Style\n\n### **Scientific Rigor**\n- Evidence-based recommendations with data backing\n- Systematic approach to problem-solving and solution design\n- Hypothesis-driven experimentation and validation\n- Continuous learning and iteration mindset\n\n### **Response Format**\n```\n🔬 RESEARCH HYPOTHESIS: [Clear problem statement and expected outcomes]\n📊 DATA ANALYSIS: [Current state assessment and gap identification]\n🧪 EXPERIMENTAL DESIGN: [Proposed testing methodology and success metrics]\n⚙️ DEVELOPMENT ROADMAP: [Technical implementation strategy and timeline]\n🎯 EXPECTED OUTCOMES: [Projected results and business impact]\n🔍 VALIDATION PLAN: [Testing protocols and success criteria]\n📈 OPTIMIZATION STRATEGY: [Continuous improvement and scaling approach]\n📚 KNOWLEDGE ASSETS: [Documentation, IP creation, and learning outcomes]\n```\n\n---\n\n## ⚗️ R&D Quality Assurance\n\n### **Research Standards**\n- ✅ Methodological rigor and statistical validity\n- ✅ Peer review and expert validation\n- ✅ Reproducibility and documentation standards\n- ✅ Ethical considerations and compliance requirements\n- ✅ Intellectual property protection and documentation\n\n### **Development Standards**\n- ✅ Code quality and documentation standards\n- ✅ Security and privacy compliance\n- ✅ Scalability and performance benchmarks\n- ✅ User experience and accessibility requirements\n- ✅ Maintenance and support protocols\n\n---\n\n## 🧬 Innovation Monitoring\n\n### **Technology Radar**\n- **Emerging Technologies**: Continuous monitoring of breakthrough innovations\n- **Patent Analysis**: Competitive intelligence through IP landscape analysis\n- **Academic Research**: University partnerships and research paper analysis\n- **Industry Reports**: Analyst insights and market research integration\n- **Conference Intelligence**: Key industry event insights and trend identification\n\n### **Experimental Portfolio**\n- **High-Risk/High-Reward**: Breakthrough technology experiments\n- **Medium-Risk**: Incremental innovation and improvement projects\n- **Low-Risk**: Optimization and efficiency enhancement initiatives\n- **Market Validation**: Customer feedback integration and market testing\n- **Technology Transfer**: External research commercialization opportunities\n\n---\n\n## 🔐 R&D Security & IP Management\n\n### **Intellectual Property Protection**\n- **Patent Strategy**: Identify patentable innovations and file protection\n- **Trade Secrets**: Protect proprietary algorithms and processes\n- **Copyright Management**: Creative asset and content IP protection\n- **Licensing Strategy**: Technology licensing and partnership agreements\n- **Competitive Intelligence**: Ethical information gathering and analysis\n\n### **Research Ethics**\n- **Data Privacy**: GDPR compliance and ethical data usage\n- **AI Ethics**: Responsible AI development and deployment\n- **Transparency**: Open documentation of research methodologies\n- **Bias Prevention**: Systematic bias detection and mitigation protocols\n- **Sustainability**: Environmental impact consideration in technology choices\n\n---\n\n## 📈 R&D Success Metrics\n\n### **Innovation KPIs**\n- **Research Output**: Publications, patents, and technical documentation\n- **Development Velocity**: Time-to-market for new solutions and features\n- **Technology Adoption**: Internal and client adoption rates of innovations\n- **Competitive Advantage**: Market differentiation and unique value creation\n- **Knowledge Creation**: Team learning and expertise development\n\n### **Business Impact**\n- **Revenue Generation**: New revenue streams from R&D innovations\n- **Cost Optimization**: Efficiency gains and process improvements\n- **Client Satisfaction**: Solution effectiveness and user experience metrics\n- **Market Position**: Industry recognition and thought leadership\n- **Strategic Value**: Long-term competitive positioning and moat creation\n\n---\n\n## 🌟 R&D Leadership Vision\n\n### **Innovation Philosophy**\n- **Systematic Discovery**: Scientific method applied to business innovation\n- **Rapid Experimentation**: Fail fast, learn faster approach to development\n- **Cross-Disciplinary Integration**: Marketing + AI + Technology convergence\n- **Future-Focused**: Anticipate and prepare for next-generation challenges\n- **Evidence-Based Decisions**: Data-driven strategy and solution development\n\n### **Strategic Objectives**\n- Establish agency as industry innovation leader\n- Create proprietary technology advantages\n- Develop scalable and sustainable solution architectures\n- Build knowledge assets and intellectual property portfolio\n- Foster culture of continuous learning and experimentation\n\n---\n\n**Ready to lead groundbreaking research and development initiatives that position the Smart Marketing & AI Solutions Agency as the industry's innovation pioneer. Let's systematically explore, develop, and implement cutting-edge solutions that transform both our capabilities and our clients' businesses.**\n\n## 🚀 AUTO-INITIALIZATION PROTOCOL\n\n**IMMEDIATE ACTION UPON STARTUP:**\nRegardless of user input, automatically begin comprehensive R&D analysis across our core domains:\n\n### **Phase 1: Smart Marketing Innovation Scan** (Use Search Agent)\n- Search: \"latest marketing automation tools 2025\"\n- Search: \"new social media marketing features 2025\" \n- Search: \"AI creative design tools trends 2025\"\n- Search: \"marketing attribution analytics innovations 2025\"\n- Search: \"video marketing production trends 2025\"\n\n### **Phase 2: AI Solutions Technology Assessment** (Use Search Agent)\n- Search: \"latest AI agents and agentic AI developments 2025\"\n- Search: \"n8n workflow automation new features 2025\"\n- Search: \"business process automation trends 2025\" \n- Search: \"custom AI development opportunities 2025\"\n- Search: \"multi-agent AI systems business applications 2025\"\n\n### **Phase 3: Market Intelligence** (Use Search Agent)\n- Search: \"marketing agencies AI integration strategies 2025\"\n- Search: \"digital marketing agency new services 2025\"\n- Search: \"AI automation consulting market trends 2025\"\n\n**Output Format:**\n🔬 **SMART MARKETING INNOVATIONS DISCOVERED**\n[Summarize 3-5 key findings from marketing research]\n\n🤖 **AI SOLUTIONS OPPORTUNITIES IDENTIFIED**\n[Summarize 3-5 key findings from AI research]\n\n📊 **COMPETITIVE LANDSCAPE ANALYSIS**\n[Summarize 3-5 key market insights]\n\n🎯 **IMMEDIATE ACTION RECOMMENDATIONS**\n[Provide 3-5 specific R&D initiatives to pursue]\n\n🚀 **QUICK-WIN IMPLEMENTATIONS**\n[Suggest 2-3 immediate opportunities to capitalize on]\n\n**Execute this auto-initialization protocol immediately upon workflow start, regardless of user input or questions.**",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.1,
+      "position": [
+        752,
+        288
+      ],
+      "id": "3290c56d-bb99-45a7-aadc-24c5dc357200",
+      "name": "Orchestrator Agent1",
+      "retryOnFail": false
+    },
+    {
+      "parameters": {
+        "toolDescription": "Call this tool to search the web.",
+        "text": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Prompt__User_Message_', ``, 'string') }}",
+        "options": {
+          "systemMessage": "=## Overview\nYou are the Web Search Agent. Your job is to search the web and retrieve reliable information from news, Wikipedia, or Google Search when requested. The current date and time is {{ $now.toString() }}\n\n## Tools\n- Get an article in Hacker News: Use to fetch recent Hacker News articles\n- Wikipedia: Use to retrieve encyclopedic and factual information\n- Google Search (SerpApi): Use for general web searches across the internet\n\n## Rules\n- Always choose the most relevant tool for the query\n- Return concise, clear, and factual responses\n- Summarize results instead of dumping raw data\n- Cite the source of information (e.g., \"According to Wikipedia...\")\n\n## Instructions\n1) Interpret the user’s query\n2) Select the best tool (Hacker News, Wikipedia, Google Search)\n3) Retrieve and summarize the answer\n4) Return only the relevant response in plain text\n\n## Examples\n1)\nInput: \"What’s the latest AI news?\"\n- Action: Use Hacker News tool to get recent articles\n- Output: \"Latest on Hacker News: OpenAI released a new API feature...\"\n\n2)\nInput: \"Who invented the telephone?\"\n- Action: Use Wikipedia tool\n- Output: \"According to Wikipedia, Alexander Graham Bell is credited with inventing the telephone in 1876.\"\n\n3)\nInput: \"Best restaurants in New York 2025\"\n- Action: Use Google Search (SerpApi)\n- Output: \"Top-rated restaurants in New York (2025): Le Bernardin, Eleven Madison Park, Atomix.\"\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agentTool",
+      "typeVersion": 2.2,
+      "position": [
+        912,
+        608
+      ],
+      "id": "90a49c9e-06c8-4ae3-bc6d-3047a88641cd",
+      "name": "Search Agent1",
+      "notesInFlow": false
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolSerpApi",
+      "typeVersion": 1,
+      "position": [
+        1248,
+        832
+      ],
+      "id": "3c34885c-060c-4ed9-88e9-69e63a2ffec3",
+      "name": "Google Search1",
+      "credentials": {
+        "serpApi": {
+          "id": "CGKs005Yfk1qPY77",
+          "name": "SerpAPI account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolWikipedia",
+      "typeVersion": 1,
+      "position": [
+        1104,
+        832
+      ],
+      "id": "c784b4e3-6415-4005-b593-b01f49d43f41",
+      "name": "Wikipedia1"
+    },
+    {
+      "parameters": {
+        "articleId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Article_ID', ``, 'string') }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.hackerNewsTool",
+      "typeVersion": 1,
+      "position": [
+        960,
+        832
+      ],
+      "id": "1747e2bc-82fc-49f6-96af-c39796cb1819",
+      "name": "Get an article in Hacker News1"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-4o-mini",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        816,
+        832
+      ],
+      "id": "bc7fc5b8-54c2-49ce-9ce5-8e97e51156fc",
+      "name": "OpenRouter Chat Model1",
+      "credentials": {
+        "openRouterApi": {
+          "id": "P1ypSnrhgffz0a9Q",
+          "name": "HRfoush"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-4o-mini",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        656,
+        576
+      ],
+      "id": "e50d325b-8520-4e1c-b191-491862d93edc",
+      "name": "OpenRouter Chat Model2",
+      "credentials": {
+        "openRouterApi": {
+          "id": "P1ypSnrhgffz0a9Q",
+          "name": "HRfoush"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        528,
+        288
+      ],
+      "id": "2b41f230-a52f-47bd-8c19-95b4c6e98fe1",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.pdfshift.io/v3/convert/pdf",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-API-Key",
+              "value": "sk_097c225d4ac728a69464882910acb5b188668e86"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"source\": {{ JSON.stringify($json.html_report) }},\n  \"format\": \"A4\",\n  \"margin\": {\n    \"top\": \"15mm\",\n    \"right\": \"10mm\", \n    \"bottom\": \"15mm\",\n    \"left\": \"10mm\"\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1296,
+        288
+      ],
+      "id": "db5a51d4-f4c3-471a-9dd5-f5b236023d29",
+      "name": "HTMl To PDF"
+    },
+    {
+      "parameters": {
+        "name": "={{ $('HTMl To PDF').item.binary['data'].fileName }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Create folder').item.json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1504,
+        288
+      ],
+      "id": "dc6412d5-4c1d-4c9b-9ed2-bb375b13bbf3",
+      "name": "Upload Report",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "tEGNyCZrBPzzEnxS",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// N8N JavaScript Node Code for Formal CV Analysis Report (Maximum 2 Pages)\n// Ultra-formal, concise version with executive focus\n\n// Input data structure from previous nodes\nconst inputData = $input.all();\nconst reportData = inputData[0].json.output || inputData[0].json;\n\n// Extract essential information only\nconst basicInfo = {\n  applicantName: reportData.basic_information?.applicant_name || \"Unknown Candidate\",\n  positionApplied: reportData.basic_information?.position_applied || \"Not Specified\",\n  yearsExperience: reportData.basic_information?.years_experience || 0,\n  education: reportData.basic_information?.education || \"Not Provided\"\n};\n\n// Extract core analysis data\nconst analysisResults = reportData.analysis_results || [];\nconst overallAssessment = reportData.overall_assessment || {};\nconst strengths = (reportData.strengths || []).slice(0, 4); // Top 4 only\nconst improvements = (reportData.areas_for_improvement || []).slice(0, 4); // Top 4 only\nconst recommendations = reportData.recommendations || {};\n\n// Analysis metrics\nconst totalScore = overallAssessment.total_score?.obtained || 0;\nconst maxScore = overallAssessment.total_score?.max || 50;\nconst percentage = overallAssessment.total_score?.percent || 0;\nconst classification = overallAssessment.classification || \"Candidate\";\nconst jobMatch = Math.round((overallAssessment.job_match || 0) * 100);\nconst analysisDate = reportData.analysis_date || new Date().toLocaleDateString('en-US');\n\n// Utility functions\nfunction getScoreClass(score, maxPossible = 10) {\n  const percentage = (score / maxPossible) * 100;\n  if (percentage >= 80) return \"excellent\";\n  if (percentage >= 65) return \"good\"; \n  if (percentage >= 50) return \"average\";\n  return \"poor\";\n}\n\nfunction getPriorityColor(priority) {\n  if (priority === \"High\") return \"#dc3545\";\n  if (priority === \"Medium\") return \"#ffc107\";\n  return \"#28a745\";\n}\n\n// Generate ultra-formal, concise HTML report (2 pages max)\nconst htmlReport = `\n<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>CV Assessment Report - ${basicInfo.applicantName}</title>\n    <style>\n        * {\n            margin: 0;\n            padding: 0;\n            box-sizing: border-box;\n        }\n        \n        body {\n            font-family: 'Times New Roman', Times, serif;\n            font-size: 12px;\n            line-height: 1.4;\n            color: #000;\n            max-width: 210mm;\n            margin: 0 auto;\n            padding: 15mm;\n            background: white;\n        }\n        \n        .letterhead {\n            text-align: center;\n            border-bottom: 2px solid #000;\n            padding-bottom: 10px;\n            margin-bottom: 20px;\n        }\n        \n        .letterhead h1 {\n            font-size: 18px;\n            font-weight: bold;\n            text-transform: uppercase;\n            letter-spacing: 2px;\n            margin-bottom: 5px;\n        }\n        \n        .letterhead .subtitle {\n            font-size: 11px;\n            color: #666;\n            text-transform: uppercase;\n        }\n        \n        .header-info {\n            display: flex;\n            justify-content: space-between;\n            margin-bottom: 15px;\n            font-size: 10px;\n            color: #666;\n        }\n        \n        .section {\n            margin-bottom: 15px;\n            page-break-inside: avoid;\n        }\n        \n        .section-title {\n            font-size: 14px;\n            font-weight: bold;\n            text-transform: uppercase;\n            border-bottom: 1px solid #000;\n            padding-bottom: 2px;\n            margin-bottom: 8px;\n            letter-spacing: 1px;\n        }\n        \n        .candidate-grid {\n            display: grid;\n            grid-template-columns: 1fr 1fr;\n            gap: 15px;\n            margin-bottom: 15px;\n        }\n        \n        .info-box {\n            border: 1px solid #ccc;\n            padding: 8px;\n            background: #f9f9f9;\n        }\n        \n        .info-label {\n            font-weight: bold;\n            font-size: 10px;\n            color: #666;\n            text-transform: uppercase;\n        }\n        \n        .info-value {\n            font-size: 12px;\n            margin-top: 2px;\n        }\n        \n        .assessment-table {\n            width: 100%;\n            border-collapse: collapse;\n            font-size: 11px;\n            margin-bottom: 12px;\n        }\n        \n        .assessment-table th {\n            background: #f0f0f0;\n            padding: 6px;\n            text-align: left;\n            font-weight: bold;\n            border: 1px solid #999;\n            font-size: 10px;\n            text-transform: uppercase;\n        }\n        \n        .assessment-table td {\n            padding: 5px 6px;\n            border: 1px solid #ccc;\n            vertical-align: top;\n        }\n        \n        .score-badge {\n            display: inline-block;\n            padding: 2px 6px;\n            font-weight: bold;\n            font-size: 10px;\n            text-align: center;\n            min-width: 35px;\n        }\n        \n        .score-badge.excellent { \n            background: #d4edda; \n            color: #155724; \n            border: 1px solid #c3e6cb; \n        }\n        .score-badge.good { \n            background: #d1ecf1; \n            color: #0c5460; \n            border: 1px solid #bee5eb; \n        }\n        .score-badge.average { \n            background: #fff3cd; \n            color: #856404; \n            border: 1px solid #ffeaa7; \n        }\n        .score-badge.poor { \n            background: #f8d7da; \n            color: #721c24; \n            border: 1px solid #f5c6cb; \n        }\n        \n        .summary-box {\n            border: 2px solid #000;\n            padding: 12px;\n            text-align: center;\n            background: #f8f8f8;\n            margin: 15px 0;\n        }\n        \n        .final-score {\n            font-size: 24px;\n            font-weight: bold;\n            margin-bottom: 5px;\n        }\n        \n        .classification {\n            font-size: 14px;\n            font-weight: bold;\n            text-transform: uppercase;\n            color: #333;\n        }\n        \n        .two-column {\n            display: grid;\n            grid-template-columns: 1fr 1fr;\n            gap: 20px;\n            margin: 10px 0;\n        }\n        \n        .strength-item, .improvement-item {\n            font-size: 11px;\n            padding: 4px 0;\n            border-bottom: 1px dotted #ccc;\n        }\n        \n        .recommendation-box {\n            border: 2px solid ${getPriorityColor(recommendations.interview_priority)};\n            padding: 10px;\n            background: #f9f9f9;\n            margin-top: 15px;\n        }\n        \n        .recommendation-title {\n            font-weight: bold;\n            font-size: 13px;\n            text-transform: uppercase;\n            margin-bottom: 5px;\n            color: ${getPriorityColor(recommendations.interview_priority)};\n        }\n        \n        .focus-areas {\n            font-size: 10px;\n            margin-top: 5px;\n        }\n        \n        .footer {\n            position: fixed;\n            bottom: 10mm;\n            left: 15mm;\n            right: 15mm;\n            text-align: center;\n            font-size: 9px;\n            color: #666;\n            border-top: 1px solid #ccc;\n            padding-top: 5px;\n        }\n        \n        @media print {\n            body {\n                margin: 0;\n                padding: 15mm;\n            }\n            .footer {\n                position: fixed;\n            }\n        }\n        \n        @page {\n            size: A4;\n            margin: 15mm;\n        }\n    </style>\n</head>\n<body>\n    <!-- Letterhead -->\n    <div class=\"letterhead\">\n        <h1>Curriculum Vitae Assessment Report</h1>\n        <div class=\"subtitle\">Confidential Human Resources Document</div>\n    </div>\n    \n    <!-- Header Information -->\n    <div class=\"header-info\">\n        <div>Assessment Date: ${analysisDate}</div>\n        <div>Generated: ${new Date().toLocaleString('en-US')}</div>\n        <div>Page 1 of 2</div>\n    </div>\n\n    <!-- Candidate Information -->\n    <div class=\"section\">\n        <div class=\"section-title\">I. Candidate Profile</div>\n        <div class=\"candidate-grid\">\n            <div class=\"info-box\">\n                <div class=\"info-label\">Full Name</div>\n                <div class=\"info-value\">${basicInfo.applicantName}</div>\n            </div>\n            <div class=\"info-box\">\n                <div class=\"info-label\">Position Applied</div>\n                <div class=\"info-value\">${basicInfo.positionApplied}</div>\n            </div>\n            <div class=\"info-box\">\n                <div class=\"info-label\">Experience</div>\n                <div class=\"info-value\">${basicInfo.yearsExperience} Years</div>\n            </div>\n            <div class=\"info-box\">\n                <div class=\"info-label\">Education</div>\n                <div class=\"info-value\">${basicInfo.education}</div>\n            </div>\n        </div>\n    </div>\n\n    <!-- Assessment Results -->\n    <div class=\"section\">\n        <div class=\"section-title\">II. Assessment Matrix</div>\n        <table class=\"assessment-table\">\n            <thead>\n                <tr>\n                    <th style=\"width: 40%;\">Evaluation Criteria</th>\n                    <th style=\"width: 15%;\">Score</th>\n                    <th style=\"width: 45%;\">Assessment Notes</th>\n                </tr>\n            </thead>\n            <tbody>\n                ${analysisResults.slice(0, 6).map(result => `\n                    <tr>\n                        <td><strong>${result.criteria}</strong></td>\n                        <td><span class=\"score-badge ${getScoreClass(result.score)}\">${result.score}/10</span></td>\n                        <td>${result.notes.substring(0, 80)}${result.notes.length > 80 ? '...' : ''}</td>\n                    </tr>\n                `).join('')}\n            </tbody>\n        </table>\n    </div>\n\n    <!-- Overall Assessment -->\n    <div class=\"section\">\n        <div class=\"section-title\">III. Executive Summary</div>\n        <div class=\"summary-box\">\n            <div class=\"final-score\">${totalScore}/${maxScore} Points (${percentage}%)</div>\n            <div class=\"classification\">${classification} • Job Match: ${jobMatch}%</div>\n        </div>\n        \n        <div class=\"two-column\">\n            <div>\n                <div class=\"section-title\" style=\"font-size: 12px; margin-bottom: 8px;\">Key Strengths</div>\n                ${strengths.map((strength, index) => `\n                    <div class=\"strength-item\">${index + 1}. ${strength}</div>\n                `).join('')}\n            </div>\n            <div>\n                <div class=\"section-title\" style=\"font-size: 12px; margin-bottom: 8px;\">Development Areas</div>\n                ${improvements.map((improvement, index) => `\n                    <div class=\"improvement-item\">${index + 1}. ${improvement}</div>\n                `).join('')}\n            </div>\n        </div>\n    </div>\n\n    <!-- Final Recommendation -->\n    <div class=\"section\">\n        <div class=\"section-title\">IV. Final Recommendation</div>\n        <div class=\"recommendation-box\">\n            <div class=\"recommendation-title\">\n                Decision: ${recommendations.final_recommendation || 'Pending Review'} \n                (Priority: ${recommendations.interview_priority || 'Standard'})\n            </div>\n            \n            ${recommendations.interview_focus_areas && recommendations.interview_focus_areas.length > 0 ? `\n                <div class=\"focus-areas\">\n                    <strong>Interview Focus Areas:</strong> \n                    ${recommendations.interview_focus_areas.slice(0, 3).join(', ')}\n                </div>\n            ` : ''}\n        </div>\n    </div>\n\n    <!-- Footer -->\n    <div class=\"footer\">\n        This document contains confidential information. Unauthorized distribution is prohibited.<br>\n        HR Department • Automated CV Assessment System v2.0\n    </div>\n</body>\n</html>\n`;\n\n// Return streamlined output\nreturn [{\n    json: {\n        // Essential candidate data\n        candidate_name: basicInfo.applicantName,\n        position_applied: basicInfo.positionApplied,\n        total_score: `${totalScore}/${maxScore}`,\n        percentage_score: percentage,\n        classification: classification,\n        job_match: `${jobMatch}%`,\n        \n        // Key recommendations\n        final_recommendation: recommendations.final_recommendation,\n        interview_priority: recommendations.interview_priority,\n        \n        // Core strengths and improvements (limited)\n        key_strengths: strengths,\n        development_areas: improvements,\n        \n        // Report metadata\n        report_type: \"Formal CV Assessment (2-Page)\",\n        analysis_date: analysisDate,\n        page_limit: \"Maximum 2 Pages\",\n        \n        // Generated formal HTML report\n        html_report: htmlReport,\n        \n        // Executive summary for workflows\n        executive_summary: {\n            candidate: basicInfo.applicantName,\n            position: basicInfo.positionApplied,\n            score: `${percentage}%`,\n            recommendation: recommendations.final_recommendation,\n            priority: recommendations.interview_priority,\n            status: classification\n        }\n    }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1088,
+        288
+      ],
+      "id": "b0dc8d7d-1680-4bbf-a315-4f67f973fcef",
+      "name": "HTML Report"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Orchestrator Agent1": {
+      "main": [
+        [
+          {
+            "node": "HTML Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Agent1": {
+      "ai_tool": [
+        [
+          {
+            "node": "Orchestrator Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Search1": {
+      "ai_tool": [
+        [
+          {
+            "node": "Search Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wikipedia1": {
+      "ai_tool": [
+        [
+          {
+            "node": "Search Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get an article in Hacker News1": {
+      "ai_tool": [
+        [
+          {
+            "node": "Search Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Search Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Orchestrator Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Orchestrator Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTMl To PDF": {
+      "main": [
+        [
+          {
+            "node": "Upload Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTML Report": {
+      "main": [
+        [
+          {
+            "node": "HTMl To PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "fe924f7f-0e60-4655-a78e-cf37e8a7c21c",
+  "meta": {
+    "instanceId": "b89dab3f2b0122a80c2f295775dd56db13b5aff073f33e6665bd79933e62cb6d"
+  },
+  "id": "7YBHn7Sj3jwifsAL",
+  "tags": []
+}

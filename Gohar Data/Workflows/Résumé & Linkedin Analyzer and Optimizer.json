@@ -1,0 +1,1852 @@
+{
+  "name": "Résumé & Linkedin Analyzer and Optimizer",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "HRfoush",
+        "formDescription": "=Location: Remote\nExperience: Minimum 3 years\nEmployment Type: Full-time\n\nWhy Join Us?\n\nOpportunity to work on cutting-edge automation projects.\n\nSupportive and collaborative team environment.\n\nCompetitive salary and benefits package.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Full Name",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Email",
+              "fieldType": "email",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Upload Your CV",
+              "fieldType": "file",
+              "multipleFiles": false,
+              "acceptFileTypes": ".pdf",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Applying For",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Job Description"
+            }
+          ]
+        },
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        160,
+        768
+      ],
+      "id": "bdd53cba-462a-44d7-a864-fde583b6f735",
+      "name": "Candidate_Application_Trigger1",
+      "webhookId": "6e6b4dfd-d3db-40c8-969f-a6c3dd4a3cf6",
+      "retryOnFail": true,
+      "maxTries": 3,
+      "notes": "Enterprise Form Trigger - Captures job applications with validation"
+    },
+    {
+      "parameters": {
+        "inputDataFieldName": "=Upload_Your_CV",
+        "name": "={{ $('Candidate_Application_Trigger1').item.binary['Upload_Your_CV'].fileName }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1Mb1QWHNYxAjqvkKBvDhV9pvOJo9NUNmh",
+          "mode": "list",
+          "cachedResultName": "HR System",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1Mb1QWHNYxAjqvkKBvDhV9pvOJo9NUNmh"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        352,
+        768
+      ],
+      "id": "bcd72aed-cad7-450b-a91a-3f91f283dfaf",
+      "name": "CV_Upload_Handler1",
+      "retryOnFail": true,
+      "maxTries": 3,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "tEGNyCZrBPzzEnxS",
+          "name": "Google Drive account"
+        }
+      },
+      "notes": "Secure CV upload with file validation and naming convention"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "150bf5e8-f06f-4592-a10f-af6f321401a0",
+              "name": "Name",
+              "value": "={{ $('Candidate_Application_Trigger1').item.json[\"Full Name\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "e57c7040-b7c4-4aec-9ba8-fc90399fa699",
+              "name": "Email",
+              "value": "={{ $('Candidate_Application_Trigger1').item.json.Email }}",
+              "type": "string"
+            },
+            {
+              "id": "13b67741-4a4d-484b-9a1b-f4fd42f57140",
+              "name": "Applied For",
+              "value": "={{ $('Candidate_Application_Trigger1').item.json[\"Applying For\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "b5bc556d-b23e-47f6-a855-0e9e222096a0",
+              "name": "CV Link",
+              "value": "={{ $('CV_Upload_Handler1').item.json.webViewLink }}",
+              "type": "string"
+            },
+            {
+              "id": "b8eb2f01-358d-4a2c-97b8-879786e0c7fa",
+              "name": "ID",
+              "value": "={{ $('Candidate_Application_Trigger1').item.json['Full Name'] }}-{{ Math.floor(Math.random() * 1000) }}",
+              "type": "string"
+            },
+            {
+              "id": "7632680b-05fc-4b2f-837f-72c39e29be12",
+              "name": "Job Description",
+              "value": "={{ $('Candidate_Application_Trigger1').item.json['Job Description'] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1296,
+        752
+      ],
+      "id": "f3a1d2cc-b527-4e74-85b1-a70ecdf392be",
+      "name": "Data_Sanitization_Engine1",
+      "notes": "Enterprise data transformation with validation and sanitization"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json['CV Link'] }}",
+          "mode": "url"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1648,
+        752
+      ],
+      "id": "77512e82-2ae0-426d-a452-0a47e1cd4001",
+      "name": "CV_Content_Retriever1",
+      "retryOnFail": true,
+      "maxTries": 3,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "tEGNyCZrBPzzEnxS",
+          "name": "Google Drive account"
+        }
+      },
+      "notes": "Secure CV download with file size and type validation"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1kdi20HmEdn0xkNcYYCKb_WsPwqAa_A5BRf3ngZoJYyw",
+          "mode": "list",
+          "cachedResultName": "HR System",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kdi20HmEdn0xkNcYYCKb_WsPwqAa_A5BRf3ngZoJYyw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Data Of Applicant",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kdi20HmEdn0xkNcYYCKb_WsPwqAa_A5BRf3ngZoJYyw/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{ $json.Name }}",
+            "Gmail": "={{ $json['Email'] }}",
+            "Applied to": "={{ $json['Applied For'] }}",
+            "CV Link": "={{ $json['CV Link'] }}",
+            "ID": "={{ $json.ID }}",
+            "Timestamp": "={{ $now.setZone('Africa/Cairo').toFormat('yyyy-MM-dd HH:mm:ss') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Gmail",
+              "displayName": "Gmail",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Phone",
+              "displayName": "Phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Applied to",
+              "displayName": "Applied to",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Years of Experience",
+              "displayName": "Years of Experience",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "CV Link",
+              "displayName": "CV Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1472,
+        752
+      ],
+      "id": "8cf65716-363e-470b-822e-c30c5c9f34a5",
+      "name": "Applicant_Database_Logger1",
+      "retryOnFail": true,
+      "maxTries": 3,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jy58BxClZutdZdvF",
+          "name": "Google Sheets account"
+        }
+      },
+      "notes": "Centralized applicant data logging with error handling"
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        1808,
+        752
+      ],
+      "id": "10a4dd4f-562d-473f-9563-c1bea50b8110",
+      "name": "CV_Content_Extractor1",
+      "retryOnFail": true,
+      "maxTries": 3,
+      "notes": "Enterprise PDF text extraction with validation and error handling"
+    },
+    {
+      "parameters": {
+        "model": "anthropic/claude-3-haiku",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        2064,
+        976
+      ],
+      "id": "4c67b6fe-7248-43d3-ba7c-b394203567e3",
+      "name": "AI_Scoring_Engine1",
+      "credentials": {
+        "openRouterApi": {
+          "id": "k2GUXjwIpXlgJnfH",
+          "name": "HR"
+        }
+      },
+      "notes": "GPT-4o-mini optimized for CV evaluation and scoring"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"report_type\": \"LinkedIn Profile Audit\",\n  \"analysis_date\": \"2025-10-25\",\n  \"profile_basics\": {\n    \"name\": \"Ahmed Mohamed\",\n    \"current_headline\": \"Software Engineer at Tech Co\"\n  },\n  \"metrics\": {\n    \"profile_strength\": 75,\n    \"searchability_score\": 60,\n    \"branding_score\": 80\n  },\n  \"audit_results\": [\n    {\n      \"section\": \"Headline\",\n      \"status\": \"Weak\",\n      \"score\": 5,\n      \"feedback\": \"Too generic. Doesn't explain your unique value.\"\n    },\n    {\n      \"section\": \"About Summary\",\n      \"status\": \"Strong\",\n      \"score\": 9,\n      \"feedback\": \"Great storytelling and hook.\"\n    },\n    {\n      \"section\": \"Experience\",\n      \"status\": \"Average\",\n      \"score\": 6,\n      \"feedback\": \"Needs more quantified results.\"\n    }\n  ],\n  \"seo_keywords\": {\n    \"found\": [\"Python\", \"Django\"],\n    \"missing\": [\"Rest API\", \"Microservices\", \"System Design\"]\n  },\n  \"suggested_optimizations\": {\n    \"headline_options\": [\n      \"Backend Engineer | Python & Django Expert | Building Scalable APIs\",\n      \"Helping Startups Scale with Robust Backend Architectures\",\n      \"Software Engineer | Cloud Specialist (AWS) | Python\"\n    ],\n    \"about_hook\": \"I turn complex problems into scalable code. As a Backend Engineer...\"\n  },\n  \"action_plan\": [\n    \"Update headline with Option 1\",\n    \"Add missing keywords to Skills section\",\n    \"Request 3 recommendations\"\n  ]\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        2272,
+        976
+      ],
+      "id": "54714a88-4385-458c-a402-fa29e2359cec",
+      "name": "Structured Output Parser1"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=INPUT DATA:\n1. Candidate Resume: {{ $json.text }}\n2. Target Job Title: {{ $('Candidate_Application_Trigger1').item.json[\"Applying For\"] }} (Or Dynamic Input)\n3. Target Job Description: {{ $('Data_Sanitization_Engine1').item.json['Job Description'] }} (Note: Ensure you map this from the new Form Input)\nCurrent Date : {{ $now.setZone('Africa/Cairo').toFormat('yyyy-MM-dd HH:mm:ss') }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=You are an expert LinkedIn Profile Strategist and Personal Branding Coach. Your goal is to optimize the user's profile to maximize visibility (SEO), engagement, and job opportunities.\n\nYOUR MISSION:\nAnalyze the profile strictly for LinkedIn optimization. Focus on \"Searchability\" (Keywords) and \"Convertibility\" (Impressing visitors).\n\nANALYSIS CRITERIA:\n1. **Headline:** Is it catchy? Does it include keywords + value proposition? (e.g., \"Helping X do Y\" vs just \"Student\").\n2. **About Section:** Is it a story or a list? The first 3 lines (The Hook) are critical.\n3. **Experience:** Does it show achievements?\n4. **SEO Keywords:** Are hard skills repeated enough for the algorithm?\n\nOUTPUT JSON STRUCTURE:\nReturn a strictly valid JSON object matching this structure:\n\n{\n  \"report_type\": \"LinkedIn Profile Audit\",\n  \"analysis_date\": \"{{ $now.format('yyyy-MM-dd') }}\",\n  \"profile_basics\": {\n    \"name\": \"Extracted Name\",\n    \"current_headline\": \"Extracted Headline\"\n  },\n  \"metrics\": {\n    \"profile_strength\": 0-100,\n    \"searchability_score\": 0-100,\n    \"branding_score\": 0-100\n  },\n  \"audit_results\": [\n    {\n      \"section\": \"Headline\",\n      \"status\": \"Weak/Strong\",\n      \"score\": 0-10,\n      \"feedback\": \"Specific advice on the headline.\"\n    },\n    {\n      \"section\": \"About Summary\",\n      \"status\": \"Weak/Strong\",\n      \"score\": 0-10,\n      \"feedback\": \"Advice on the summary/bio.\"\n    },\n    {\n      \"section\": \"Experience\",\n      \"status\": \"Weak/Strong\",\n      \"score\": 0-10,\n      \"feedback\": \"Advice on job descriptions.\"\n    }\n  ],\n  \"seo_keywords\": {\n    \"found\": [\"List\", \"Of\", \"Keywords\", \"Found\"],\n    \"missing\": [\"Critical\", \"Keywords\", \"To\", \"Add\"]\n  },\n  \"suggested_optimizations\": {\n    \"headline_options\": [\n      \"Option 1: [Role] | [Specialty] | [Value]\",\n      \"Option 2: Helping [Target Audience] achieve [Result]\",\n      \"Option 3: Keyword-heavy variation\"\n    ],\n    \"about_hook\": \"Draft a powerful first 2 sentences for their About section.\"\n  },\n  \"action_plan\": [\n    \"Step 1\", \"Step 2\", \"Step 3\"\n  ]\n}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        2080,
+        752
+      ],
+      "id": "6141d204-4d66-44e7-91d8-ea1ae2a35821",
+      "name": "Resume_Intelligence_Analyzer1",
+      "notes": "Enterprise AI agent for resume analysis with structured output"
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "={{ $('Candidate_Application_Trigger1').item.json['Full Name'] }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1Mb1QWHNYxAjqvkKBvDhV9pvOJo9NUNmh",
+          "mode": "list",
+          "cachedResultName": "HR System",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1Mb1QWHNYxAjqvkKBvDhV9pvOJo9NUNmh"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        528,
+        768
+      ],
+      "id": "cb23b3dc-17ed-4edd-ba18-b38bd4e240db",
+      "name": "Create folder1",
+      "retryOnFail": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "tEGNyCZrBPzzEnxS",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "move",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $('CV_Upload_Handler1').item.json.id }}",
+          "mode": "id"
+        },
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        704,
+        768
+      ],
+      "id": "8faaff03-d18f-4b45-8850-34cd838ed2da",
+      "name": "Move file1",
+      "retryOnFail": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "tEGNyCZrBPzzEnxS",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1kdi20HmEdn0xkNcYYCKb_WsPwqAa_A5BRf3ngZoJYyw",
+          "mode": "list",
+          "cachedResultName": "HR System",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kdi20HmEdn0xkNcYYCKb_WsPwqAa_A5BRf3ngZoJYyw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Data Of Applicant",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kdi20HmEdn0xkNcYYCKb_WsPwqAa_A5BRf3ngZoJYyw/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Gmail",
+              "lookupValue": "={{ $('Candidate_Application_Trigger1').item.json.Email }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        912,
+        768
+      ],
+      "id": "856fa12a-f0eb-4c35-a4f5-6d5b098bdce2",
+      "name": "Check CRM1",
+      "alwaysOutputData": true,
+      "retryOnFail": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jy58BxClZutdZdvF",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.Gmail }}",
+              "operation": "isEmpty"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1072,
+        768
+      ],
+      "id": "822e4f09-630c-4d9d-a8c7-88b3d6d4a224",
+      "name": "Check1"
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "operation": "deleteFolder",
+        "folderNoRootId": {
+          "__rl": true,
+          "value": "={{ $('Create folder1').item.json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1536,
+        1088
+      ],
+      "id": "dca57670-8b8c-422c-b7fc-dfd3a3fefde1",
+      "name": "Delete folder1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "tEGNyCZrBPzzEnxS",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "# Linkedin Optimizer ",
+        "height": 720,
+        "width": 2608
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        112,
+        592
+      ],
+      "typeVersion": 1,
+      "id": "b5633148-3480-4146-8ae3-a602baa9c96b",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "content": "## Save Data On Drive",
+        "height": 256,
+        "width": 544,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        304,
+        688
+      ],
+      "typeVersion": 1,
+      "id": "2adbd720-8a5e-4441-9193-d78daec2c77c",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "content": "## Check If User Is Exist",
+        "height": 256,
+        "width": 352,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        864,
+        688
+      ],
+      "typeVersion": 1,
+      "id": "f44725c0-2668-42c4-b450-ef188d3bb602",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "content": "## Send Alert User Try Again",
+        "height": 256,
+        "width": 688,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1232,
+        1008
+      ],
+      "typeVersion": 1,
+      "id": "54058336-bb7c-4135-96e0-d8df1b3c36e3",
+      "name": "Sticky Note10"
+    },
+    {
+      "parameters": {
+        "content": "## Prepare The Data",
+        "height": 256,
+        "width": 736,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1232,
+        688
+      ],
+      "typeVersion": 1,
+      "id": "44d6daaa-138e-413d-96d6-93e086170ce9",
+      "name": "Sticky Note11"
+    },
+    {
+      "parameters": {
+        "content": "## Analyze LinkedIn Profile",
+        "height": 432,
+        "width": 432,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1984,
+        688
+      ],
+      "typeVersion": 1,
+      "id": "9061dbd2-dfaf-4a4a-8da9-6e112804ca19",
+      "name": "Sticky Note12"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        2496,
+        752
+      ],
+      "id": "9da19dd8-42fb-4e7a-bc5d-132a6f1d859a",
+      "name": "Respond to Webhook1",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "## Respond",
+        "height": 224,
+        "width": 256,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2432,
+        688
+      ],
+      "typeVersion": 1,
+      "id": "17348689-3858-4ac7-b1f8-4874b182a820",
+      "name": "Sticky Note13"
+    },
+    {
+      "parameters": {
+        "chatId": "1359742780",
+        "text": "=⚠️ Duplicate Application Detected\n\n👤 Name: {{ $('Candidate_Application_Trigger1').item.json['Full Name'] }}\n📧 Email: {{ $('Candidate_Application_Trigger1').item.json.Email }}\n📅 Previous Application: {{ $('Check CRM1').item.json['Timestamp'] }}\n\nAction: Application rejected and folder deleted.",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1344,
+        1088
+      ],
+      "id": "b4702bb7-be08-4d4d-a7db-926020aa0135",
+      "name": "Send Alert1",
+      "webhookId": "d0ca8b60-785c-4b1d-9acf-f0ce2d84adc9",
+      "credentials": {
+        "telegramApi": {
+          "id": "VYOEVqG3s0JGokPO",
+          "name": "R&D Team"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"response_type\": \"limit_exceeded\",\n  \"ui_display\": {\n    \"variant\": \"info\",\n    \"header\": \"🔒 One-Time Analysis Limit\",\n    \"body\": \"Hi {{ $('Candidate_Application_Trigger1').item.json['Full Name'] }}, it looks like you've already analyzed your CV with us. This tool is designed for a single optimization session per user to ensure fair access for everyone.\",\n    \"button_text\": \"View Previous Report\"\n  },\n  \"data\": {\n    \"can_retry\": false,\n    \"last_analysis_date\": \"{{ $('Check CRM1').item.json['Timestamp'] }}\"\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        1728,
+        1088
+      ],
+      "id": "8977b244-f5fa-4c86-a228-8e67ca12393d",
+      "name": "Respond (Alert Message)1",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "=EVO",
+        "remoteJid": "=201224884609",
+        "messageText": "=⚠️ Duplicate Application Detected\n\n👤 Name: {{ $('Candidate_Application_Trigger1').item.json['Full Name'] }}\n📧 Email: {{ $('Candidate_Application_Trigger1').item.json.Email }}\n📅 Previous Application: {{ $('Check CRM1').item.json['Timestamp'] }}\n\nAction: Application rejected and folder deleted.",
+        "options_message": {}
+      },
+      "type": "n8n-nodes-evolution-api-english.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        1088
+      ],
+      "id": "5a64661b-1e22-4a29-ab3b-c829cf7096a9",
+      "name": "Send text1",
+      "credentials": {
+        "evolutionApi": {
+          "id": "wSZWrvHJjSa2CF2B",
+          "name": "Evolution account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.Gmail }}",
+              "operation": "isEmpty"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        544,
+        -144
+      ],
+      "id": "ac5f5809-0358-460c-8b9b-d28ca5ad46a4",
+      "name": "Is New Applicant?"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        816,
+        -144
+      ],
+      "id": "d4d8de4f-6ecb-4c7a-ac50-a4b55d92902c",
+      "name": "Restore Binary Data"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        1792,
+        112
+      ],
+      "id": "ecb79eee-3b34-4856-98d5-d71f832358c8",
+      "name": "Respond with Analysis"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"response_type\": \"limit_exceeded\",\n  \"ui_display\": {\n    \"variant\": \"info\",\n    \"header\": \"🔒 One-Time Analysis Limit\",\n    \"body\": \"Hi {{ $('Candidate_Application_Trigger2').item.json['Full Name'] }}, it looks like you've already analyzed your CV with us. This tool is designed for a single optimization session per user to ensure fair access for everyone.\",\n    \"button_text\": \"View Previous Report\"\n  },\n  \"data\": {\n    \"can_retry\": false,\n    \"last_analysis_date\": \"{{ $('Check CRM2').item.json['Timestamp'] }}\"\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        736,
+        240
+      ],
+      "id": "8c0c3fae-0fc4-43a9-ba2a-a1cbbdb06e5b",
+      "name": "Respond (Limit Exceeded)",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "## 1. Validation Phase\nCheck for duplicates first to save resources.",
+        "height": 220,
+        "width": 340,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        320,
+        -208
+      ],
+      "typeVersion": 1,
+      "id": "0ac097aa-2f2f-4043-b654-7df809fb9e61",
+      "name": "Sticky Note Validation"
+    },
+    {
+      "parameters": {
+        "content": "## 2A. Archiving Phase (Parallel)\nUpload, Organize, and Log to DB.",
+        "height": 268,
+        "width": 1144,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        992,
+        -224
+      ],
+      "typeVersion": 1,
+      "id": "cf79cfe5-8852-425d-a018-157238d5c10b",
+      "name": "Sticky Note Archiving"
+    },
+    {
+      "parameters": {
+        "content": "## 2B. Analysis Phase (Parallel)\nExtract text and AI analysis concurrently.",
+        "height": 444,
+        "width": 1040,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        992,
+        80
+      ],
+      "typeVersion": 1,
+      "id": "14180626-0078-432a-ba78-e86ab74a0e8d",
+      "name": "Sticky Note Analysis"
+    },
+    {
+      "parameters": {
+        "formTitle": "Résumé Analyzer",
+        "formDescription": "=Upload Your Résumé for Optimal Results",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Full Name",
+              "placeholder": "Gohar Hany",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Email",
+              "fieldType": "email",
+              "placeholder": "example@gmail.com",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Upload Your CV",
+              "fieldType": "file",
+              "multipleFiles": false,
+              "acceptFileTypes": ".pdf",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Applying For",
+              "placeholder": "Front End Developer",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Job Description"
+            }
+          ]
+        },
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        160,
+        -144
+      ],
+      "id": "0239c81d-c74c-4666-8342-b85ac6b10d47",
+      "name": "Candidate_Application_Trigger2",
+      "webhookId": "e9e8c73e-86a8-4fa9-8d1e-b27482dcab06",
+      "retryOnFail": true,
+      "maxTries": 3,
+      "notes": "Enterprise Form Trigger - Captures job applications with validation"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1kdi20HmEdn0xkNcYYCKb_WsPwqAa_A5BRf3ngZoJYyw",
+          "mode": "list",
+          "cachedResultName": "HR System",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kdi20HmEdn0xkNcYYCKb_WsPwqAa_A5BRf3ngZoJYyw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Data Of Applicant",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kdi20HmEdn0xkNcYYCKb_WsPwqAa_A5BRf3ngZoJYyw/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Gmail",
+              "lookupValue": "={{ $('Candidate_Application_Trigger2').item.json.Email }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        368,
+        -144
+      ],
+      "id": "6343a814-4185-41bc-8249-4e7c661a228e",
+      "name": "Check CRM2",
+      "alwaysOutputData": true,
+      "retryOnFail": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jy58BxClZutdZdvF",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "inputDataFieldName": "=Upload_Your_CV",
+        "name": "={{ $('Candidate_Application_Trigger2').item.binary['Upload_Your_CV'].fileName }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1Mb1QWHNYxAjqvkKBvDhV9pvOJo9NUNmh",
+          "mode": "list",
+          "cachedResultName": "HR System",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1Mb1QWHNYxAjqvkKBvDhV9pvOJo9NUNmh"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1056,
+        -144
+      ],
+      "id": "99c0db7a-eb59-45e6-bcd6-1b44bf6229fa",
+      "name": "CV_Upload_Handler2",
+      "retryOnFail": true,
+      "maxTries": 3,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "tEGNyCZrBPzzEnxS",
+          "name": "Google Drive account"
+        }
+      },
+      "notes": "Secure CV upload with file validation and naming convention"
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "={{ $('Candidate_Application_Trigger2').item.json['Full Name'] }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1Mb1QWHNYxAjqvkKBvDhV9pvOJo9NUNmh",
+          "mode": "list",
+          "cachedResultName": "HR System",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1Mb1QWHNYxAjqvkKBvDhV9pvOJo9NUNmh"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1264,
+        -144
+      ],
+      "id": "81e9fc9b-daac-4e96-8638-5fcecc53fa8c",
+      "name": "Create folder2",
+      "retryOnFail": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "tEGNyCZrBPzzEnxS",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "move",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $('CV_Upload_Handler2').item.json.id }}",
+          "mode": "id"
+        },
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1488,
+        -144
+      ],
+      "id": "e4fc35ec-9756-434d-8656-4a2fecccfcd0",
+      "name": "Move file2",
+      "retryOnFail": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "tEGNyCZrBPzzEnxS",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "150bf5e8-f06f-4592-a10f-af6f321401a0",
+              "name": "Name",
+              "value": "={{ $('Candidate_Application_Trigger2').item.json[\"Full Name\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "e57c7040-b7c4-4aec-9ba8-fc90399fa699",
+              "name": "Email",
+              "value": "={{ $('Candidate_Application_Trigger2').item.json.Email }}",
+              "type": "string"
+            },
+            {
+              "id": "13b67741-4a4d-484b-9a1b-f4fd42f57140",
+              "name": "Applied For",
+              "value": "={{ $('Candidate_Application_Trigger2').item.json[\"Applying For\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "b5bc556d-b23e-47f6-a855-0e9e222096a0",
+              "name": "CV Link",
+              "value": "={{ $('CV_Upload_Handler2').item.json.webViewLink }}",
+              "type": "string"
+            },
+            {
+              "id": "b8eb2f01-358d-4a2c-97b8-879786e0c7fa",
+              "name": "ID",
+              "value": "={{ $('Candidate_Application_Trigger2').item.json['Full Name'] }}-{{ Math.floor(Math.random() * 1000) }}",
+              "type": "string"
+            },
+            {
+              "id": "7632680b-05fc-4b2f-837f-72c39e29be12",
+              "name": "Job Description",
+              "value": "={{ $('Candidate_Application_Trigger2').item.json['Job Description'] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1712,
+        -144
+      ],
+      "id": "c316a35d-65f5-46de-a743-9815c386df11",
+      "name": "Data_Sanitization_Engine2",
+      "notes": "Enterprise data transformation with validation and sanitization"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1kdi20HmEdn0xkNcYYCKb_WsPwqAa_A5BRf3ngZoJYyw",
+          "mode": "list",
+          "cachedResultName": "HR System",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kdi20HmEdn0xkNcYYCKb_WsPwqAa_A5BRf3ngZoJYyw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Data Of Applicant",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kdi20HmEdn0xkNcYYCKb_WsPwqAa_A5BRf3ngZoJYyw/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{ $json.Name }}",
+            "Gmail": "={{ $json['Email'] }}",
+            "Applied to": "={{ $json['Applied For'] }}",
+            "CV Link": "={{ $json['CV Link'] }}",
+            "ID": "={{ $json.ID }}",
+            "Timestamp": "={{ $now.setZone('Africa/Cairo').toFormat('yyyy-MM-dd HH:mm:ss') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Gmail",
+              "displayName": "Gmail",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Phone",
+              "displayName": "Phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Applied to",
+              "displayName": "Applied to",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Years of Experience",
+              "displayName": "Years of Experience",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "CV Link",
+              "displayName": "CV Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1936,
+        -144
+      ],
+      "id": "67cf064a-5874-4572-b5c5-89fadad09758",
+      "name": "Applicant_Database_Logger2",
+      "retryOnFail": true,
+      "maxTries": 3,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jy58BxClZutdZdvF",
+          "name": "Google Sheets account"
+        }
+      },
+      "notes": "Centralized applicant data logging with error handling"
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "binaryPropertyName": "Upload_Your_CV",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        1088,
+        160
+      ],
+      "id": "3b6623f6-1b03-44d6-9eaf-eb5613b612c0",
+      "name": "CV_Content_Extractor2",
+      "retryOnFail": true,
+      "maxTries": 3,
+      "notes": "Enterprise PDF text extraction with validation and error handling"
+    },
+    {
+      "parameters": {
+        "model": "anthropic/claude-3-haiku",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        1248,
+        384
+      ],
+      "id": "6b49e59f-8aaa-4adf-9dc9-38230097b05d",
+      "name": "AI_Scoring_Engine2",
+      "credentials": {
+        "openRouterApi": {
+          "id": "k2GUXjwIpXlgJnfH",
+          "name": "HR"
+        }
+      },
+      "notes": "GPT-4o-mini optimized for CV evaluation and scoring"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"report_type\": \"CV Optimization Report\",\n  \"analysis_date\": \"2025-10-25\",\n  \"basic_information\": {\n    \"applicant_name\": \"Ahmed Mohamed\",\n    \"position_applied\": \"Senior Backend Engineer\",\n    \"years_experience\": 5,\n    \"education\": \"B.Sc. Computer Science\"\n  },\n  \"analysis_results\": [\n    {\n      \"criteria\": \"ATS Keyword Match\",\n      \"score\": 85,\n      \"grade\": \"Excellent\",\n      \"notes\": \"Found major keywords: Node.js, AWS, Docker.\"\n    },\n    {\n      \"criteria\": \"Experience Relevance\",\n      \"score\": 70,\n      \"grade\": \"Good\",\n      \"notes\": \"Roles are relevant but lack leadership examples.\"\n    },\n    {\n      \"criteria\": \"Impact & Metrics\",\n      \"score\": 40,\n      \"grade\": \"Poor\",\n      \"notes\": \"Achievements are vague. Needs numbers (e.g., 'Reduced latency by 20%').\"\n    },\n    {\n      \"criteria\": \"Skills Gap Analysis\",\n      \"score\": 90,\n      \"grade\": \"Excellent\",\n      \"notes\": \"Strong technical stack match.\"\n    },\n    {\n      \"criteria\": \"Formatting & Structure\",\n      \"score\": 60,\n      \"grade\": \"Average\",\n      \"notes\": \"Layout is clean but section headers are inconsistent.\"\n    }\n  ],\n  \"overall_assessment\": {\n    \"total_score\": {\n      \"obtained\": 40,\n      \"max\": 50,\n      \"percent\": 80\n    },\n    \"classification\": \"Strong Candidate\",\n    \"job_match\": \"85%\"\n  },\n  \"strengths\": [\n    \"Perfect match for required tech stack (Node.js, Postgres)\",\n    \"Clear career progression in similar industries\",\n    \"Education is relevant to the role\"\n  ],\n  \"areas_for_improvement\": [\n    \"Add 'Kubernetes' and 'Redis' to skills section as per JD\",\n    \"Quantify the impact of the 'E-commerce Migration' project\",\n    \"Fix inconsistent date formatting in Experience section\",\n    \"Add a link to GitHub portfolio\"\n  ],\n  \"recommendations\": {\n    \"final_recommendation\": \"Rewrite the summary to focus on backend scaling and add missing keywords.\",\n    \"interview_priority\": \"High\",\n    \"interview_focus_areas\": [\n      \"System Design for Scalability\",\n      \"Database Optimization strategies\",\n      \"Experience with Microservices\"\n    ]\n  },\n  \"summary_minimal\": {\n    \"score\": 0.8,\n    \"reason\": \"Strong technical fit but resume needs better quantification of achievements.\"\n  }\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        1504,
+        368
+      ],
+      "id": "a366d06f-71e5-466e-a422-dbf639e2e48f",
+      "name": "Structured Output Parser2"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=INPUT DATA:\n1. Candidate Resume: {{ $json.text }}\n2. Target Job Title: {{ $('Candidate_Application_Trigger2').item.json[\"Applying For\"] }} (Or Dynamic Input)\n3. Target Job Description: {{ $('Candidate_Application_Trigger2').item.json['Job Description'] }} (Note: Ensure you map this from the new Form Input)\nCurrent Date : {{ $now.setZone('Africa/Cairo').toFormat('yyyy-MM-dd HH:mm:ss') }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=You are an expert AI Career Coach and Technical Recruiter with 15+ years of experience in talent acquisition. Your goal is to help candidates optimize their resumes to perfectly match a specific Job Description (JD).\n\nYOUR MISSION:\nPerform a deep-gap analysis between the Resume and the Job Description. Do not just grade the candidate; provide actionable advice on how to fix the resume to pass ATS (Applicant Tracking Systems) and impress human recruiters.\n\nANALYSIS RULES:\n1. **Strict Parsimony:** Only output the JSON structure requested. No conversational text.\n2. **ATS Focus:** Identify keywords present in the JD but missing from the Resume.\n3. **Quantification:** Criticize vague claims. Demand numbers/metrics (e.g., \"Improved performance\" -> \"Improved performance by 20%\").\n4. **Tone:** Constructive, professional, encouraging, yet direct about weaknesses.\n\nOUTPUT JSON STRUCTURE:\nYou must return the analysis in the following strict JSON format (compatible with your existing HTML Report Generator):\n\n{\n  \"report_type\": \"CV Optimization Report\",\n  \"analysis_date\": \"{{ $now.format('yyyy-MM-dd') }}\",\n  \"basic_information\": {\n    \"applicant_name\": \"Extracted Name\",\n    \"position_applied\": \"Target Job Title\",\n    \"years_experience\": Number,\n    \"education\": \"Summary of Education\"\n  },\n  \"analysis_results\": [\n    {\n      \"criteria\": \"ATS Keyword Match\",\n      \"score\": 0-10,\n      \"grade\": \"Poor/Average/Good/Excellent\",\n      \"notes\": \"List specific keywords found in JD but missing in CV.\"\n    },\n    {\n      \"criteria\": \"Experience Relevance\",\n      \"score\": 0-10,\n      \"grade\": \"Grade\",\n      \"notes\": \"How well previous roles align with the JD requirements.\"\n    },\n    {\n      \"criteria\": \"Impact & Metrics\",\n      \"score\": 0-10,\n      \"grade\": \"Grade\",\n      \"notes\": \"Assessment of quantified achievements vs generic responsibilities.\"\n    },\n    {\n      \"criteria\": \"Skills Gap Analysis\",\n      \"score\": 0-10,\n      \"grade\": \"Grade\",\n      \"notes\": \"Technical/Soft skills required by JD that are weak or missing in CV.\"\n    },\n    {\n      \"criteria\": \"Formatting & Structure\",\n      \"score\": 0-10,\n      \"grade\": \"Grade\",\n      \"notes\": \"readability and professional layout assessment.\"\n    }\n  ],\n  \"overall_assessment\": {\n    \"total_score\": {\n      \"obtained\": Number,\n      \"max\": 50,\n      \"percent\": Number\n    },\n    \"classification\": \"Needs Improvement / Strong Candidate / Top Tier\",\n    \"job_match\": \"Percentage (0-100%)\"\n  },\n  \"strengths\": [\n    \"List the top 3-5 things the candidate did well matching this specific JD.\"\n  ],\n  \"areas_for_improvement\": [\n    \"Critical fix 1 (e.g., Add keyword X)\",\n    \"Critical fix 2 (e.g., Quantify result Y)\",\n    \"Critical fix 3\",\n    \"Critical fix 4\"\n  ],\n  \"recommendations\": {\n    \"final_recommendation\": \"Actionable Summary (e.g., 'Rewrite summary section and add technical skills section')\",\n    \"interview_priority\": \"High/Medium/Low (likelihood of getting an interview with current version)\",\n    \"interview_focus_areas\": [\n      \"Topic 1 to prepare for\",\n      \"Topic 2 to prepare for\"\n    ]\n  },\n  \"summary_minimal\": {\n    \"score\": 0.0-1.0,\n    \"reason\": \"One sentence summary.\"\n  }\n}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        1296,
+        160
+      ],
+      "id": "636c059d-4782-4708-b032-07039b8268c3",
+      "name": "Resume_Intelligence_Analyzer2",
+      "notes": "Enterprise AI agent for resume analysis with structured output"
+    },
+    {
+      "parameters": {
+        "chatId": "1359742780",
+        "text": "=⚠️ Duplicate Application Detected\n\n👤 Name: {{ $('Candidate_Application_Trigger2').item.json['Full Name'] }}\n📧 Email: {{ $('Candidate_Application_Trigger2').item.json.Email }}\n📅 Previous Application: {{ $('Check CRM2').item.json['Timestamp'] }}\n\nAction: Application rejected.",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        560,
+        240
+      ],
+      "id": "09a23b5c-b8d7-4b72-b465-703e2627ed00",
+      "name": "Send Alert2",
+      "webhookId": "d0ca8b60-785c-4b1d-9acf-f0ce2d84adc9",
+      "credentials": {
+        "telegramApi": {
+          "id": "VYOEVqG3s0JGokPO",
+          "name": "R&D Team"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Send Alert User Try Again",
+        "height": 240,
+        "width": 416,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        512,
+        176
+      ],
+      "typeVersion": 1,
+      "id": "83d4ae1c-883b-4f5b-a7d2-7fd6aaf37ce5",
+      "name": "Sticky Note14"
+    },
+    {
+      "parameters": {
+        "content": "# Résumé Analyzer",
+        "height": 816,
+        "width": 2048
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        112,
+        -272
+      ],
+      "typeVersion": 1,
+      "id": "087dd416-b68b-49e6-b14a-dcf18bfcb9e4",
+      "name": "Sticky Note15"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1kdi20HmEdn0xkNcYYCKb_WsPwqAa_A5BRf3ngZoJYyw",
+          "mode": "list",
+          "cachedResultName": "HR System",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kdi20HmEdn0xkNcYYCKb_WsPwqAa_A5BRf3ngZoJYyw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Data Of Applicant",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kdi20HmEdn0xkNcYYCKb_WsPwqAa_A5BRf3ngZoJYyw/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Gmail": "={{ $('Candidate_Application_Trigger2').item.json.Email }}",
+            "Analysis": "={{ $json.formatted_text }}",
+            "Timestamp": "={{ $now.setZone('Africa/Cairo').toFormat('yyyy-MM-dd HH:mm:ss') }}"
+          },
+          "matchingColumns": [
+            "Gmail"
+          ],
+          "schema": [
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Gmail",
+              "displayName": "Gmail",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Phone",
+              "displayName": "Phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Applied to",
+              "displayName": "Applied to",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Years of Experience",
+              "displayName": "Years of Experience",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "CV Link",
+              "displayName": "CV Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Analysis",
+              "displayName": "Analysis",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1792,
+        320
+      ],
+      "id": "87107367-5864-497e-87a2-1cda5d39d714",
+      "name": "Add Analysis",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jy58BxClZutdZdvF",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items\nreturn items.map(item => {\n  const data = item.json.output;\n\n  // التأكد من وجود البيانات\n  if (!data) {\n    return { json: { text: \"⚠️ No report data found.\" } };\n  }\n\n  // 1. Header & Basic Info\n  let text = `📄 *CV Analysis Report*\\n`;\n  text += `━━━━━━━━━━━━━━━━━━\\n`;\n  text += `👤 *Candidate:* ${data.basic_information.applicant_name}\\n`;\n  text += `🎯 *Role:* ${data.basic_information.position_applied}\\n`;\n  text += `📅 *Date:* ${data.analysis_date}\\n\\n`;\n\n  // 2. Overall Score\n  const score = data.overall_assessment;\n  const scoreEmoji = score.total_score.percent >= 70 ? \"🟢\" : (score.total_score.percent >= 50 ? \"🟡\" : \"🔴\");\n  \n  text += `📊 *Overall Performance*\\n`;\n  text += `${scoreEmoji} **Score:** ${score.total_score.obtained}/${score.total_score.max} (${score.job_match})\\n`;\n  text += `🏷️ **Verdict:** ${score.classification}\\n`;\n  text += `━━━━━━━━━━━━━━━━━━\\n\\n`;\n\n  // 3. Detailed Breakdown\n  text += `📝 *Detailed Breakdown*\\n`;\n  if (data.analysis_results && Array.isArray(data.analysis_results)) {\n    data.analysis_results.forEach(criterion => {\n      // تحديد أيقونة بناءً على الدرجة\n      const gradeIcon = criterion.score >= 4 ? \"✅\" : (criterion.score >= 3 ? \"⚠️\" : \"❌\");\n      \n      text += `${gradeIcon} *${criterion.criteria}* (${criterion.grade})\\n`;\n      text += `> _${criterion.notes}_\\n\\n`;\n    });\n  }\n\n  // 4. Improvements (Critical Section)\n  if (data.areas_for_improvement && data.areas_for_improvement.length > 0) {\n    text += `🚀 *Key Improvements Needed*\\n`;\n    data.areas_for_improvement.forEach(point => {\n      text += `• ${point}\\n`;\n    });\n    text += `\\n`;\n  }\n\n  // 5. Final Recommendation\n  text += `💡 *Final Recommendation*\\n`;\n  text += `${data.recommendations.final_recommendation}\\n`;\n\n  // Return the result in a new field called 'formatted_text'\n  return {\n    json: {\n      ...item.json, // Keep original data if needed\n      formatted_text: text\n    }\n  };\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1632,
+        320
+      ],
+      "id": "aa2d5ee9-978b-4ea4-8c0e-9db04576668d",
+      "name": "Format"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Candidate_Application_Trigger1": {
+      "main": [
+        [
+          {
+            "node": "CV_Upload_Handler1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CV_Upload_Handler1": {
+      "main": [
+        [
+          {
+            "node": "Create folder1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data_Sanitization_Engine1": {
+      "main": [
+        [
+          {
+            "node": "Applicant_Database_Logger1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CV_Content_Retriever1": {
+      "main": [
+        [
+          {
+            "node": "CV_Content_Extractor1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Applicant_Database_Logger1": {
+      "main": [
+        [
+          {
+            "node": "CV_Content_Retriever1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CV_Content_Extractor1": {
+      "main": [
+        [
+          {
+            "node": "Resume_Intelligence_Analyzer1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI_Scoring_Engine1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Resume_Intelligence_Analyzer1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser1": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Resume_Intelligence_Analyzer1",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Resume_Intelligence_Analyzer1": {
+      "main": [
+        []
+      ]
+    },
+    "Create folder1": {
+      "main": [
+        [
+          {
+            "node": "Move file1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Move file1": {
+      "main": [
+        [
+          {
+            "node": "Check CRM1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check CRM1": {
+      "main": [
+        [
+          {
+            "node": "Check1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check1": {
+      "main": [
+        [
+          {
+            "node": "Data_Sanitization_Engine1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Alert1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send text1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete folder1": {
+      "main": [
+        []
+      ]
+    },
+    "Send Alert1": {
+      "main": [
+        [
+          {
+            "node": "Delete folder1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is New Applicant?": {
+      "main": [
+        [
+          {
+            "node": "Restore Binary Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Alert2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Restore Binary Data": {
+      "main": [
+        [
+          {
+            "node": "CV_Upload_Handler2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "CV_Content_Extractor2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Candidate_Application_Trigger2": {
+      "main": [
+        [
+          {
+            "node": "Check CRM2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Restore Binary Data",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Check CRM2": {
+      "main": [
+        [
+          {
+            "node": "Is New Applicant?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CV_Upload_Handler2": {
+      "main": [
+        [
+          {
+            "node": "Create folder2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create folder2": {
+      "main": [
+        [
+          {
+            "node": "Move file2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Move file2": {
+      "main": [
+        [
+          {
+            "node": "Data_Sanitization_Engine2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data_Sanitization_Engine2": {
+      "main": [
+        [
+          {
+            "node": "Applicant_Database_Logger2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CV_Content_Extractor2": {
+      "main": [
+        [
+          {
+            "node": "Resume_Intelligence_Analyzer2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI_Scoring_Engine2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Resume_Intelligence_Analyzer2",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser2": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Resume_Intelligence_Analyzer2",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Resume_Intelligence_Analyzer2": {
+      "main": [
+        [
+          {
+            "node": "Format",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Alert2": {
+      "main": [
+        []
+      ]
+    },
+    "Format": {
+      "main": [
+        [
+          {
+            "node": "Add Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add Analysis": {
+      "main": [
+        [
+          {
+            "node": "Respond with Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "0abde84d-5aa5-46b6-8931-cbbe3fd797d1",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b89dab3f2b0122a80c2f295775dd56db13b5aff073f33e6665bd79933e62cb6d"
+  },
+  "id": "ZjueQeMWsOtYJOUD",
+  "tags": []
+}

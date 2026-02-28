@@ -1,0 +1,246 @@
+%==============================================================================
+% GOHAR HANY - AI Automation ENGINEER
+% Final Verified & Audited LaTeX Code
+% Strictly based on Gohar's actual files (LinkedIn, CV, Reports)
+%==============================================================================
+
+\documentclass[11pt,a4paper]{article}
+
+%------------------------------------------------------------------------------
+% PACKAGES
+%------------------------------------------------------------------------------
+\usepackage[left=0.7in,right=0.7in,top=0.6in,bottom=0.6in]{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{titlesec}
+
+%------------------------------------------------------------------------------
+% DOCUMENT SETTINGS
+%------------------------------------------------------------------------------
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+\pagestyle{empty}
+
+%------------------------------------------------------------------------------
+% HYPERREF
+%------------------------------------------------------------------------------
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    urlcolor=blue,
+    pdftitle={Gohar Hany - AI Automation Engineer},
+    pdfauthor={Gohar Hany}
+}
+
+%------------------------------------------------------------------------------
+% SECTION FORMATTING
+%------------------------------------------------------------------------------
+\titleformat{\section}{\large\bfseries}{}{0em}{}[\vspace{-2pt}\hrule]
+\titlespacing*{\section}{0pt}{12pt}{6pt}
+
+%------------------------------------------------------------------------------
+% DOCUMENT
+%------------------------------------------------------------------------------
+\begin{document}
+
+%==============================================================================
+% HEADER
+%==============================================================================
+\begin{center}
+    {\LARGE\bfseries GOHAR HANY}\\[4pt]
+    Alexandria, Egypt $|$ +20 128 470 9314 $|$ \href{mailto:goharhany9@gmail.com}{goharhany9@gmail.com}\\[2pt]
+    \href{https://linkedin.com/in/goharhany}{linkedin.com/in/goharhany}
+\end{center}
+
+\vspace{8pt}
+
+%==============================================================================
+% SUMMARY
+% Source Verified: LinkedIn summary mentions "500+ users", "80+ partnerships"
+%==============================================================================
+\section*{Summary}
+
+AI Automation Engineer and CS graduate (2025) focused on Agentic AI, automation, and GenAI-driven solutions. Built AI agents, learning assistants, inventory bots, and customer support systems serving 500+ users. Toolkit includes Gemini API, LangChain, FAISS, Supabase, and n8n. Led 80+ partnerships and trained individuals in communication, and leadership.
+
+%==============================================================================
+% TECHNICAL SKILLS
+% Source Verified: LinkedIn skills list + CV technical_skills
+%==============================================================================
+\section*{Technical Skills}
+
+\textbf{Automation \& Workflow:} n8n Workflow Automation, Agentic AI, Intelligent Automation, Workflow Building, Low-Code Engineering
+
+\vspace{6pt}
+
+\textbf{Programming:} Python, JavaScript, Java, Go, Lua, C++, HTML/CSS, SQL
+
+\vspace{6pt}
+
+\textbf{AI/ML:} Gemini API, LangChain, FAISS, Linear Regression, Logistic Regression, SVM, KNN, Decision Trees, K-Means, PCA, Scikit-Learn, NumPy, Pandas, Matplotlib
+
+\vspace{6pt}
+
+\textbf{Tools \& Platforms:} Supabase, Google Sheets API, Telegram Bot API, Jupyter, Kaggle, Figma, Git
+
+%==============================================================================
+% PROFESSIONAL EXPERIENCE (Technical Only)
+% Source Verified: LinkedIn positions
+%==============================================================================
+\section*{Professional Experience}
+
+% Source: Digilians Scholarship
+\textbf{Machine Learning Developer Trainee} \hfill Jan 2026--Present\\
+\textit{Digilians Scholarship, Ministry of Communications \& Military Technical College}
+\begin{itemize}[leftmargin=0.5cm, itemsep=1pt, topsep=2pt, label={-}]
+    \item Enrolled in intensive 4-month residential AI training program covering ML, Deep Learning, NLP, Computer Vision, and MLOps
+    \item Training in Azure AI (Fundamentals + Engineer Associate), LLMs, GANs, Hugging Face, and MLflow
+    \item Working on capstone projects applying learned concepts to real-world scenarios
+\end{itemize}
+
+\vspace{8pt}
+
+% Source: LinkedIn - ITI position
+\textbf{Machine Learning Trainee} \hfill Aug 2024\\
+\textit{Information Technology Institute (ITI), Alexandria}
+\begin{itemize}[leftmargin=0.5cm, itemsep=1pt, topsep=2pt, label={-}]
+    \item Trained in supervised machine learning including feature data types, data quality assessment, handling missing values, outlier detection, and data scaling
+    \item Worked with ML models: Linear Regression, Logistic Regression, Support Vector Machines, K-Nearest Neighbors, and Decision Trees
+    \item Developed understanding of Gradient Descent, Confusion Matrix, Accuracy, Recall, Precision, F-score, and data pipeline concepts
+    \item Learned correct data splitting techniques to avoid data leakage
+\end{itemize}
+
+%==============================================================================
+% AUTOMATION PROJECTS
+% Source Verified: Reports folder (Report_Restaurant, Report_HR, Report_CustomerService, Report_Marketing)
+%==============================================================================
+\section*{Projects}
+
+% Source: Report_Restaurant.md
+\textbf{Restaurant Order \& Stock Management System} -- n8n, GPT-4o-mini, Pusher, Google Sheets
+\begin{itemize}[leftmargin=0.5cm, itemsep=1pt, topsep=2pt, label={-}]
+    \item Built AI Order Agent using GPT-4o-mini for conversational ordering with delivery and dine-in support
+    \item Implemented real-time order notifications using 3 Pusher nodes
+    \item Designed full CRUD operations for bilingual menu management (English/Arabic) with duplicate prevention
+    \item Created Business Analytics Engine calculating COGS, profit margins, and top-selling items
+    \item Built Document RAG pipeline with PDF extraction and Supabase Vector Store embedding
+\end{itemize}
+
+\vspace{6pt}
+
+% Source: Report_CustomerService.md
+\textbf{AI Customer Service System} -- n8n, Claude 3.5 Haiku, Gemini 2.0 Flash, MCP Protocol
+\begin{itemize}[leftmargin=0.5cm, itemsep=1pt, topsep=2pt, label={-}]
+    \item Engineered 3-tier security gateway with prompt injection defense (keyword blocklist, regex patterns, AI jailbreak detection)
+    \item Implemented MCP protocol integration for Email and Calendar operations
+    \item Designed multimodal input processing (text, voice, image) with sub-agent orchestration
+\end{itemize}
+
+\vspace{6pt}
+
+% Source: Report_HR.md
+\textbf{HR Recruitment \& CV Analysis Pipeline} -- n8n, Claude 3 Haiku, Google Drive, Telegram
+\begin{itemize}[leftmargin=0.5cm, itemsep=1pt, topsep=2pt, label={-}]
+    \item Developed dual-track AI analysis (CV Optimization + LinkedIn Profile Audit) with structured JSON output
+    \item Implemented Form Triggers for candidate applications with Google Drive archiving
+    \item Built duplicate detection logic and automated Telegram/WhatsApp notifications
+\end{itemize}
+
+\vspace{6pt}
+
+% Source: Report_Marketing.md
+\textbf{Marketing Content Strategy Engine} -- n8n, Gemini AI, Google Sheets
+\begin{itemize}[leftmargin=0.5cm, itemsep=1pt, topsep=2pt, label={-}]
+    \item Engineered 30-day content calendar generator with AIDA copywriting framework
+    \item Generated art direction prompts with visual specifications
+    \item Implemented multi-platform targeting (LinkedIn, Instagram, X, TikTok)
+\end{itemize}
+
+%==============================================================================
+% EDUCATION
+% Source Verified: LinkedIn + CV (user specified CGPA 3.5)
+%==============================================================================
+\section*{Education}
+
+\textbf{Bachelor of Science in Computer Science} \hfill Oct 2022 -- Oct 2025\\
+Alexandria University, Faculty of Science \hfill GPA: 3.5/4.0 (Excellent with Honors)
+
+\vspace{2pt}
+
+\textit{Graduation Project:} Agentic AI Learning Assistant -- High Excellence Rating
+
+\vspace{2pt}
+
+\textit{Relevant Coursework:} AI, Machine Learning, Distributed Systems, Software Engineering, Databases
+
+%==============================================================================
+% CERTIFICATIONS
+% Source Verified: LinkedIn certifications + CV certifications
+%==============================================================================
+\section*{Certifications}
+
+\begin{itemize}[leftmargin=0.5cm, itemsep=-2pt, parsep=2.7pt, topsep=0pt, label={-}]
+    \item Machine Learning -- Information Technology Institute (ITI), 2024
+    \item AI Automation Kickstart -- Udemy, 2025
+    \item AI for Startups -- Udemy, 2025
+    \item Business Development -- Hawk Insight, 2024
+    \item Python Basics -- Mahara Tech, 2024
+\end{itemize}
+
+%==============================================================================
+% VOLUNTEERING & LEADERSHIP
+% Source Verified: LinkedIn volunteer experiences + CV involvement
+%==============================================================================
+\section*{Volunteering \& Leadership}
+
+% Source: LinkedIn volunteer - 3ommar Community
+\textbf{Vice President} -- 3ommar Community \hfill Jan 2024--Present
+\begin{itemize}[leftmargin=0.5cm, itemsep=1pt, topsep=2pt, label={-}]
+    \item Leading team of 300+ active members and board of 20+ leaders, launched 3 campaigns with 25+ sessions and 10+ strategic deals
+\end{itemize}
+
+\vspace{4pt}
+
+% Source: LinkedIn position - Hawk Insight
+\textbf{Coach} -- Hawk Insight - STP \hfill Jul--Oct 2024
+\begin{itemize}[leftmargin=0.5cm, itemsep=1pt, topsep=2pt, label={-}]
+    \item Guided participants through business development including BMC, operational, financial, and marketing plans
+\end{itemize}
+
+\vspace{4pt}
+
+% Source: CV involvement - 3ommarX
+\textbf{Public Relations Director} -- 3ommarX, Alexandria University \hfill May--Jul 2024
+\begin{itemize}[leftmargin=0.5cm, itemsep=1pt, topsep=2pt, label={-}]
+    \item Managed PR efforts coordinating speaker outreach for 10+ speakers and negotiating 25+ sponsor deals, secured partnerships with 6+ local restaurants, cafes, and sponsors
+\end{itemize}
+
+\vspace{4pt}
+
+% Source: CV involvement - i-Code
+\textbf{Project Manager} -- i-Code, Alexandria University \hfill Aug--Dec 2023
+\begin{itemize}[leftmargin=0.5cm, itemsep=1pt, topsep=2pt, label={-}]
+    \item Managed project teaching soft skills to 100+ members, coordinated selection process with 400 applicants admitting 250 participants, oversaw Front-End, Back-End, Mobile App, and Game Development tracks
+\end{itemize}
+
+\vspace{4pt}
+
+% Source: LinkedIn - iCareer position (moved from Professional Experience)
+\textbf{Professional Development Trainee} -- iCareer, Alexandria \hfill Jul--Aug 2022
+\begin{itemize}[leftmargin=0.5cm, itemsep=1pt, topsep=2pt, label={-}]
+    \item Gained skills in CV writing, interview preparation, self-awareness, and emotional intelligence, familiarized with international and multinational companies across various industries
+\end{itemize}
+
+\vspace{4pt}
+
+%==============================================================================
+% LANGUAGES
+% Source Verified: LinkedIn languages
+%==============================================================================
+\section*{Languages}
+
+\begin{itemize}[leftmargin=0.5cm, itemsep=3pt, topsep=2pt, label={-}]
+    \item Arabic -- Native
+    \item English -- Professional Working Proficiency
+\end{itemize}
+
+\end{document}

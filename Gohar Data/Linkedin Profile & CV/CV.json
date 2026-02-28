@@ -1,0 +1,353 @@
+{
+  "personal_information": {
+    [cite_start]"name": "Gohar Hany [cite: 1]",
+    [cite_start]"email": "goharhany9@gmail.com [cite: 1]",
+    [cite_start]"phone": "01284709314 [cite: 2]",
+    [cite_start]"linkedin": "in/goharhany [cite: 2]"
+  },
+  "summary": [
+    [cite_start]"A highly motivated Computer Science student with a strong foundation in Artificial Intelligence, Machine Learning, and Mathematics. [cite: 4]",
+    [cite_start]"Experienced in applying ML algorithms such as KNN, Decision Trees, and Linear Regression to solve real-world problems. [cite: 5]",
+    [cite_start]"Proficient in mathematical concepts like linear algebra, probability, and calculus, which I integrate into my AI and ML projects to improve accuracy and efficiency. [cite: 6]",
+    [cite_start]"Passionate about leveraging data-driven insights to create intelligent systems, and always eager to expand my knowledge in cutting-edge technologies. [cite: 7]"
+  ],
+  "experience": [
+    {
+      [cite_start]"title": "Trainee [cite: 9]",
+      [cite_start]"organization": "MYM [cite: 10]",
+      [cite_start]"location": "Faculty of Petroleum and Mining Engineering, Suez University [cite: 11]",
+      [cite_start]"date": "October 2022 - October 2024 [cite: 11]",
+      "responsibilities": [
+        [cite_start]"Assisted in public relations tasks and event management, supporting the planning and execution of 3+ high-profile events. [cite: 12]",
+        [cite_start]"Contributed to partnerships and event coordination, managing professional communication with 5+ organizations to strengthen collaboration. [cite: 13]",
+        [cite_start]"Drafted and distributed press releases and promotional materials, ensuring consistent messaging and alignment with event goals. [cite: 14]"
+      ]
+    },
+    {
+      [cite_start]"title": "Trainee [cite: 15]",
+      [cite_start]"organization": "iCareer [cite: 16]",
+      [cite_start]"location": "Alexandria [cite: 17]",
+      [cite_start]"date": "September 2024 - September 2024 [cite: 17]",
+      "responsibilities": [
+        [cite_start]"Learned about emotional intelligence and self-awareness through 5+ workshops, gaining key skills for personal and professional growth. [cite: 18]",
+        [cite_start]"Participated in creating CVs and LinkedIn profiles for 20+ individuals, improving job application materials for career readiness. [cite: 19]",
+        [cite_start]"Attended 10+ workshops focused on interview preparation, learning effective techniques for successful job interviews. [cite: 20]",
+        [cite_start]"Gained exposure to over 50 multinational companies, learning about various industries and career opportunities. [cite: 21]",
+        [cite_start]"Contributed to organizing and participating in 7+ workshops, enhancing career development and networking skills. [cite: 22]"
+      ]
+    },
+    {
+      [cite_start]"title": "Coach [cite: 23]",
+      [cite_start]"organization": "Hawk Insight [cite: 24]",
+      [cite_start]"location": "Alexandria [cite: 25]",
+      [cite_start]"date": "July 2024 - September 2024 [cite: 25]",
+      "responsibilities": [
+        [cite_start]"Mentored 10+ participants in business development, improving project completion rates to 95%. [cite: 26]",
+        [cite_start]"Conducted workshops on soft skills and presentations, improving participant presentation effectiveness by 40%. [cite: 27]",
+        [cite_start]"Helped participants design business plans and secure funding/partnerships, with 85% of them achieving success. [cite: 28]",
+        [cite_start]"Provided one-on-one coaching to enhance strategic thinking, resulting in a 30% increase in business target achievements. [cite: 29]",
+        [cite_start]"Monitored progress with KPIs, ensuring 90% of participants met or exceeded business objectives. [cite: 30]"
+      ]
+    },
+    {
+      [cite_start]"title": "Trainee [cite: 31]",
+      [cite_start]"organization": "ITI - Information Technology Institute [cite: 32]",
+      [cite_start]"location": "Alexandria [cite: 33]",
+      [cite_start]"date": "July 2024 - July 2024 [cite: 33]",
+      "responsibilities": [
+        [cite_start]"Developed and applied supervised machine learning models (Linear Regression, Logistic Regression, SVM, KNN, and Decision Trees) to solve real-world problems, achieving an average model accuracy improvement of 18% across various datasets. [cite: 34]",
+        [cite_start]"Enhanced model performance by addressing missing values, handling outliers, and scaling data, resulting in a 20% increase in overall prediction accuracy for test datasets. [cite: 35]",
+        [cite_start]"Transformed categorical data into suitable formats for analysis using techniques like one-hot encoding and label encoding, improving model efficiency by 15%. [cite: 36]",
+        [cite_start]"Streamlined the data cleaning and transformation process by implementing automated data preprocessing pipelines, reducing data wrangling time by 30%. [cite: 37]",
+        [cite_start]"Evaluated machine learning models using metrics like accuracy, precision, recall, and F-score, ensuring optimal performance and achieving a 90%+ F-score for multiple models. [cite: 38]",
+        [cite_start]"Applied appropriate data splitting techniques, preventing data leakage and ensuring robust model evaluation with 5-fold cross-validation, increasing model reliability by 25%. [cite: 39]"
+      ]
+    }
+  ],
+  "projects": {
+    "ai_and_machine_learning": {
+      [cite_start]"source": "ITI - Information Technology Institute [cite: 42]",
+      [cite_start]"date": "August 2024 - July 2024 [cite: 42]",
+      "items": [
+        [cite_start]"Heart Attack Prediction Model (Python) - Developed a logistic regression model to predict heart attack risks, achieving over 90% accuracy. [cite: 43]",
+        [cite_start]"K-Nearest Neighbors (KNN) (Python) - Implemented a classification model to categorize data points based on proximity, optimizing accuracy and reducing prediction time by 20%. [cite: 44]",
+        [cite_start]"K-Means Clustering (Python) - Designed an unsupervised learning model for data clustering, determining optimal clusters using the elbow method, improving clustering efficiency by 30%. [cite: 45]"
+      ]
+    },
+    "game_development": {
+      [cite_start]"title": "Shape Shifter Game (Love2D, Lua) [cite: 46]",
+      [cite_start]"organization": "Alexandria University, Faculty of Science [cite: 47]",
+      [cite_start]"date": "February 2024 - June 2024 [cite: 47]",
+      [cite_start]"description": "Designed a 2D game with dynamic transformations and interactive gameplay. [cite: 48]"
+    },
+    "mathematical_and_information_retrieval": {
+      [cite_start]"organization": "Faculty of Science, Alexandria University [cite: 50]",
+      [cite_start]"date": "January 2025 - October 2023 [cite: 50]",
+      "items": [
+        [cite_start]"Cosine Similarity: Implemented a model to calculate vector similarity for text analysis, improving recommendation accuracy by 15%. [cite: 51]",
+        [cite_start]"Jaccard Similarity: Developed a model to measure set overlap, enhancing data categorization efficiency by 20%. [cite: 52]",
+        [cite_start]"Statistical Methods: Applied advanced statistical techniques, improving data analysis accuracy by 25%. [cite: 53]",
+        [cite_start]"JM Smoothing Method: Enhanced search result accuracy by 30%, reducing error rates in information retrieval systems. [cite: 54]",
+        [cite_start]"Boolean Search: Built an efficient document retrieval system, improving search speed by 40% and reducing query time. [cite: 55]",
+        [cite_start]"Likelihood Estimation: Estimated probabilities for data prediction, achieving a prediction confidence rate of 95%. [cite: 56]"
+      ]
+    },
+    "low_level_programming": {
+      [cite_start]"organization": "Alexandria University, Faculty of Science [cite: 58]",
+      [cite_start]"date": "January 2024 - October 2023 [cite: 58]",
+      "items": [
+        [cite_start]"Prime Number Checker (MARIE) - Developed a program to identify prime numbers using MARIE Assembly Language, reducing computational steps by 25% and improving execution efficiency. [cite: 59]",
+        [cite_start]"Turing Machine Simulation (MARIE) - Simulated a basic Turing Machine to analyze theoretical computation, demonstrating state transitions for 10+ test cases and enhancing understanding of automata theory. [cite: 60]"
+      ]
+    },
+    "system_simulation": {
+      [cite_start]"organization": "Alexandria University, Faculty of Science [cite: 62]",
+      [cite_start]"date": "June 2023 - February 2023 [cite: 62]",
+      "items": [
+        [cite_start]"Bank System Simulation (Arena Software) - Simulated banking operations, optimizing resource allocation and reducing queue wait times by 25%. [cite: 63]"
+      ]
+    },
+    "software_and_web_development": {
+      [cite_start]"organization": "Alexandria University, Faculty of Science [cite: 65]",
+      [cite_start]"date": "February 2023 - October 2022 [cite: 65]",
+      "items": [
+        [cite_start]"XO Game with AI Algorithm (Python) - Developed a Tic-Tac-Toe game with AI, ensuring only win or draw scenarios, enhancing decision-making efficiency. [cite: 66]",
+        [cite_start]"Pipeline of Instructions (Java) - Built a system to execute sequences of instructions efficiently, optimizing processing speed by 30%. [cite: 67]",
+        [cite_start]"Complete College Management System (Java, OOP, JavaFX, SQL) - Designed a college management application with a GUI and integrated database, improving administrative efficiency by 40%. [cite: 68]",
+        [cite_start]"Online Store Website (HTML, CSS, JavaScript) - Developed a responsive e-commerce website with interactive front-end features, increasing user engagement by 35%. [cite: 69]"
+      ]
+    }
+  },
+  "education": {
+    [cite_start]"degree": "Bachelor of Science in Computer Science [cite: 71]",
+    [cite_start]"university": "Alexandria University, Faculty of Science [cite: 71]",
+    [cite_start]"location": "Alexandria, Egypt [cite: 71]",
+    [cite_start]"graduation_year": "2025 [cite: 71]",
+    [cite_start]"gpa": "3.44 [cite: 71]",
+    "curriculum_highlights": [
+      [cite_start]"Programming Foundations: Proficient in Java, Object-Oriented Programming (OOP), and web development. [cite: 71]",
+      [cite_start]"Core Theoretical Knowledge: Deep understanding of algorithms, data structures, and theory of computation. [cite: 71]",
+      [cite_start]"User-Centric Design: Applied principles of Human-Computer Interaction (HCI) and multimedia for creating intuitive user experiences. [cite: 71]",
+      [cite_start]"Systems & Architecture: In-depth knowledge of operating systems, computer architecture, computer graphics, system programming, and software engineering. [cite: 71]",
+      [cite_start]"Database & AI: Comprehensive insights into database management, foundational AI concepts, and machine learning (ML). [cite: 71]",
+      [cite_start]"Advanced Studies: Studied compiler design, distributed systems, digital image processing, testing, system modeling and simulation, information retrieval, digital logic circuits, and numerical methods. [cite: 71]",
+      [cite_start]"Mathematics & Cybersecurity: Strong foundation in linear algebra, probability and statistics, and cybersecurity principles. [cite: 71]",
+      [cite_start]"Practical Application: Completed numerous projects translating theoretical knowledge into real-world solutions. [cite: 71]"
+    ]
+  },
+  "certifications": [
+    {
+      [cite_start]"name": "Machine Learning [cite: 73]",
+      [cite_start]"issuer": "ITI - Information Technology Institute [cite: 74]",
+      [cite_start]"year": "2024 [cite: 74]",
+      [cite_start]"description": "Acquired advanced skills in building predictive models, analyzing data, and solving AI-related challenges using modern machine learning techniques. [cite: 75]"
+    },
+    {
+      [cite_start]"name": "Business Development [cite: 76]",
+      [cite_start]"issuer": "Hawk insight [cite: 77]",
+      [cite_start]"year": "2024 [cite: 77]",
+      [cite_start]"description": "Developed expertise in business planning, project management, and coaching, focusing on creating operational, financial, and marketing strategies for startups. [cite: 78]"
+    },
+    {
+      [cite_start]"name": "Python Basics [cite: 79]",
+      [cite_start]"issuer": "Mahara Tech [cite: 80]",
+      [cite_start]"year": "2024 [cite: 80]",
+      [cite_start]"description": "Acquired foundational programming skills in Python, including variables, data types, control structures, functions, and basic problem-solving techniques. [cite: 81]"
+    },
+    {
+      [cite_start]"name": "Smart Time Management Program [cite: 82]",
+      [cite_start]"issuer": "My Tools [cite: 83]",
+      [cite_start]"year": "2024 [cite: 83]",
+      [cite_start]"description": "Learned essential time management techniques, including prioritization, task delegation, and goal setting, to improve personal and professional productivity. [cite: 84]"
+    },
+    {
+      [cite_start]"name": "Web Development Basics [cite: 85]",
+      [cite_start]"issuer": "Udacity [cite: 86]",
+      [cite_start]"year": "2023 [cite: 86]",
+      [cite_start]"description": "Learned the basics of HTML, CSS, JavaScript, and Bootstrap, providing foundational skills for creating simple and responsive websites. [cite: 87]"
+    },
+    {
+      [cite_start]"name": "Empower Hub Training [cite: 88]",
+      [cite_start]"issuer": "Empower Hub [cite: 89]",
+      [cite_start]"year": "2022 [cite: 89]",
+      [cite_start]"description": "Developed skills in event coordination, leadership, and team management, contributing to community engagement and project execution. [cite: 90]"
+    }
+  ],
+  "involvement": [
+    {
+      [cite_start]"role": "Multi Media Member [cite: 92]",
+      [cite_start]"organization": "Alexandria University Enactus [cite: 93]",
+      [cite_start]"date": "October 2024 - Present [cite: 93]",
+      "achievements": [
+        [cite_start]"Gained hands-on experience in photography, graphic design, and video editing, producing high-quality visual content for 5+ events. [cite: 94]",
+        [cite_start]"Captured and edited media for the Jobzella event, producing 50+ visual assets, which enhanced social media engagement and boosted event visibility by 20%. [cite: 94]",
+        [cite_start]"Assisted in video editing, ensuring timely delivery of event recap videos viewed by over 500+ individuals across various platforms. [cite: 95]"
+      ]
+    },
+    {
+      [cite_start]"role": "Public Relations Specialist [cite: 96]",
+      [cite_start]"organization": "MA SUSC, Suez University [cite: 97]",
+      [cite_start]"date": "October 2022 - November 2023 [cite: 97]",
+      "achievements": [
+        [cite_start]"Led partnerships with 5+ organizations, resulting in new team opportunities. [cite: 98]",
+        [cite_start]"Represented the team in 3+ major events, increasing visibility and collaboration by 30%. [cite: 99]",
+        [cite_start]"Coordinated with 10+ industry leaders, strengthening the team's network. [cite: 100]",
+        [cite_start]"Negotiated deals with key stakeholders, boosting the team's presence in the community. [cite: 101]",
+        [cite_start]"Developed the team's LinkedIn presence, growing engagement by 25%. [cite: 102]"
+      ]
+    },
+    {
+      [cite_start]"role": "Organizer [cite: 103]",
+      [cite_start]"organization": "British Council Empower hub [cite: 104]",
+      [cite_start]"date": "October 2022 - November 2024 [cite: 104]",
+      "achievements": [
+        [cite_start]"Coordinated logistics for over 5+ workshops and events, ensuring smooth execution and high participant satisfaction. [cite: 105]",
+        [cite_start]"Facilitated interactive sessions attended by 100+ participants, fostering a collaborative and engaging environment. [cite: 106]",
+        [cite_start]"Provided direct support to participants by addressing their needs and connecting then with relevant resources, resulting in 90% positive feedback. [cite: 107]",
+        [cite_start]"Strategized and implemented event plans that aligned with Empower Hub's mission, contributing to a 30% increase in community engagement. [cite: 108]"
+      ]
+    },
+    {
+      [cite_start]"role": "Recruiter [cite: 109]",
+      [cite_start]"organization": "British Council Circle for Training and Consultancy [cite: 110]",
+      [cite_start]"date": "August 2023 - November 2024 [cite: 110]",
+      "achievements": [
+        [cite_start]"Conducted interviews with over 50 individuals from diverse backgrounds, assessing skills and potential for the 'Active Citizens' initiative. [cite: 111]",
+        [cite_start]"Facilitated discussions on community development and UN Sustainable Development Goals (SDGs), influencing strategic initiatives for 100+ participants. [cite: 112]",
+        [cite_start]"Organized and coordinated 5+ events, ensuring seamless operations and participant satisfaction. [cite: 113]",
+        [cite_start]"Provided support in designing and delivering workshops on social change and sustainable development, improving participant knowledge by 40%. [cite: 114]"
+      ]
+    },
+    {
+      [cite_start]"role": "Social Media Member [cite: 115]",
+      [cite_start]"organization": "MA SUSA, Suez University [cite: 116]",
+      [cite_start]"date": "October 2022 - November 2024 [cite: 116]",
+      "achievements": [
+        [cite_start]"Learned how to write engaging content and create appealing posts that resonate with the target audience. [cite: 116]",
+        [cite_start]"Managed social media content, writing 5+ posts that effectively engaged over 200 readers and drove interaction. [cite: 117]",
+        [cite_start]"Acquired marketing skills, focusing on content creation and audience engagement, contributing to a 15% increase in social media engagement rates. [cite: 118]"
+      ]
+    },
+    {
+      [cite_start]"role": "Public Relations Board [cite: 119]",
+      [cite_start]"organization": "Space E, Alexandria University [cite: 120]",
+      [cite_start]"date": "September 2024 - Present [cite: 120]",
+      "achievements": [
+        [cite_start]"Managed public relations for the entire project, overseeing communication strategies. [cite: 121]",
+        [cite_start]"Secured over 30 deals and partnerships with other institutions and events. [cite: 122]",
+        [cite_start]"Led a team of 15 members, providing training and support throughout the season. [cite: 123]"
+      ]
+    },
+    {
+      [cite_start]"role": "Public Relations member [cite: 124]",
+      [cite_start]"organization": "30mmar Team, Alexandria University [cite: 125]",
+      [cite_start]"date": "October 2024 - November 2024 [cite: 125]",
+      "achievements": [
+        [cite_start]"Learned about public relations while contributing to event planning, gaining hands-on experience in strategic communication and media relations. [cite: 126]",
+        [cite_start]"Participated in the first event, securing 5+ deals and establishing strong relationships with key stakeholders. [cite: 127]",
+        [cite_start]"Collaborated with the team to execute event logistics and communication strategies, ensuring smooth operations for over 100 attendees. [cite: 128]"
+      ]
+    },
+    {
+      [cite_start]"role": "Public Relations Board [cite: 129]",
+      [cite_start]"organization": "30mmar Team, Alexandria University [cite: 130]",
+      [cite_start]"date": "October 2022 - November 2024 [cite: 130]",
+      "achievements": [
+        [cite_start]"Assisted in public relations tasks and event management, supporting the planning and execution of 3+ high-profile events. [cite: 131]",
+        [cite_start]"Contributed to partnerships and event coordination, managing professional communication with 5+ organizations to strengthen collaboration. [cite: 132]",
+        [cite_start]"Drafted and distributed press releases and promotional materials, ensuring consistent messaging and alignment with event goals. [cite: 133]"
+      ]
+    },
+    {
+      [cite_start]"role": "Public Relations Member [cite: 134]",
+      [cite_start]"organization": "Space E, Alexandria University [cite: 135]",
+      [cite_start]"date": "July 2022 - October 2024 [cite: 135]",
+      "achievements": [
+        [cite_start]"Managed public relations efforts, ensuring optimal deals for participants and maximizing event value. [cite: 136]",
+        [cite_start]"Secured over 15 deals with local restaurants, offices, and cafes for event collaborations, boosting the event's reach and engagement. [cite: 137]",
+        [cite_start]"Developed and maintained key partnerships, contributing to a 20% increase in the project's visibility and overall success. [cite: 138]"
+      ]
+    },
+    {
+      [cite_start]"role": "Volunteer [cite: 139]",
+      [cite_start]"organization": "Egypt ORCE [cite: 140]",
+      [cite_start]"date": "August 2024 - August 2024 [cite: 140]",
+      "achievements": [
+        [cite_start]"Volunteered in organizing the Open Robotics Championship in Egypt. [cite: 141]",
+        [cite_start]"Assisted with event logistics for over 10 different competitions and 50+ teams. [cite: 142]",
+        [cite_start]"Contributed to the smooth execution of the event, with over 300 attendees. [cite: 143]"
+      ]
+    },
+    {
+      [cite_start]"role": "Public Relations Director [cite: 144]",
+      [cite_start]"organization": "30mmarX, Alexandria University [cite: 145]",
+      [cite_start]"date": "May 2024 - July 2024 [cite: 145]",
+      "achievements": [
+        [cite_start]"Managed PR efforts for the event, coordinating speaker outreach for 10+ prominent speakers and successfully negotiating 25+ sponsor deals. [cite: 146]",
+        [cite_start]"Secured partnerships with 6+ local restaurants, cafes, and sponsors, contributing to a 25% reduction in event costs. [cite: 147]",
+        [cite_start]"Collaborated with TEDx AU to establish a strategic partnership, resulting in attendance exceeding 250 individuals. [cite: 148]"
+      ]
+    },
+    {
+      [cite_start]"role": "Project Manager [cite: 149]",
+      [cite_start]"organization": "i-Code, Alexandria University [cite: 150]",
+      [cite_start]"date": "August 2023 - December 2023 [cite: 150]",
+      "achievements": [
+        [cite_start]"Managed a project aimed at teaching soft skills to 100+ members, ensuring the delivery of engaging and impactful sessions. [cite: 151]",
+        [cite_start]"Oversaw coding education tracks in Front-End, Back-End, Mobile App Development, and Game Development. [cite: 152]",
+        [cite_start]"Coordinated a selection process with 400 applicants, successfully admitting 250 participants. [cite: 153]",
+        [cite_start]"Supervised a team of instructors and mentors, facilitating their collaboration to provide high-quality training. [cite: 154]"
+      ]
+    },
+    {
+      [cite_start]"role": "President [cite: 155]",
+      [cite_start]"organization": "ZeroOne Team, Alexandria University [cite: 156]",
+      [cite_start]"date": "October 2022 - August 2023 [cite: 156]",
+      "achievements": [
+        [cite_start]"Led partnerships with 5+ organizations, expanding the team's network. [cite: 157]",
+        [cite_start]"Represented the team in 3+ major events, enhancing visibility and collaboration. [cite: 158]",
+        [cite_start]"Coordinated with industry leaders, contributing to key team opportunities. [cite: 159]"
+      ]
+    },
+    {
+      [cite_start]"role": "Organizer [cite: 160]",
+      [cite_start]"organization": "Jobzella [cite: 161]",
+      [cite_start]"date": "December 2024 - December 2024 [cite: 161]",
+      "achievements": [
+        [cite_start]"Gained hands-on experience in event planning, coordination, and photography, ensuring the smooth execution of 5+ events. [cite: 162]",
+        [cite_start]"Captured and edited media for the Jobzella event, producing 50+ visual assets. [cite: 163]",
+        [cite_start]"Assisted in managing logistics, coordinating with vendors, and ensuring timely execution of event schedules. [cite: 164]",
+        [cite_start]"Produced high-quality event recap videos, viewed by over 500+ attendees across various platforms. [cite: 165]"
+      ]
+    }
+  ],
+  "skills": {
+    "soft_skills": [
+      [cite_start]"Communication [cite: 167]",
+      [cite_start]"Project Management [cite: 168]",
+      [cite_start]"Team Collaboration [cite: 169]",
+      [cite_start]"Problem-Solving [cite: 170]",
+      [cite_start]"Negotiation [cite: 171]",
+      [cite_start]"Time Management [cite: 172]",
+      [cite_start]"Adaptability [cite: 173]",
+      [cite_start]"Critical Thinking [cite: 174]",
+      [cite_start]"Creativity [cite: 175]",
+      [cite_start]"Public Speaking [cite: 176]",
+      [cite_start]"Emotional Intelligence [cite: 177]"
+    ],
+    "technical_skills": [
+      [cite_start]"Java [cite: 178]",
+      [cite_start]"Go (Programming Language) [cite: 179]",
+      [cite_start]"Lua [cite: 180]",
+      [cite_start]"C++ [cite: 181]",
+      [cite_start]"LOVE (Game Development Framework) [cite: 182]",
+      [cite_start]"HTML/CSS/JavaScript [cite: 183]",
+      [cite_start]"Python [cite: 184]",
+      [cite_start]"UI Design on Figma [cite: 185]",
+      [cite_start]"Object-Oriented Programming (OOP) [cite: 186]",
+      [cite_start]"Database Management [cite: 187]",
+      [cite_start]"AI Fundamentals [cite: 188]",
+      [cite_start]"Web Development [cite: 189]"
+    ]
+  }
+}

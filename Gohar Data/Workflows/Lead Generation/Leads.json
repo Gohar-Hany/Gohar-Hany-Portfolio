@@ -1,0 +1,336 @@
+{
+  "name": "Leads",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "998779ed-d3ec-4ef1-aba3-8203979ad3c6",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://overpass-api.de/api/interpreter",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/x-www-form-urlencoded",
+        "body": "=data=[out:json][timeout:180];node[\"amenity\"=\"{{ $json.Field }}\"](16.0,34.0,32.0,56.0);out;",
+        "options": {
+          "response": {
+            "response": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        224,
+        0
+      ],
+      "id": "0658ce85-613c-4f5a-83ce-1fc2ebad5065",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "jsCode": "// الوصول إلى مصفوفة 'elements' من المدخلات\nconst elements = items[0].json.elements;\n\n// فلترة المصفوفة بناءً على الشروط المطلوبة\nconst qualifiedLeads = elements.filter(element => {\n  \n  // أولاً، نتأكد أن العنصر يحتوي على 'tags' أصلاً، لو لا، يتم استبعاده\n  if (!element.tags) {\n    return false;\n  }\n\n  // الشرط الأول: التأكد من وجود اسم بأي صيغة\n  const hasName = element.tags.name || element.tags['name:en'] || element.tags['name:ar'];\n\n  // الشرط الثاني: التأكد من وجود أي وسيلة تواصل\n  const hasContactInfo = element.tags.phone || element.tags.website || element.tags.email;\n\n  // إرجاع 'true' فقط إذا تحقق الشرطان معاً\n  return hasName && hasContactInfo;\n});\n\n// إرجاع قائمة الـ Leads عالية الجودة النهائية\nreturn qualifiedLeads;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        432,
+        0
+      ],
+      "id": "20552189-160a-4fd2-ab12-1bc09d14b756",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        672,
+        0
+      ],
+      "id": "6e14ac90-caa9-45a5-ad8f-0ea4b988f6b6",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1t25FxRYMdtzbXrHPTbNX2qqJl-qmp8BrTmWfwsFVyzo",
+          "mode": "list",
+          "cachedResultName": "Leads",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1t25FxRYMdtzbXrHPTbNX2qqJl-qmp8BrTmWfwsFVyzo/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1t25FxRYMdtzbXrHPTbNX2qqJl-qmp8BrTmWfwsFVyzo/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "name": "={{ $('Loop Over Items').item.json.tags.name }}",
+            "name:ar": "={{ $('Loop Over Items').item.json.tags[\"name:ar\"] }}",
+            "name:en": "={{ $('Loop Over Items').item.json.tags[\"name:en\"] }}",
+            "phone": "={{ $('Loop Over Items').item.json.tags.phone }}",
+            "website": "={{ $('Loop Over Items').item.json.tags.website }}",
+            "Analysis": "={{ $json.output }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "name:ar",
+              "displayName": "name:ar",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "name:en",
+              "displayName": "name:en",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "phone",
+              "displayName": "phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "website",
+              "displayName": "website",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Analysis",
+              "displayName": "Analysis",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        1360,
+        192
+      ],
+      "id": "b323a473-18bb-43d8-a820-635ed16f8351",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jy58BxClZutdZdvF",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=حلل لي البيانات التالية لهذا المكان:\n\nالاسم: {{ $json.tags.name || \"غير متوفر\" }}\nالعنوان: {{ $json.tags[\"addr:street\"] || \"غير متوفر\" }}\nرقم الهاتف: {{ $json.tags.phone || \"غير متوفر\" }}\nالموقع الإلكتروني: {{ $json.tags.website || \"غير متوفر\" }}\nأوقات العمل: {{ $json.tags[\"opening_hours\"] || \"غير متوفر\" }}\nالموقع على الخريطة: https://www.openstreetmap.org/?mlat={{ $json.lat }}&mlon={{ $json.lon }}\nهل يبدو المكان موثوقًا؟ هل المعلومات كافية؟ وهل تنصح به؟ قدم إجابة موجزة وواضحة.\n",
+        "options": {
+          "systemMessage": "أنت مساعد ذكاء صناعي محترف في تحليل بيانات الشركات والمحال العامة. دورك هو تقييم المعلومات المتوفرة عن كل مكان (مثل صيدلية) من حيث الموثوقية، اكتمال المعلومات، والخدمة المتوقعة. كن دقيقًا واحترافيًا، وقدم تحليلًا واضحًا للمستخدم."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.1,
+      "position": [
+        912,
+        16
+      ],
+      "id": "34c2af2b-b584-4ea3-97d0-7f5a0e329b34",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-4o-mini",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        784,
+        224
+      ],
+      "id": "aa5205de-74c6-4c7a-9bde-c76753b23933",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "P1ypSnrhgffz0a9Q",
+          "name": "HRfoush"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "formTitle": "Filed",
+        "formDescription": "Write Your Target Field",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Field",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        0,
+        256
+      ],
+      "id": "1012da66-3804-4035-ba47-67d7544899e8",
+      "name": "On form submission",
+      "webhookId": "e9a12de7-c42c-4036-beeb-5499de68c12b"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "3d7dd125-e6bf-4c58-aa46-bb37c1140a20",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b89dab3f2b0122a80c2f295775dd56db13b5aff073f33e6665bd79933e62cb6d"
+  },
+  "id": "ezKl8CNaHmyeIz2s",
+  "tags": []
+}

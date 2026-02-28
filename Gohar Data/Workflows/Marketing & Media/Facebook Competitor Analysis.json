@@ -1,0 +1,896 @@
+{
+  "name": "Facebook Competitor Analysis",
+  "nodes": [
+    {
+      "parameters": {
+        "jsCode": "// Extract images with improved metadata\nconst results = [];\nconst data = $input.first().json;\n\n// Profile picture\nif (data.profile.profilePicLarge) {\n  results.push({ \n    url: data.profile.profilePicLarge, \n    type: 'profile_picture',\n    context: 'Brand identity - logo/profile image'\n  });\n}\n\n// Cover photo\nif (data.profile.coverPhoto?.photo?.image?.uri) {\n  results.push({ \n    url: data.profile.coverPhoto.photo.image.uri, \n    type: 'cover_photo',\n    context: 'Brand header - key visual messaging'\n  });\n}\n\n// Posts with deduplication and context\nif (data.posts && Array.isArray(data.posts)) {\n  const seenUrls = new Set();\n  \n  data.posts.forEach(post => {\n    const postContext = {\n      postId: post.id,\n      text: post.text || '',\n      engagement: {\n        reactions: post.reactionCount || 0,\n        comments: post.commentCount || 0\n      },\n      publishDate: post.publishTime ? new Date(post.publishTime * 1000).toISOString() : null\n    };\n\n    // Main post image\n    if (post.image && !seenUrls.has(post.image)) {\n      seenUrls.add(post.image);\n      results.push({ \n        url: post.image, \n        type: 'post_image',\n        context: 'Main post visual',\n        ...postContext\n      });\n    }\n\n    // Carousel images (deduplicated)\n    if (post.images && post.images.length > 0) {\n      post.images.forEach((imgUrl, idx) => {\n        if (!seenUrls.has(imgUrl)) {\n          seenUrls.add(imgUrl);\n          results.push({ \n            url: imgUrl, \n            type: 'post_carousel',\n            carouselIndex: idx + 1,\n            context: `Carousel image ${idx + 1} of ${post.images.length}`,\n            ...postContext\n          });\n        }\n      });\n    }\n  });\n}\n\nreturn results;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2272,
+        864
+      ],
+      "id": "ede78f6a-4d52-4012-ad7a-9167d6c2550c",
+      "name": "Extract Images with Context"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -2048,
+        864
+      ],
+      "id": "02b9d8ac-f38a-4cc6-b31c-184cf7db201b",
+      "name": "Loop Over Images"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.groq.com/openai/v1/chat/completions",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_GROQ_API_KEY"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ {\n  \"model\": \"meta-llama/llama-4-scout-17b-16e-instruct\",\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"You are an expert brand strategist and visual analyst specializing in social media marketing. Analyze images with a focus on: branding elements, design patterns, color psychology, messaging strategy, emotional triggers, and competitive positioning. Always respond in valid JSON format.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": [\n        {\n          \"type\": \"text\",\n          \"text\": \"Analyze this \" + $json.type + \" image from a Facebook page.\\n\\nContext: \" + $json.context + (($json.text) ? \"\\n\\nPost Text: \" + $json.text : \"\") + \"\\n\\nProvide comprehensive analysis in strict JSON format with these fields:\\n\\n{\\n  \\\"visual_elements\\\": {\\n    \\\"primary_colors\\\": [\\\"list of hex codes or color names\\\"],\\n    \\\"color_psychology\\\": \\\"what emotions/associations these colors evoke\\\",\\n    \\\"typography\\\": {\\n      \\\"fonts_used\\\": [\\\"font names if identifiable\\\"],\\n      \\\"text_hierarchy\\\": \\\"description of text layout\\\",\\n      \\\"readability_score\\\": \\\"1-10 rating\\\"\\n    },\\n    \\\"composition\\\": \\\"layout type (grid/asymmetric/centered etc)\\\",\\n    \\\"design_style\\\": \\\"modern/minimalist/corporate/creative etc\\\"\\n  },\\n  \\\"branding\\\": {\\n    \\\"logo_visible\\\": true/false,\\n    \\\"logo_placement\\\": \\\"position and prominence\\\",\\n    \\\"brand_consistency\\\": \\\"1-10 rating with explanation\\\",\\n    \\\"brand_personality\\\": [\\\"list of traits: professional, playful, innovative, etc\\\"]\\n  },\\n  \\\"content_analysis\\\": {\\n    \\\"main_message\\\": \\\"core message being communicated\\\",\\n    \\\"call_to_action\\\": \\\"explicit or implicit CTA\\\",\\n    \\\"target_audience\\\": \\\"inferred audience demographic\\\",\\n    \\\"emotional_tone\\\": \\\"inspirational/educational/promotional etc\\\",\\n    \\\"content_type\\\": \\\"infographic/quote/product/service/announcement etc\\\"\\n  },\\n  \\\"marketing_strategy\\\": {\\n    \\\"engagement_potential\\\": \\\"1-10 rating\\\",\\n    \\\"engagement_factors\\\": [\\\"what makes this engaging or not\\\"],\\n    \\\"value_proposition\\\": \\\"what value is offered to the audience\\\",\\n    \\\"differentiation\\\": \\\"how this stands out from competitors\\\",\\n    \\\"improvement_suggestions\\\": [\\\"2-3 actionable improvements\\\"]\\n  },\\n  \\\"technical_quality\\\": {\\n    \\\"image_quality\\\": \\\"professional/good/average/poor\\\",\\n    \\\"resolution_estimate\\\": \\\"high/medium/low\\\",\\n    \\\"design_tools_likely_used\\\": [\\\"Canva/Photoshop/Figma etc\\\"]\\n  },\\n  \\\"competitive_insights\\\": {\\n    \\\"industry_alignment\\\": \\\"how well this aligns with industry standards\\\",\\n    \\\"trend_adoption\\\": \\\"current/dated/ahead of trends\\\",\\n    \\\"unique_elements\\\": [\\\"what makes this unique\\\"],\\n    \\\"common_elements\\\": [\\\"what follows common patterns\\\"]\\n  },\\n  \\\"overall_assessment\\\": {\\n    \\\"effectiveness_score\\\": \\\"1-10 rating\\\",\\n    \\\"strengths\\\": [\\\"3-5 key strengths\\\"],\\n    \\\"weaknesses\\\": [\\\"3-5 areas for improvement\\\"],\\n    \\\"strategy_category\\\": \\\"brand awareness/lead gen/engagement/education etc\\\"\\n  }\\n}\\n\\nBe specific, analytical, and actionable in your assessment.\"\n        },\n        {\n          \"type\": \"image_url\",\n          \"image_url\": {\n            \"url\": $json.url\n          }\n        }\n      ]\n    }\n  ],\n  \"response_format\": {\n    \"type\": \"json_object\"\n  },\n  \"temperature\": 0.7,\n  \"max_completion_tokens\": 2048\n} }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -1760,
+        864
+      ],
+      "id": "6e39b473-900e-47f3-bce7-77b3127bd858",
+      "name": "Vision Analysis (Enhanced)"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=# Comprehensive Facebook Competitor Analysis Report\n\n## Page Profile Summary\n**Name:** {{ $('Prepare for AI1').first().json.profile.name }}\n**Category:** {{ $('Prepare for AI1').first().json.profile.category }}\n**Bio:** {{ $('Prepare for AI1').first().json.profile.pageIntro }}\n**Followers:** {{ $('Prepare for AI1').first().json.profile.followerCount }}\n**Engagement Metrics:** {{ $('Prepare for AI1').first().json.profile.likeCount }} likes\n\n## Visual Analysis Results\n{{ $json.output }}\n\n## Recent Posts Context\n{{ \n  JSON.stringify(\n    $('Prepare for AI1').first().json.posts.slice(0, 5).map(post => ({\n      id: post.id,\n      text: post.text || \"No text\",\n      publishDate: post.publishTime ? new Date(post.publishTime * 1000).toISOString().split('T')[0] : null,\n      engagement: {\n        reactions: post.reactionCount || 0,\n        comments: post.commentCount || 0\n      },\n      contentType: post.images?.length > 1 ? \"carousel\" : post.image ? \"image\" : post.videoDetails?.sdUrl ? \"video\" : \"text\",\n      imageCount: post.images?.length || (post.image ? 1 : 0),\n      topComment: post.topComments?.[0]?.text || null\n    })),\n    null, \n    2\n  )\n}}",
+        "hasOutputParser": true,
+        "messages": {
+          "messageValues": [
+            {
+              "message": "=# System Prompt: Facebook Competitor Strategy Analyst\n\nYou are an elite marketing strategist specializing in competitive analysis for digital agencies. Your task is to synthesize visual analysis data, content patterns, and engagement metrics into actionable strategic insights.\n\n## Analysis Framework\n\n### 1. BRAND POSITIONING\nAnalyze:\n- Visual identity consistency across all images\n- Brand personality and tone evolution\n- Unique value proposition clarity\n- Market positioning relative to competitors\n\n### 2. CONTENT STRATEGY PATTERNS\nIdentify:\n- Content pillars and themes\n- Posting frequency and timing patterns\n- Content format preferences (carousel, single image, video)\n- Engagement optimization tactics\n\n### 3. VISUAL DESIGN EVOLUTION\nTrack:\n- Design style consistency/changes over time\n- Color palette strategy\n- Typography choices and hierarchy\n- Use of graphics vs photography\n\n### 4. AUDIENCE ENGAGEMENT TACTICS\nEvaluate:\n- CTA strategies and effectiveness\n- Emotional triggers used\n- Value delivery methods\n- Community building approaches\n\n### 5. COMPETITIVE ADVANTAGES\nDetermine:\n- What they do better than competitors\n- Gaps in their strategy\n- Opportunities for differentiation\n- Threats to watch\n\n### 6. STRATEGIC RECOMMENDATIONS\nProvide:\n- Top 5 immediate improvements\n- Long-term strategic shifts needed\n- Content ideas to test\n- Design refinements\n\n## Output Format\n\nProvide your analysis as a structured markdown report with:\n\n1. **Executive Summary** (3-5 key findings)\n2. **Brand Identity Assessment** (consistency, personality, positioning)\n3. **Content Strategy Breakdown** (what's working, what's not)\n4. **Visual Design Audit** (quality, trends, effectiveness)\n5. **Engagement Analysis** (what drives interactions)\n6. **Competitive Positioning** (strengths, weaknesses, opportunities, threats)\n7. **Strategic Recommendations** (prioritized action items)\n8. **Key Metrics Dashboard** (quantified insights)\n\nBe specific, data-driven, and actionable. Use the visual analysis results to support your conclusions."
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "id": "19b08ed9-eb39-4875-8e70-cec486b73467",
+      "name": "Generate Strategy Report",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        -1472,
+        464
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "url-field",
+              "name": "URL",
+              "value": "={{ $json.body.facebook_url }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "6f232e55-4fab-471b-9083-fd7b724bbbaa",
+      "name": "Input URL1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -3168,
+        864
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "facebook",
+        "url": "={{ $json.URL }}",
+        "requestOptions": {}
+      },
+      "id": "b669d748-2bc3-4a3c-b337-115b6d1bee33",
+      "name": "Scrape Profile1",
+      "type": "n8n-nodes-scrape-creators.scrapeCreators",
+      "typeVersion": 1,
+      "position": [
+        -2944,
+        752
+      ],
+      "credentials": {
+        "scrapeCreatorsApi": {
+          "id": "LkrObPybPnTe2zVm",
+          "name": "Hackathon"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "facebook",
+        "operation": "getFacebookProfilePosts",
+        "url": "={{ $json.URL }}",
+        "limit": 2,
+        "requestOptions": {}
+      },
+      "id": "563aacff-bed9-4672-8959-58a004f163e8",
+      "name": "Scrape Posts1",
+      "type": "n8n-nodes-scrape-creators.scrapeCreators",
+      "typeVersion": 1,
+      "position": [
+        -2944,
+        944
+      ],
+      "credentials": {
+        "scrapeCreatorsApi": {
+          "id": "LkrObPybPnTe2zVm",
+          "name": "Hackathon"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combinationMode": "mergeByPosition",
+        "options": {}
+      },
+      "id": "28ad616f-0737-452c-8c88-93a5b47ba3fc",
+      "name": "Merge Scraped Data1",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2.1,
+      "position": [
+        -2720,
+        864
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "p1",
+              "name": "profile",
+              "value": "={{ $node[\"Scrape Profile1\"].json }}",
+              "type": "object"
+            },
+            {
+              "id": "p2",
+              "name": "posts",
+              "value": "={{ $node[\"Scrape Posts1\"].json.posts }}",
+              "type": "array"
+            },
+            {
+              "id": "a7fc3ce6-5959-4ec2-b0d3-81175ac48708",
+              "name": "Name",
+              "value": "={{ $json.name }}",
+              "type": "string"
+            },
+            {
+              "id": "c9fa62d9-9cc2-4dab-a750-4901ef5d6478",
+              "name": "Category",
+              "value": "={{ $json.category }}",
+              "type": "string"
+            },
+            {
+              "id": "3c527db0-9c77-49f3-915f-1c7a63ad327c",
+              "name": "Bio",
+              "value": "={{ $json.pageIntro }}",
+              "type": "string"
+            },
+            {
+              "id": "c2344a9a-6178-4c7e-8e1c-bfe852b9708a",
+              "name": "Followers",
+              "value": "={{ $json.followerCount }}",
+              "type": "string"
+            },
+            {
+              "id": "1b2cd3bf-9ceb-40a4-8b12-c91e5219a129",
+              "name": "Engagement",
+              "value": "={{ $json.likeCount }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "daf8818a-3e80-4142-9763-198c8b67d5c7",
+      "name": "Prepare for AI1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -2496,
+        864
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "15xKvCyiDq7Om6RozM7X5Qud3WFSfeCh3nAHYA43RTiY",
+          "mode": "list",
+          "cachedResultName": "Facebook Analysis",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/15xKvCyiDq7Om6RozM7X5Qud3WFSfeCh3nAHYA43RTiY/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Visual",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/15xKvCyiDq7Om6RozM7X5Qud3WFSfeCh3nAHYA43RTiY/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Image URL": "={{ $('Loop Over Images').item.json.url }}",
+            "Content Type": "={{ $('Loop Over Images').item.json.type }}",
+            "Context": "={{ $('Loop Over Images').item.json.context }}",
+            "Analysis Date": "={{ $json.analyzed_at }}",
+            "Primary Colors": "={{ ($json.analysis.visual_elements.primary_colors ?? []).join(', ') }}",
+            "Color Psychology": "={{ $json.analysis.visual_elements.color_psychology }}",
+            "Design Style": "={{ $json.analysis.visual_elements.design_style }}",
+            "Composition": "={{ $json.analysis.visual_elements.composition }}",
+            "Typography (Fonts)": "={{ ($json.analysis.visual_elements.typography.fonts_used ?? []).join(', ') }}",
+            "Text Hierarchy": "={{ $json.analysis.visual_elements.typography.text_hierarchy }}",
+            "Readability Score": "={{ Number($json.analysis.visual_elements.typography.readability_score) }}",
+            "Logo Visible": "={{ $json.analysis.branding.logo_visible ? 'Yes' : 'No' }}",
+            "Logo Placement": "={{ $json.analysis.branding.logo_placement }}",
+            "Brand Consistency ( /10 )": "={{ Number($json.analysis.branding.brand_consistency) }}",
+            "Main Message": "={{ $json.analysis.content_analysis.main_message }}",
+            "Call To Action": "={{ $json.analysis.content_analysis.call_to_action }}",
+            "Target Audience": "={{ $json.analysis.content_analysis.target_audience }}",
+            "Emotional Tone": "={{ $json.analysis.content_analysis.emotional_tone }}",
+            "Strengths": "={{ ($json.analysis.overall_assessment.strengths ?? []).join(' + ') }}",
+            "Weaknesses": "={{ ($json.analysis.overall_assessment.weaknesses ?? []).join(' - ') }}",
+            "Improvement Suggestions": "={{ ($json.analysis.marketing_strategy.improvement_suggestions ?? []).join('\\n') }}",
+            "Strategy Category": "={{ $json.analysis.overall_assessment.strategy_category }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Image URL",
+              "displayName": "Image URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Analysis Date",
+              "displayName": "Analysis Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Context",
+              "displayName": "Context",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Content Type",
+              "displayName": "Content Type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Primary Colors",
+              "displayName": "Primary Colors",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Color Psychology",
+              "displayName": "Color Psychology",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Design Style",
+              "displayName": "Design Style",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Composition",
+              "displayName": "Composition",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Typography (Fonts)",
+              "displayName": "Typography (Fonts)",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Text Hierarchy",
+              "displayName": "Text Hierarchy",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Readability Score",
+              "displayName": "Readability Score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Design Style",
+              "displayName": "Design Style",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Logo Visible",
+              "displayName": "Logo Visible",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Logo Placement",
+              "displayName": "Logo Placement",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Brand Consistency ( /10 )",
+              "displayName": "Brand Consistency ( /10 )",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Logo Visible",
+              "displayName": "Logo Visible",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Main Message",
+              "displayName": "Main Message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Call To Action",
+              "displayName": "Call To Action",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Target Audience",
+              "displayName": "Target Audience",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Emotional Tone",
+              "displayName": "Emotional Tone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Strengths",
+              "displayName": "Strengths",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Weaknesses",
+              "displayName": "Weaknesses",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Improvement Suggestions",
+              "displayName": "Improvement Suggestions",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Strategy Category",
+              "displayName": "Strategy Category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -896,
+        944
+      ],
+      "id": "8a376386-5f19-4a31-9a8f-0a984e206add",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jy58BxClZutdZdvF",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Role: You are a Senior Visual Strategy Analyst & Brand Consultant.\n\nObjective: Your task is to provide a high-level strategic analysis of competitor visuals using the data stored in the 'Competitor_Visual_Database'.\n\nInstructions:\n1. Access the 'Competitor_Visual_Database' to retrieve all analyzed visual records.\n2. Synthesize findings across Color Psychology, Typography, and Branding Consistency.\n3. Identify market trends and psychological triggers used by the competitor.\n4. Provide actionable marketing recommendations to outperform them based on their identified weaknesses.\n\nTone: Professional, data-driven, and highly analytical. Avoid generic advice; focus on the specific data found in the sheet.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -1824,
+        464
+      ],
+      "id": "b5e390fc-809e-4f28-a0fe-1a0e52d658fe",
+      "name": "Visual Strategy Analyst",
+      "retryOnFail": true,
+      "maxTries": 2
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "15xKvCyiDq7Om6RozM7X5Qud3WFSfeCh3nAHYA43RTiY",
+          "mode": "list"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        -1760,
+        688
+      ],
+      "id": "deda9a10-8620-4541-8e76-d6e8ad83dad6",
+      "name": "Competitor_Visual_Database",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jy58BxClZutdZdvF",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// كود n8n المعدل - بيحافظ على الـ structure المتوقع من Google Sheets\n\nfor (const item of $input.all()) {\n  try {\n    // استخراج الـ Content من الـ item\n    const contentString = item.json.Content;\n    \n    // تحويل الـ string لـ JSON object\n    const parsedContent = JSON.parse(contentString);\n    \n    // بناء الـ structure المطلوب بالضبط\n    const output = {\n      // معلومات الصورة من Loop Over Images\n      image_metadata: {\n        url: item.json.url,\n        type: item.json.type,\n        context: item.json.context,\n        postId: item.json.postId || null,\n        text: item.json.text || null,\n        engagement: item.json.engagement || null,\n        publishDate: item.json.publishDate || null,\n        carouselIndex: item.json.carouselIndex || null\n      },\n      \n      // التحليل المفصول\n      analysis: parsedContent,\n      \n      // timestamp\n      analyzed_at: new Date().toISOString()\n    };\n    \n    // استبدال الـ item بالـ structure الجديد\n    item.json = output;\n    \n  } catch (error) {\n    // في حالة حصول خطأ - نحتفظ بالـ data الأصلية\n    item.json = {\n      error: true,\n      message: error.message,\n      original_data: item.json,\n      analyzed_at: new Date().toISOString()\n    };\n  }\n}\n\nreturn $input.all();"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1120,
+        864
+      ],
+      "id": "2e9fc8aa-bd38-4dd8-8fc7-7a970c8ddd46",
+      "name": "Parse & Enrich Results2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ae54dacf-f012-4956-bd9e-6f839267b706",
+              "name": "Content",
+              "value": "={{ $json.choices[0].message.content }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1408,
+        864
+      ],
+      "id": "8f1f6b34-9979-462b-89e6-456b3c524ecc",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"executive_summary\": {\n      \"type\": \"string\",\n      \"description\": \"3-5 key findings in bullet points\"\n    },\n    \"brand_identity_assessment\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"consistency_score\": {\"type\": \"number\", \"minimum\": 1, \"maximum\": 10},\n        \"personality_traits\": {\"type\": \"array\", \"items\": {\"type\": \"string\"}},\n        \"positioning_statement\": {\"type\": \"string\"}\n      }\n    },\n    \"content_strategy_breakdown\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"whats_working\": {\"type\": \"array\", \"items\": {\"type\": \"string\"}},\n        \"whats_not_working\": {\"type\": \"array\", \"items\": {\"type\": \"string\"}},\n        \"content_pillars\": {\"type\": \"array\", \"items\": {\"type\": \"string\"}}\n      }\n    },\n    \"visual_design_audit\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"quality_rating\": {\"type\": \"string\", \"enum\": [\"excellent\", \"good\", \"average\", \"poor\"]},\n        \"design_trends\": {\"type\": \"array\", \"items\": {\"type\": \"string\"}},\n        \"effectiveness_score\": {\"type\": \"number\", \"minimum\": 1, \"maximum\": 10}\n      }\n    },\n    \"engagement_analysis\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"top_engagement_drivers\": {\"type\": \"array\", \"items\": {\"type\": \"string\"}, \"maxItems\": 5},\n        \"avg_engagement_rate\": {\"type\": \"string\"}\n      }\n    },\n    \"swot_analysis\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"strengths\": {\"type\": \"array\", \"items\": {\"type\": \"string\"}, \"maxItems\": 5},\n        \"weaknesses\": {\"type\": \"array\", \"items\": {\"type\": \"string\"}, \"maxItems\": 5},\n        \"opportunities\": {\"type\": \"array\", \"items\": {\"type\": \"string\"}, \"maxItems\": 5},\n        \"threats\": {\"type\": \"array\", \"items\": {\"type\": \"string\"}, \"maxItems\": 5}\n      }\n    },\n    \"strategic_recommendations\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"priority\": {\"type\": \"string\", \"enum\": [\"high\", \"medium\", \"low\"]},\n          \"action\": {\"type\": \"string\"},\n          \"expected_impact\": {\"type\": \"string\"}\n        }\n      },\n      \"maxItems\": 10\n    },\n    \"key_metrics\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"total_posts_analyzed\": {\"type\": \"number\"},\n        \"avg_engagement_rate\": {\"type\": \"number\"},\n        \"brand_consistency_score\": {\"type\": \"number\"},\n        \"visual_quality_score\": {\"type\": \"number\"}\n      }\n    }\n  },\n  \"required\": [\"executive_summary\", \"swot_analysis\", \"strategic_recommendations\"]\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        -1328,
+        688
+      ],
+      "id": "71b0b8d4-6db5-44d7-82df-7eda0c4f92a9",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        -1120,
+        576
+      ],
+      "id": "68f74686-11a4-47f1-8502-aca4be612ac8",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "Facebook",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -3392,
+        864
+      ],
+      "id": "11c2a04d-ebbf-4c69-bdb9-602131ae7582",
+      "name": "Webhook",
+      "webhookId": "c23ab02c-ff93-4515-aa51-aaa55fac6636"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-4o-mini",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        -1472,
+        688
+      ],
+      "id": "1520dff5-5640-4737-91f0-bf0c2ddc0f98",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "4EX4QFWKTRgupXJH",
+          "name": "Hackathon"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Extract Images with Context": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Images",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Images": {
+      "main": [
+        [
+          {
+            "node": "Visual Strategy Analyst",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Vision Analysis (Enhanced)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Vision Analysis (Enhanced)": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Strategy Report": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Input URL1": {
+      "main": [
+        [
+          {
+            "node": "Scrape Profile1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Scrape Posts1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Scrape Profile1": {
+      "main": [
+        [
+          {
+            "node": "Merge Scraped Data1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Scrape Posts1": {
+      "main": [
+        [
+          {
+            "node": "Merge Scraped Data1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge Scraped Data1": {
+      "main": [
+        [
+          {
+            "node": "Prepare for AI1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare for AI1": {
+      "main": [
+        [
+          {
+            "node": "Extract Images with Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Images",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Competitor_Visual_Database": {
+      "ai_tool": [
+        [
+          {
+            "node": "Visual Strategy Analyst",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Visual Strategy Analyst": {
+      "main": [
+        [
+          {
+            "node": "Generate Strategy Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Parse & Enrich Results2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse & Enrich Results2": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Generate Strategy Report",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Input URL1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Visual Strategy Analyst",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Generate Strategy Report",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "34e01f6a-d9d5-434d-b634-4225524f0aaa",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b89dab3f2b0122a80c2f295775dd56db13b5aff073f33e6665bd79933e62cb6d"
+  },
+  "id": "aoIDrMXrbamrIngu",
+  "tags": []
+}

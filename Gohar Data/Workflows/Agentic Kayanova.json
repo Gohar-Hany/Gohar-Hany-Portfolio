@@ -1,0 +1,3421 @@
+{
+  "name": "Agentic Kayanova",
+  "nodes": [
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "2f35809b-3889-4ef7-a8d5-a4d934842631",
+              "name": "userMessage",
+              "value": "={{ $json.body.message }}",
+              "type": "string"
+            },
+            {
+              "id": "6bb14aa8-ab61-4164-a783-784c8f7dc4c3",
+              "name": "sessionId",
+              "value": "={{ $json.body.session_id }}",
+              "type": "string"
+            },
+            {
+              "id": "7c25919c-4990-5fg8-b9e6-b5e045953742",
+              "name": "timestamp",
+              "value": "={{ $now.toISO() }}",
+              "type": "string"
+            },
+            {
+              "id": "8d36020d-5aa1-6gh9-c0f7-c6f156064853",
+              "name": "userId",
+              "value": "={{ $json.body.user_id || 'anonymous' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        4208,
+        3152
+      ],
+      "id": "bc7b40f0-5c47-44dd-9c69-5231ad36c02f",
+      "name": "Parse User Input"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.userMessage }}",
+        "options": {
+          "systemMessage": "=و المستخدم بيتكلم بالعربي، رد عليه بالعربي المصري بأسلوب بسيط ومهذب ومفهوم. لو المستخدم كتب بالإنجليزي، كمل معاه بالإنجليزي بنفس المستوى.\n\nإنت الـ Orchestrator Core في نظام كيانوفا. شغلتك الأساسية هي فهم سؤال المستخدم وتوجيهه للـ Agent المناسب.\n\n🛑 القاعدة الأهم: الـ Agents المتخصصون (Tech – Sales – Marketing – Creative – Search) يمكنهم الآن طلب معلومات أو مساعدة من وكلاء آخرين مباشرةً. إذا قام أحد الـ Agents باستخدام Tool (أداة) لطلب معلومة من Agent آخر، يجب عليك أن تعمل كـ Proxy (وسيط).\n\nاستقبل طلب الـ Agent: إذا استخدم Agent أداة Agent_Name، يجب عليك تمرير الرسالة إلى هذا الـ Agent المطلوب تنفيذه.\n\nأعد النتيجة: بعد تنفيذ طلب الـ Agent الآخر، قم بإعادة النتيجة (Output) إلى الـ Agent الأصلي الذي طلبها، ثم اسمح له بإكمال إجابته النهائية للمستخدم.\n\nمتردش بنفسك إلا في حالتين بس:\n\nلو السؤال مش واضح وعايز توضيح.\n\nأو لو مافيش Agent مناسب أو طلب الـ Agent الآخر فشل.\n\nدايمًا خليك محايد، مختصر، ومهذب."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.1,
+      "position": [
+        4976,
+        3152
+      ],
+      "id": "1778c840-4e94-48b4-a5c4-55cc2056517f",
+      "name": "Orchestrator Agent",
+      "retryOnFail": true,
+      "maxTries": 3,
+      "retryOnFailExecution": "all",
+      "waitBetweenTries": 1000
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-4o-mini",
+        "options": {
+          "maxTokens": 2000,
+          "temperature": 0.3,
+          "topP": 0.9
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        4736,
+        3280
+      ],
+      "id": "5269f2d6-5ff6-469f-b3fa-af61fb96185e",
+      "name": "Orchestrator LLM (GPT-4o)",
+      "credentials": {
+        "openRouterApi": {
+          "id": "Ax2jv1nsA7Oarldx",
+          "name": "HRFoush Test"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId }}",
+        "contextWindowLength": 100
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        4912,
+        3344
+      ],
+      "id": "03d3ccd1-d1b0-4ce5-a0d0-31ce33d286fb",
+      "name": "Session Memory (100 msgs)"
+    },
+    {
+      "parameters": {
+        "description": "CRITICAL TOOL: Use this FIRST before making any routing decision. This tool searches Kayanova's knowledge base (vector database) to retrieve relevant context about:\n- Company mission, vision, values, and identity\n- Service offerings and capabilities per department\n- Which agent handles which types of queries\n- Client case studies and examples\n- Pricing structures and package information\n\nWhen to use:\n- ALWAYS use before routing to any agent\n- When user asks about Kayanova's services\n- When uncertain which agent to route to\n- When need context to make informed decisions\n\nThis tool helps you make INTELLIGENT routing decisions based on actual company knowledge, not guesses."
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolVectorStore",
+      "typeVersion": 1.1,
+      "position": [
+        5248,
+        3280
+      ],
+      "id": "89824824-a286-4557-b37d-a8a6eb94c9ff",
+      "name": "Kayanova Knowledge Base RAG"
+    },
+    {
+      "parameters": {
+        "tableName": {
+          "__rl": true,
+          "value": "kayanova",
+          "mode": "list",
+          "cachedResultName": "kayanova"
+        },
+        "options": {
+          "queryName": "match_kayanova"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        5232,
+        3440
+      ],
+      "id": "4e62628e-0341-4c76-a89d-21c6fe6b02aa",
+      "name": "Supabase Vector Store",
+      "credentials": {
+        "supabaseApi": {
+          "id": "SwPgyGjnZWNT2C66",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        5232,
+        3600
+      ],
+      "id": "0e22fb96-81e8-45df-86a7-29e7ce67c119",
+      "name": "Gemini Embeddings",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "2oe6nreVlfGHRk0g",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-4o-mini",
+        "options": {
+          "temperature": 0.2
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        5552,
+        3392
+      ],
+      "id": "08617151-285c-4e9f-b486-45869e384b8e",
+      "name": "RAG Query LLM (GPT-4o-mini)",
+      "credentials": {
+        "openRouterApi": {
+          "id": "Ax2jv1nsA7Oarldx",
+          "name": "HRFoush Test"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        6320,
+        3152
+      ],
+      "id": "7756ac36-a990-411d-b03d-fcca8be50c32",
+      "name": "Send Response to User"
+    },
+    {
+      "parameters": {
+        "description": "Use this tool when you need to think through complex routing decisions. It helps you:\n- Analyze ambiguous queries\n- Reason about multi-agent coordination\n- Consider trade-offs between different routing options\n- Plan sequential agent handoffs\n- Evaluate which agent combination is optimal\n\nUse this AFTER retrieving knowledge but BEFORE making final routing decision."
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1.1,
+      "position": [
+        4976,
+        3536
+      ],
+      "id": "da1e147a-efe1-4854-a623-afc4316cf14e",
+      "name": "Strategic Thinking Tool"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "orchestrator",
+        "responseMode": "responseNode",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              },
+              {
+                "name": "Access-Control-Allow-Methods",
+                "value": "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+              },
+              {
+                "name": "Access-Control-Allow-Headers",
+                "value": "Content-Type, Accept, Authorization, X-Requested-With"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        3968,
+        3152
+      ],
+      "id": "1a993052-3611-4cac-92e1-c3089eb6805f",
+      "name": "Webhook Trigger",
+      "webhookId": "32cdf4f7-3fcf-4fdb-9333-6d99498fb51d"
+    },
+    {
+      "parameters": {
+        "content": "## 📥 USER INPUT PROCESSING\nWebhook receives request → Parse message, session ID, timestamp, user ID",
+        "height": 336,
+        "width": 544,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3904,
+        3040
+      ],
+      "typeVersion": 1,
+      "id": "c294e6b5-2b41-454f-b8ad-bac010f26ebc",
+      "name": "Section: Input Processing"
+    },
+    {
+      "parameters": {
+        "content": "## 🎯 ORCHESTRATOR CORE\nMaster agent with:\n- GPT-4o for complex reasoning\n- 100-message memory window\n- Knowledge base RAG integration\n- Strategic thinking capability",
+        "height": 720,
+        "width": 1200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        4480,
+        3040
+      ],
+      "typeVersion": 1,
+      "id": "89bdb2fa-730d-410e-a854-d01cf0d3783d",
+      "name": "Section: Orchestrator Agent"
+    },
+    {
+      "parameters": {
+        "content": "## ✅ RESPONSE OUTPUT\nSend final routing decision or direct response back to user",
+        "height": 272,
+        "width": 800,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        5728,
+        3040
+      ],
+      "typeVersion": 1,
+      "id": "5c12981f-3de1-4d3e-823f-e62b13109575",
+      "name": "Section: Output"
+    },
+    {
+      "parameters": {
+        "toolDescription": "🤖 TECH AGENT - AI Automation & Development Specialist\n\nUse this agent when the user needs:\n\n✅ CORE CAPABILITIES:\n- AI automation & workflow design (n8n, Zapier, Make)\n- Chatbot development (WhatsApp, Messenger, web chat)\n- Web/app development & integrations\n- API design & system architecture\n- Database design & data modeling\n- CRM integrations & business tools\n- Security & authentication solutions\n\n✅ WHEN TO USE:\n- \"How can I automate [process]?\"\n- \"Build me a chatbot for...\"\n- \"I need a web app that...\"\n- \"Integrate [system A] with [system B]\"\n- \"Design a workflow for...\"\n- \"What's the best tech stack for...\"\n- Technical feasibility questions\n- Architecture & implementation planning\n\n✅ WHAT THIS AGENT PROVIDES:\n- Technology recommendations & stack suggestions\n- System architecture diagrams (bullets/Mermaid)\n- n8n workflow designs with node configurations\n- Integration patterns & API strategies\n- Security considerations & best practices\n- Time/cost estimates (high-level)\n- Implementation roadmap\n\n⚠️ LIMITATIONS:\n- Exact pricing → Sales Agent\n- Marketing campaigns → Marketing Agent\n- Creative/video work → Creative Agent\n- Pure research → Search Agent\n\nThis agent combines technical expertise with practical business solutions.",
+        "text": "={{ $fromAI('userQuery', ``, 'string') }}",
+        "options": {
+          "systemMessage": "=نت الـ Tech Agent في كيانوفا. شغلتك ترد على الأسئلة اللي ليها علاقة بالأتمتة، تطوير المواقع، البوتات، الذكاء الصناعي، والتكاملات التقنية.\n\n🛠️ التعاون مع الفرق الأخرى: يمكنك استدعاء الـ Agents الآخرين كأدوات للحصول على معلومات مكملة:\n\nSales Consultant Agent: للأسعار، الباقات، أو التعاقد.\n\nMarketing Growth Agent: لاستراتيجيات الحملات أو الأداء.\n\nCreative Director Agent: للهوية البصرية أو أفكار المحتوى.\n\nاستخدم أسلوب بسيط وسهل يخلي العميل يفهم التقنية من غير مصطلحات معقدة.\n\nلو المستخدم بيتكلم بالعربي، رد عليه بالعربي المصري بأسلوب بسيط ومهذب ومفهوم. لو المستخدم كتب بالإنجليزي، كمل معاه بالإنجليزي بنفس المستوى."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agentTool",
+      "typeVersion": 2.2,
+      "position": [
+        5952,
+        3440
+      ],
+      "id": "002d0fcb-d70d-42ef-8baa-1eee5bc79075",
+      "name": "Tech Solutions Agent"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-4o-mini",
+        "options": {
+          "maxTokens": 3000,
+          "temperature": 0.4,
+          "topP": 0.95
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        5872,
+        3648
+      ],
+      "id": "cf641842-c6df-4bee-b075-ee7a0a6113d2",
+      "name": "Tech Agent LLM (GPT-4o)",
+      "credentials": {
+        "openRouterApi": {
+          "id": "k2GUXjwIpXlgJnfH",
+          "name": "HR"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "description": "🔍 TECH KNOWLEDGE BASE - Your Implementation Library\n\nThis tool searches Kayanova's technical documentation database containing:\n\n📚 WHAT'S INSIDE:\n- Past automation projects & workflows (n8n, Zapier patterns)\n- Chatbot implementations (WhatsApp, Messenger, Telegram examples)\n- Integration blueprints (CRM, payment, analytics connectors)\n- Architecture templates (microservices, serverless, monolithic)\n- Security guidelines (authentication, encryption, compliance)\n- Code snippets & configuration examples\n- Best practices & lessons learned\n- Common troubleshooting solutions\n- Technology comparison guides\n- API documentation & usage patterns\n\n✅ WHEN TO USE THIS TOOL:\n- **ALWAYS use FIRST** before proposing any solution\n- When user asks \"how to\" implement something\n- To find proven patterns for common use cases\n- To check if we've solved similar problems before\n- To get security & compliance guidelines\n- To find code examples and templates\n- To understand integration requirements\n- To validate your technical approach\n\n💡 HOW TO QUERY:\n- Be specific: \"WhatsApp chatbot with CRM integration\"\n- Use technical terms: \"n8n workflow for lead qualification\"\n- Ask for patterns: \"authentication best practices\"\n- Search by technology: \"Supabase vector database setup\"\n- Look for examples: \"webhook error handling patterns\"\n\n🎯 EXPECTED OUTPUT:\n- Relevant technical documentation\n- Code snippets and configurations\n- Architecture diagrams and patterns\n- Implementation steps and checklists\n- Security considerations\n- Integration requirements\n\n⚠️ IMPORTANT:\nDO NOT propose solutions without consulting this knowledge base first. It contains our proven, tested approaches that ensure quality and consistency across all technical implementations."
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolVectorStore",
+      "typeVersion": 1.1,
+      "position": [
+        6208,
+        3568
+      ],
+      "id": "6e700bf5-fa2d-4bfb-af52-1b18ffaf93bc",
+      "name": "Tech Knowledge Base RAG"
+    },
+    {
+      "parameters": {
+        "tableName": {
+          "__rl": true,
+          "value": "tech_kayanova",
+          "mode": "list",
+          "cachedResultName": "tech_kayanova"
+        },
+        "options": {
+          "queryName": "match_documents"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        6000,
+        3728
+      ],
+      "id": "323bd963-777a-4c1d-b6da-5b6ac8cc05bb",
+      "name": "Supabase Vector Store (Tech)",
+      "credentials": {
+        "supabaseApi": {
+          "id": "SwPgyGjnZWNT2C66",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        5824,
+        3904
+      ],
+      "id": "9b9766d4-4276-4cdd-a914-8cc05bde2780",
+      "name": "Gemini Embeddings (Tech)",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "2oe6nreVlfGHRk0g",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "description": "🧠 TECHNICAL THINKING TOOL - Architecture & Design Reasoning\n\nUse this tool when you need to think through complex technical decisions:\n\n✅ USE FOR:\n- Comparing multiple solution approaches (\"Should we use X or Y?\")\n- Evaluating architecture trade-offs (monolithic vs microservices)\n- Planning multi-phase implementations\n- Assessing scalability implications\n- Considering security vs. usability trade-offs\n- Estimating technical complexity\n- Identifying potential bottlenecks or risks\n- Breaking down complex problems into phases\n\n💭 THINKING PROCESS:\n1. State the technical problem clearly\n2. List possible approaches\n3. Evaluate pros/cons of each\n4. Consider constraints (time, cost, complexity)\n5. Reason through implications\n6. Make a recommendation\n\n🎯 EXAMPLE USE CASES:\n- \"Thinking: Should we use serverless or traditional hosting for this chatbot?\"\n- \"Thinking: What's the optimal database structure for this use case?\"\n- \"Thinking: How should we handle authentication - JWT or session-based?\"\n- \"Thinking: Is this simple enough for n8n or do we need custom code?\"\n\nUse this AFTER retrieving knowledge but BEFORE finalizing your technical recommendation."
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1.1,
+      "position": [
+        6256,
+        3904
+      ],
+      "id": "cb607590-64f6-4c15-97b8-16c73f64b1d0",
+      "name": "Technical Thinking Tool"
+    },
+    {
+      "parameters": {
+        "content": "## ⚙️ TECH AGENT - AI Automation & Development\n\nSpecializes in:\n- AI automation & workflows (n8n, Zapier)\n- Chatbot development (WhatsApp, Messenger, Web)\n- Web/app development & integrations\n- System architecture & API design\n- Database design & CRM integrations\n- Security & best practices\n\nUses GPT-4o for complex technical reasoning",
+        "height": 736,
+        "width": 800,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        5728,
+        3328
+      ],
+      "typeVersion": 1,
+      "id": "e836ff2b-7922-4800-bbc4-c8dca18089f2",
+      "name": "Section: Tech Agent"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-4o-mini",
+        "options": {
+          "maxTokens": 2000,
+          "temperature": 0.2
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        6336,
+        3744
+      ],
+      "id": "3592c2de-1170-4660-8335-3a4e0f40a682",
+      "name": "RAG Query LLM (GPT-4o-mini)1",
+      "credentials": {
+        "openRouterApi": {
+          "id": "k2GUXjwIpXlgJnfH",
+          "name": "HR"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "toolDescription": "📢 MARKETING AGENT - Growth & Campaign Strategy Specialist\n\nUse this agent when the user needs:\n\n✅ CORE CAPABILITIES:\n- Marketing strategy & campaign planning\n- Channel selection & budget allocation\n- Content calendars & social media management\n- Paid advertising (Meta, Google, TikTok, LinkedIn)\n- SEO & organic growth strategies\n- Email marketing & automation\n- Analytics & performance tracking\n- Audience targeting & persona development\n- Conversion optimization & funnel design\n\n✅ WHEN TO USE:\n- \"How do I market my product/service?\"\n- \"Create a marketing plan for...\"\n- \"Best social media strategy for...\"\n- \"How to run ads on [platform]?\"\n- \"Content calendar for the next 90 days\"\n- \"What's the best channel mix for my budget?\"\n- \"How to improve my conversion rate?\"\n- \"SEO strategy for my website\"\n- \"Social media automation ideas\"\n- Marketing budget allocation questions\n\n✅ WHAT THIS AGENT PROVIDES:\n- Complete marketing strategy (30-90 day plans)\n- Channel mix recommendations with rationale\n- Content calendars with pillars, hooks, CTAs\n- Budget allocation (acquisition vs. retargeting)\n- Ad campaign structures & targeting strategies\n- KPI frameworks (CAC, ROAS, CTR, CVR, LTV)\n- Tracking setup (pixels, UTMs, dashboards)\n- A/B testing plans\n- Localized content (Arabic/English)\n- Competitor positioning insights\n\n⚠️ LIMITATIONS:\n- Exact pricing & ROI calculations → Sales Agent\n- Marketing automation implementation → Tech Agent\n- Creative assets (design, video) → Creative Agent\n- Market research & competitor data → Search Agent\n\nThis agent transforms business goals into executable marketing campaigns with measurable results.",
+        "text": "={{ $fromAI('userQuery', ``, 'string') }}",
+        "options": {
+          "systemMessage": "=نت الـ Marketing Agent في كيانوفا. شغلتك ترد على أي سؤال ليه علاقة بالحملات الإعلانية، الاستراتيجيات، تحليل السوق، أو تطوير النمو.\n\n🛠️ التعاون مع الفرق الأخرى: يمكنك استدعاء الـ Agents الآخرين كأدوات للحصول على معلومات مكملة:\n\nSales Consultant Agent: للتسعير أو تفاصيل الباقات المتاحة.\n\nTech Solutions Agent: لأتمتة التسويق أو أدوات التحليل التقنية.\n\nCreative Director Agent: لأفكار الحملات المرئية أو النغمة الإبداعية.\n\nاستخدم أسلوب ذكي وسلس، بيشرح الفكرة بلُغة بسيطة ومقنعة.\n\nلو المستخدم بيتكلم بالعربي، رد عليه بالعربي المصري بأسلوب بسيط ومهذب ومفهوم. لو المستخدم كتب بالإنجليزي، كمل معاه بالإنجليزي بنفس المستوى."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agentTool",
+      "typeVersion": 2.2,
+      "position": [
+        5120,
+        3920
+      ],
+      "id": "ad66325a-9d1c-4bb8-a341-bc0ad14eb12e",
+      "name": "Marketing Growth Agent"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-4o-mini",
+        "options": {
+          "maxTokens": 3500,
+          "temperature": 0.5,
+          "topP": 0.95
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        4880,
+        4112
+      ],
+      "id": "c5efaba3-8c89-4ba9-988e-29af4419cd58",
+      "name": "Marketing Agent LLM (GPT-4o)",
+      "credentials": {
+        "openRouterApi": {
+          "id": "k2GUXjwIpXlgJnfH",
+          "name": "HR"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "description": "📚 MARKETING KNOWLEDGE BASE - Campaign Playbooks & Best Practices\n\nThis tool searches Kayanova's marketing strategy database containing:\n\n📚 WHAT'S INSIDE:\n- Proven campaign templates for various industries (e-commerce, SaaS, services, B2B)\n- Channel-specific playbooks (Meta, Google, TikTok, LinkedIn, SEO)\n- Content calendar templates with engagement hooks\n- Budget allocation benchmarks by business size\n- Successful case studies with metrics (CAC, ROAS, CVR)\n- A/B testing frameworks and results\n- Localization guidelines (Arabic vs. English markets)\n- Audience targeting strategies and personas\n- Conversion optimization tactics\n- Email automation sequences\n- Seasonal campaign strategies (Ramadan, Black Friday, etc.)\n- Competitor analysis frameworks\n\n✅ WHEN TO USE THIS TOOL:\n- **ALWAYS use FIRST** before creating any marketing plan\n- When user asks for marketing strategy or campaign ideas\n- To find proven approaches for specific industries\n- To get channel-specific best practices and benchmarks\n- To understand what's worked in similar situations\n- To retrieve content templates and calendars\n- To check localization requirements for target markets\n- To find KPI benchmarks for realistic goal-setting\n\n💡 HOW TO QUERY:\n- Be specific: \"B2B SaaS lead generation campaign\"\n- Use industry terms: \"e-commerce conversion funnel optimization\"\n- Mention channels: \"Meta ads strategy for service businesses\"\n- Ask for templates: \"content calendar for tech startups\"\n- Search by goal: \"customer acquisition strategies under $5k budget\"\n- Localization: \"Arabic market social media best practices\"\n\n🎯 EXPECTED OUTPUT:\n- Complete campaign frameworks and templates\n- Budget allocation models with benchmarks\n- Content strategies with examples\n- Channel recommendations with rationale\n- KPI targets based on industry standards\n- Localization considerations\n- Testing and optimization approaches\n\n⚠️ IMPORTANT:\nDO NOT create marketing plans from scratch without consulting this knowledge base. It contains proven, tested strategies that ensure higher success rates and client satisfaction."
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolVectorStore",
+      "typeVersion": 1.1,
+      "position": [
+        5344,
+        4080
+      ],
+      "id": "c42998b9-ca48-4b47-bd8a-8ffa07809eb9",
+      "name": "Marketing Knowledge Base RAG"
+    },
+    {
+      "parameters": {
+        "tableName": {
+          "__rl": true,
+          "value": "marketing_kayanova",
+          "mode": "list",
+          "cachedResultName": "marketing_kayanova"
+        },
+        "options": {
+          "queryName": "match_documents"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        5216,
+        4240
+      ],
+      "id": "cbff5b89-9ce1-4eef-bbb2-352afe151308",
+      "name": "Supabase Vector Store (Marketing)",
+      "credentials": {
+        "supabaseApi": {
+          "id": "SwPgyGjnZWNT2C66",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        5104,
+        4400
+      ],
+      "id": "1bf3f8c3-cc30-4959-a173-ddcef52a81f2",
+      "name": "Gemini Embeddings (Marketing)",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "2oe6nreVlfGHRk0g",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "description": "🧠 MARKETING STRATEGY THINKING TOOL - Campaign Planning & Optimization\n\nUse this tool when you need to think through strategic marketing decisions:\n\n✅ USE FOR:\n- Comparing multiple channel options (\"Should we focus on Meta or Google first?\")\n- Budget allocation decisions (\"How to split $10k across channels?\")\n- Prioritizing marketing activities (\"What gives fastest ROI?\")\n- Evaluating trade-offs (short-term wins vs. long-term brand building)\n- Planning multi-phase campaigns (\"What sequence makes sense?\")\n- Assessing market timing and seasonality\n- Reasoning through audience targeting options\n- Deciding on content mix and frequency\n- Evaluating localization strategies\n\n💭 THINKING PROCESS:\n1. State the marketing challenge or decision\n2. List viable strategic options\n3. Evaluate pros/cons of each approach\n4. Consider budget, timeline, and resource constraints\n5. Think through expected outcomes and metrics\n6. Make a recommendation with justification\n\n🎯 EXAMPLE USE CASES:\n- \"Thinking: For a $5k/month budget, should we prioritize Meta ads or SEO?\"\n- \"Thinking: Should we launch in Arabic and English simultaneously or start with one?\"\n- \"Thinking: Is influencer marketing or paid ads better for this B2B SaaS?\"\n- \"Thinking: How to balance acquisition vs. retention marketing with limited budget?\"\n\nUse this AFTER retrieving knowledge from the marketing database but BEFORE finalizing your strategic recommendation to the client."
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1.1,
+      "position": [
+        5104,
+        4112
+      ],
+      "id": "7fc7c613-97b1-408c-8c3f-6fcd2ddb22f2",
+      "name": "Marketing Strategy Tool"
+    },
+    {
+      "parameters": {
+        "content": "## 📢 MARKETING AGENT - Growth & Campaign Strategy\n\nSpecializes in:\n- Marketing strategy & campaign planning\n- Channel mix & budget optimization\n- Content calendars & social media\n- Paid advertising (Meta, Google, TikTok, LinkedIn)\n- SEO & organic growth\n- Analytics & KPI tracking\n- Localization (Arabic/English)\n\nUses GPT-4o for strategic campaign planning",
+        "height": 768,
+        "width": 912,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        4768,
+        3808
+      ],
+      "typeVersion": 1,
+      "id": "f094bd39-85a3-47e2-839e-328af811a279",
+      "name": "Section: Marketing Agent"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-4o-mini",
+        "options": {
+          "maxTokens": 2000,
+          "temperature": 0.2
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        5536,
+        4288
+      ],
+      "id": "7e71213a-ea8b-44b7-ba3c-4ece2eb074eb",
+      "name": "RAG Query LLM (GPT-4o-mini)2",
+      "credentials": {
+        "openRouterApi": {
+          "id": "k2GUXjwIpXlgJnfH",
+          "name": "HR"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "toolDescription": "💰 SALES AGENT - Business Development & Revenue Specialist\n\nUse this agent when the user needs:\n\n✅ CORE CAPABILITIES:\n- Lead qualification & discovery (BANT/MEDDIC frameworks)\n- Package & pricing consultations\n- ROI calculations & business case development\n- Proposal creation & deal structuring\n- Meeting booking & sales process management\n- Objection handling & negotiation support\n- Contract discussions & closing support\n- Upselling & cross-selling opportunities\n\n✅ WHEN TO USE:\n- \"How much does [service] cost?\"\n- \"What packages do you offer?\"\n- \"I want to book a meeting/demo/consultation\"\n- \"What's the ROI of [solution]?\"\n- \"Can you send me a proposal?\"\n- \"Is there a discount available?\"\n- \"I need to discuss pricing with my team\"\n- \"How does your pricing compare to competitors?\"\n- User shows buying intent or asks commercial questions\n- Follow-up on previous sales conversations\n\n✅ WHAT THIS AGENT PROVIDES:\n- Detailed package breakdowns with value propositions\n- Custom pricing recommendations based on needs\n- ROI projections (time saved, revenue increase, cost reduction)\n- Professional proposal outlines\n- Meeting booking links with clear agendas\n- Objection responses with proof points\n- Next steps & clear CTAs\n- Deal timelines & implementation roadmaps\n\n⚠️ WHAT THIS AGENT DOES NOT DO:\n- Technical implementation details → Tech Agent\n- Campaign strategy & execution → Marketing Agent\n- Creative work (design, video) → Creative Agent\n- Market research & data → Search Agent\n\n💡 SALES PHILOSOPHY:\nConsultative selling - understand pain points first, then map to solutions. Build trust through transparency, provide value before asking for the sale, and always guide prospects to the next logical step.\n\nThis agent turns conversations into qualified opportunities and opportunities into closed deals.",
+        "text": "={{ $fromAI('userQuery', ``, 'string') }}",
+        "options": {
+          "systemMessage": "=نت الـ Sales Agent بتاع كيانوفا. شغلتك ترد على أي حد بيسأل عن الأسعار، الباقات، أو طريقة التعاقد.\n\n🛠️ التعاون مع الفرق الأخرى: يمكنك استدعاء الـ Agents الآخرين كأدوات للحصول على معلومات مكملة (مثل: مدة التنفيذ أو الاستراتيجية اللازمة للتسعير):\n\nTech Solutions Agent: لتقدير مدة التنفيذ أو الصعوبة التقنية.\n\nMarketing Growth Agent: لحساب العائد المتوقع على الاستثمار (ROI).\n\nCreative Director Agent: لمعرفة أنواع المحتوى المضمنة في الباقة.\n\nدايمًا استخدم أسلوب ودّي ومهني، ركّز على القيمة اللي العميل هيستفيدها.\n\nلو المستخدم بيتكلم بالعربي، رد عليه بالعربي المصري بأسلوب بسيط ومهذب ومفهوم. لو المستخدم كتب بالإنجليزي، كمل معاه بالإنجليزي بنفس المستوى."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agentTool",
+      "typeVersion": 2.2,
+      "position": [
+        4272,
+        3888
+      ],
+      "id": "93e3eb97-e412-44f3-8f63-6b08f47f06b8",
+      "name": "Sales Consultant Agent"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-4o-mini",
+        "options": {
+          "maxTokens": 3000,
+          "temperature": 0.6,
+          "topP": 0.95
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        4128,
+        4128
+      ],
+      "id": "effcc332-f9f3-4266-bda6-133536917ed2",
+      "name": "Sales Agent LLM (GPT-4o)",
+      "credentials": {
+        "openRouterApi": {
+          "id": "k2GUXjwIpXlgJnfH",
+          "name": "HR"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "description": "💼 SALES KNOWLEDGE BASE - Packages, Pricing, ROI & Objection Handling\n\nThis tool searches Kayanova's sales enablement database containing:\n\n📚 WHAT'S INSIDE:\n- **Package Details**: Complete breakdown of all service packages (AI Automation, Chatbots, Marketing, Web/App, Creative, Full-Service)\n- **Pricing Structures**: Investment ranges, pricing models (project/retainer/hybrid), discount policies\n- **ROI Calculators**: Templates for time savings, revenue increase, and cost reduction calculations by industry\n- **Case Studies**: Client success stories with metrics (industry, challenge, solution, results, testimonials)\n- **Objection Handling Scripts**: Proven responses to common objections (too expensive, need to think, in-house, competitors)\n- **Proposal Templates**: Structured formats for different package types and deal sizes\n- **Competitive Positioning**: How Kayanova compares to alternatives\n- **ICP Profiles**: Ideal Customer Profiles by industry and company size\n- **Value Propositions**: Benefits and outcomes for each service\n- **Sales Battle Cards**: Quick reference for different buyer personas\n- **Upsell/Cross-sell Paths**: How to expand account value\n\n✅ WHEN TO USE THIS TOOL:\n- **ALWAYS use FIRST** when any pricing or package question comes up\n- When prospect asks \"How much does [service] cost?\"\n- When you need to calculate or explain ROI\n- When prospect raises an objection\n- When you need relevant case studies for their industry\n- When structuring a proposal or quote\n- When deciding which package to recommend\n- When comparing with competitors\n- When prospect asks \"What do other clients pay?\"\n\n💡 HOW TO QUERY:\n- Be specific: \"chatbot package pricing for e-commerce\"\n- Use buyer context: \"ROI calculator for 50-person company\"\n- Objection-focused: \"objection handling script for budget concerns\"\n- Industry-specific: \"case study SaaS company automation\"\n- Service-specific: \"web development package details\"\n- Comparison: \"Kayanova vs Zapier positioning\"\n\n🎯 EXPECTED OUTPUT:\n- Exact package inclusions and pricing ranges\n- ROI calculation formulas with example numbers\n- Case studies with real metrics and outcomes\n- Objection responses that have proven effective\n- Proposal structures ready to customize\n- Competitive advantages and differentiators\n\n⚠️ CRITICAL RULES:\n- NEVER quote exact prices without checking this database first\n- NEVER make up ROI numbers - use templates from knowledge base\n- NEVER wing objection handling - use proven scripts\n- ALWAYS reference case studies when claiming results\n\nThis is your sales playbook. Master it to close more deals with higher confidence."
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolVectorStore",
+      "typeVersion": 1.1,
+      "position": [
+        4448,
+        4048
+      ],
+      "id": "d4a629c3-17c7-4e52-8161-c497765d9281",
+      "name": "Sales Knowledge Base RAG"
+    },
+    {
+      "parameters": {
+        "tableName": {
+          "__rl": true,
+          "value": "sales_kayanova",
+          "mode": "list",
+          "cachedResultName": "sales_kayanova"
+        },
+        "options": {
+          "queryName": "match_documents"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        4256,
+        4272
+      ],
+      "id": "00bbad27-18e9-4994-98eb-e288c1e32e17",
+      "name": "Supabase Vector Store (Sales)",
+      "credentials": {
+        "supabaseApi": {
+          "id": "SwPgyGjnZWNT2C66",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        4224,
+        4432
+      ],
+      "id": "fc78b390-ec1b-4c53-80fd-89e1c58d6b14",
+      "name": "Gemini Embeddings (Sales)",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "2oe6nreVlfGHRk0g",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "description": "🧠 SALES STRATEGY THINKING TOOL - Deal Structuring & Negotiation Planning\n\nUse this tool when you need to think through strategic sales decisions:\n\n✅ USE FOR:\n- Package selection: \"Should I recommend Starter or Growth package?\"\n- Pricing decisions: \"Can we discount? How much?\"\n- Deal structuring: \"Project-based or retainer model?\"\n- Objection strategy: \"How should I respond to this specific objection?\"\n- Multi-service deals: \"How to bundle Tech + Marketing + Creative?\"\n- Competitive situations: \"How to position against [competitor]?\"\n- Complex negotiations: \"They want X but need Y - how to bridge?\"\n- Phasing decisions: \"Should we do everything at once or phase it?\"\n- Risk assessment: \"Is this prospect a good fit for us?\"\n- Upsell opportunities: \"Can we expand this deal? How?\"\n\n💭 THINKING PROCESS:\n1. State the sales challenge or decision\n2. Consider prospect's context (budget, timeline, pain, authority)\n3. Evaluate options (package tiers, pricing models, deal structures)\n4. Think through objections and responses\n5. Assess risk vs. reward\n6. Plan negotiation approach\n7. Make recommendation with justification\n\n🎯 EXAMPLE USE CASES:\n- \"Thinking: Prospect wants all features but has limited budget. Options: A) Smaller starter package, B) Full package with payment plan, C) Phased approach starting with highest-ROI features. Recommend C because...\"\n- \"Thinking: Competitor quoted $8k, we're at $12k. Can we match? No, but we can emphasize our integrated approach (tech+marketing) vs their tech-only. Show ROI is 3x better.\"\n- \"Thinking: Prospect keeps asking for 'one more thing'. Risk: scope creep. Strategy: Bundle extras into upsell package for month 2, don't include free.\"\n\nUse this AFTER retrieving data from Sales Knowledge Base but BEFORE presenting final recommendation to prospect."
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1.1,
+      "position": [
+        4512,
+        4432
+      ],
+      "id": "4117a937-b49a-463b-a018-cc0dc5d2ab7b",
+      "name": "Sales Strategy Tool"
+    },
+    {
+      "parameters": {
+        "content": "## 💰 SALES AGENT - Business Development & Revenue\n\nSpecializes in:\n- Lead qualification (BANT/MEDDIC)\n- Package & pricing consultations\n- ROI calculations & business cases\n- Proposal creation & deal structuring\n- Objection handling & negotiation\n- Meeting booking & closing support\n- Consultative selling approach\n\nUses GPT-4o for persuasive, strategic conversations",
+        "height": 768,
+        "width": 736,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        4000,
+        3808
+      ],
+      "typeVersion": 1,
+      "id": "1c01619c-55cf-450f-9950-901874e0ef0c",
+      "name": "Section: Sales Agent"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-4o-mini",
+        "options": {
+          "maxTokens": 2000,
+          "temperature": 0.2
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        4592,
+        4256
+      ],
+      "id": "e026b23e-7fd2-4eef-853a-b67813a4be8e",
+      "name": "RAG Query LLM (GPT-4o-mini)3",
+      "credentials": {
+        "openRouterApi": {
+          "id": "k2GUXjwIpXlgJnfH",
+          "name": "HR"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "toolDescription": "🎨 CREATIVE AGENT - Brand, Design & Visual Content Specialist\n\nUse this agent when the user needs:\n\n✅ CORE CAPABILITIES:\n- Brand identity & visual systems design\n- Logo design & brand guidelines\n- Graphic design (social media, print, digital)\n- Video production & editing (ads, explainers, testimonials)\n- Motion graphics & animations\n- 3D rendering & CGI\n- UI/UX design concepts\n- Creative copywriting & messaging\n- Photo direction & art direction\n- Storyboarding & creative briefs\n\n✅ WHEN TO USE:\n- \"I need a logo for my business\"\n- \"Design social media posts for...\"\n- \"Create a video ad for...\"\n- \"I need branding/rebranding\"\n- \"Design a website mockup\"\n- \"Create an explainer video\"\n- \"I need CGI/3D animations\"\n- \"Help with visual identity\"\n- \"Design Instagram content\"\n- \"Create a brand guideline\"\n- \"Motion graphics for...\"\n- Any visual/creative deliverable request\n\n✅ WHAT THIS AGENT PROVIDES:\n- Creative direction & mood boards\n- Visual concepts with mood, color palette, typography\n- Deliverable specifications (formats, sizes, ratios, durations)\n- Storyboards & content outlines\n- Brand positioning & messaging frameworks\n- Copy hooks & creative angles\n- Production timelines & asset requirements\n- Design system recommendations\n- Style guide foundations\n- Portfolio examples for inspiration\n\n⚠️ WHAT THIS AGENT DOES NOT DO:\n- Exact pricing & quotes → Sales Agent\n- Campaign strategy & media buying → Marketing Agent\n- Technical implementation (web dev, automation) → Tech Agent\n- Market research & competitor analysis → Search Agent\n\n💡 CREATIVE PHILOSOPHY:\nGreat creative work starts with understanding the brand essence and target audience. Every design decision should serve the business goal while maintaining aesthetic excellence. Form follows function, but beauty amplifies impact.\n\nThis agent transforms brand vision into stunning visual reality.",
+        "text": "={{ $fromAI('userQuery', ``, 'string') }}",
+        "options": {
+          "systemMessage": "=لو المستخدم بيتكلم بالعربي، رد عليه بالعربي المصري بأسلوب بسيط ومهذب ومفهوم. لو المستخدم كتب بالإنجليزي، كمل معاه بالإنجليزي بنفس المستوى.\n\nإنت الـ Creative Agent في كيانوفا. شغلتك تشرح الأفكار الإبداعية، أنواع المحتوى البصري، والفيديوهات اللي كيانوفا بتقدمها.\n\n🛠️ التعاون مع الفرق الأخرى: يمكنك استدعاء الـ Agents الآخرين كأدوات للحصول على معلومات مكملة:\n\nSales Consultant Agent: للأسعار أو الباقات اللي بتشمل خدمات إبداعية.\n\nTech Solutions Agent: لمتطلبات الـ UI/UX أو تصميم التطبيقات.\n\nMarketing Growth Agent: لربط الإبداع بأهداف الحملة أو الـ Performance.\n\nخليك متكلم بطريقة جذابة ومريحة، وحسّس العميل إن البراند بتفهم الذوق والستايل كويس."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agentTool",
+      "typeVersion": 2.2,
+      "position": [
+        3408,
+        3904
+      ],
+      "id": "e391e744-a785-4607-a91d-b8a79ff85754",
+      "name": "Creative Director Agent"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-4o-mini",
+        "options": {
+          "maxTokens": 3500,
+          "temperature": 0.7,
+          "topP": 0.95
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        3232,
+        4144
+      ],
+      "id": "4ce97155-7091-4165-89ad-90a2359be066",
+      "name": "Creative Agent LLM (GPT-4o)",
+      "credentials": {
+        "openRouterApi": {
+          "id": "k2GUXjwIpXlgJnfH",
+          "name": "HR"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "description": "🎨 CREATIVE KNOWLEDGE BASE - Portfolio, Guidelines & Design Resources\n\nThis tool searches Kayanova's creative asset library containing:\n\n📚 WHAT'S INSIDE:\n- **Portfolio Examples**: Past branding, design, and video projects with case studies\n- **Brand Guidelines**: Template structures and best practices for creating brand books\n- **Design Specs**: Technical specifications for all deliverable types (social, print, video, web)\n- **Creative Frameworks**: Mood boarding, design thinking, visual direction processes\n- **Style References**: Design trends, color psychology, typography guides\n- **Video Production**: Storyboard templates, shot lists, production checklists\n- **Copywriting Hooks**: Proven formulas for headlines, CTAs, and social copy\n- **Design Systems**: Component libraries, pattern guidelines, UI/UX best practices\n- **Client Success Stories**: Before/after transformations with metrics\n- **Tool Recommendations**: Software, plugins, resources for different creative tasks\n\n✅ WHEN TO USE THIS TOOL:\n- **ALWAYS use FIRST** before proposing any creative direction\n- When client asks for branding or design work\n- To find relevant portfolio examples in their industry\n- To get technical specs for deliverables (sizes, formats, resolutions)\n- To retrieve brand guideline templates\n- To find visual inspiration and mood board references\n- To get video production frameworks and storyboard templates\n- To access proven copywriting hooks and formulas\n- To understand design trends and best practices\n\n💡 HOW TO QUERY:\n- Industry-specific: \"tech startup branding examples\"\n- Deliverable-focused: \"Instagram video specs and best practices\"\n- Style-oriented: \"minimalist logo design guidelines\"\n- Technical specs: \"social media graphic dimensions 2024\"\n- Process-focused: \"brand identity creation process\"\n- Inspiration: \"color palettes for healthcare brands\"\n\n🎯 EXPECTED OUTPUT:\n- Portfolio case studies with visual examples\n- Technical specifications (file formats, dimensions, resolutions)\n- Brand guideline templates and structures\n- Design direction frameworks and mood boards\n- Copywriting templates and hook formulas\n- Production checklists and timelines\n- Style guides and design system components\n\n⚠️ IMPORTANT:\nDO NOT propose creative directions without consulting this knowledge base first. It ensures brand consistency, technical accuracy, and leverages proven approaches that have delivered results for past clients."
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolVectorStore",
+      "typeVersion": 1.1,
+      "position": [
+        3696,
+        4048
+      ],
+      "id": "dc4eb805-1a98-4eef-8b66-dd6c6acd2d69",
+      "name": "Creative Knowledge Base RAG"
+    },
+    {
+      "parameters": {
+        "tableName": {
+          "__rl": true,
+          "value": "creative_kayanova",
+          "mode": "list",
+          "cachedResultName": "creative_kayanova"
+        },
+        "options": {
+          "queryName": "match_documents"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        3424,
+        4224
+      ],
+      "id": "8327e801-257d-4bc4-bc19-f6729ac4b339",
+      "name": "Supabase Vector Store (Creative)",
+      "credentials": {
+        "supabaseApi": {
+          "id": "SwPgyGjnZWNT2C66",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        3376,
+        4400
+      ],
+      "id": "c3f21965-2638-43b5-85d9-ec3baf2e6570",
+      "name": "Gemini Embeddings (Creative)",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "2oe6nreVlfGHRk0g",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "description": "🧠 CREATIVE STRATEGY THINKING TOOL - Design Direction & Concept Development\n\nUse this tool when you need to think through strategic creative decisions:\n\n✅ USE FOR:\n- Comparing visual direction options (\"Modern minimal vs. bold expressive?\")\n- Brand personality decisions (\"Professional corporate vs. approachable friendly?\")\n- Color palette selection (\"Blue for trust or orange for energy?\")\n- Design style choices (\"Flat design vs. gradients and depth?\")\n- Balancing creativity with brand guidelines\n- Video style decisions (\"Cinematic vs. documentary vs. fast-paced?\")\n- Logo concept evaluation (\"Wordmark, lettermark, or icon mark?\")\n- Multi-platform design adaptation strategies\n- Trend vs. timeless design decisions\n\n💭 THINKING PROCESS:\n1. State the creative challenge or decision\n2. Consider brand personality, audience, and goals\n3. List possible creative approaches\n4. Evaluate pros/cons of each direction\n5. Think through execution complexity and scalability\n6. Consider longevity vs. trend factor\n7. Make recommendation with creative rationale\n\n🎯 EXAMPLE USE CASES:\n- \"Thinking: Client wants 'premium' feel but limited budget. Options: A) Minimalist black/white with gold accents (looks expensive, easy to execute), B) Rich photography with dramatic lighting (expensive to produce), C) Sophisticated typography with subtle animations (moderate cost, scalable). Recommend A - achieves premium perception within budget.\"\n- \"Thinking: Tech startup needs to look innovative but trustworthy. Blue = trust but overdone in tech. Purple = innovative but can feel gimmicky. Deep blue + electric teal combo = trust foundation with innovative accent. Recommend this balance.\"\n- \"Thinking: Video style - cinematic (high production, slower pace) vs fast-paced social (quick cuts, trending music). Audience is Gen Z on TikTok. Recommend fast-paced to match platform expectations and attention span.\"\n\nUse this AFTER retrieving examples from Creative Knowledge Base but BEFORE finalizing your creative direction recommendation."
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1.1,
+      "position": [
+        3696,
+        4352
+      ],
+      "id": "869de872-9037-4909-8b8e-6d0bdbbe18b9",
+      "name": "Creative Strategy Tool"
+    },
+    {
+      "parameters": {
+        "content": "## 🎨 CREATIVE AGENT - Brand, Design & Visual Content\n\nSpecializes in:\n- Brand identity & visual systems\n- Logo design & brand guidelines\n- Graphic design (social, print, digital)\n- Video production & editing\n- Motion graphics & 3D/CGI\n- UI/UX design concepts\n- Creative copywriting & messaging\n- Art direction & storyboarding\n\nUses GPT-4o for creative thinking and visual storytelling",
+        "height": 768,
+        "width": 816,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3152,
+        3808
+      ],
+      "typeVersion": 1,
+      "id": "bb92c9db-1722-456a-b87e-e27b4d9fe398",
+      "name": "Section: Creative Agent"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-4o-mini",
+        "options": {
+          "maxTokens": 2000,
+          "temperature": 0.2
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        3840,
+        4256
+      ],
+      "id": "799607ec-e220-4874-a0f4-73d5aa35aea0",
+      "name": "RAG Query LLM (GPT-4o-mini)4",
+      "credentials": {
+        "openRouterApi": {
+          "id": "k2GUXjwIpXlgJnfH",
+          "name": "HR"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolWikipedia",
+      "typeVersion": 1,
+      "position": [
+        6192,
+        4384
+      ],
+      "id": "ad30da90-f5dc-44da-aaa0-08d68d6ad2b1",
+      "name": "Tool_Wikipedia_Encyclopedia"
+    },
+    {
+      "parameters": {
+        "articleId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Article_ID', `Retrieve the article ID from the search query or context`, 'string') }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.hackerNewsTool",
+      "typeVersion": 1,
+      "position": [
+        6016,
+        4384
+      ],
+      "id": "6e64963e-aa33-432f-a9e8-c95a679ebc4c",
+      "name": "Tool_HackerNews_TechArticles"
+    },
+    {
+      "parameters": {
+        "content": "# 🔍 Search Agent (Optimized)\n\n**Purpose:** Intelligent web search with smart tool selection\n\n**Tools:**\n- HackerNews: Tech news & discussions\n- Wikipedia: Encyclopedic facts\n- Google: General web search\n\n**Key Features:**\n✅ Smart tool routing\n✅ Context-aware responses\n✅ Source citation\n✅ Performance optimized",
+        "height": 480,
+        "width": 800,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        5728,
+        4096
+      ],
+      "typeVersion": 1,
+      "id": "b7ad9a20-2932-41c6-9f42-d58628b2ae71",
+      "name": "Note_SearchAgent_Documentation"
+    },
+    {
+      "parameters": {
+        "options": {
+          "temperature": 0.3
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        5824,
+        4400
+      ],
+      "id": "97668bfe-03d4-4400-b4d8-48ba0a158353",
+      "name": "LLM_GoogleGemini_SearchReasoning",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "2oe6nreVlfGHRk0g",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolSerpApi",
+      "typeVersion": 1,
+      "position": [
+        6368,
+        4384
+      ],
+      "id": "503a9620-4f0c-4998-91c5-5fdf0c77e740",
+      "name": "Tool_GoogleSearch_WebResults",
+      "credentials": {
+        "serpApi": {
+          "id": "CGKs005Yfk1qPY77",
+          "name": "SerpAPI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "toolDescription": "=Use this specialized search agent when you need to find information from the web, news sources, or encyclopedic knowledge. This agent intelligently selects between HackerNews (tech), Wikipedia (facts), or Google (general) based on the query type. Returns concise, cited answers.",
+        "text": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('user_search_query', `Extract the search query from the user's message`, 'string') }}",
+        "options": {
+          "systemMessage": "=# Search Agent - Intelligent Web Research Assistant\n\n## 🎯 Core Purpose\nYou are an expert web search agent specialized in retrieving accurate, relevant information using the optimal search tool. Current timestamp: {{ $now.toISO() }}\n\n## 🛠️ Available Tools & When to Use Them\n\n### 1️⃣ HackerNews Tool (Tool_HackerNews_TechArticles)\n**USE WHEN:**\n- Query mentions: startups, tech companies, programming, AI/ML, software\n- Looking for: recent tech trends, developer discussions, startup news\n- Keywords: \"latest\", \"trending\", \"tech news\", \"developers\"\n\n**EXAMPLES:**\n- ✅ \"Latest AI developments\"\n- ✅ \"What are developers saying about React?\"\n- ✅ \"Recent startup funding news\"\n\n### 2️⃣ Wikipedia Tool (Tool_Wikipedia_Encyclopedia)\n**USE WHEN:**\n- Query asks: \"what is\", \"who is\", \"when was\", \"define\"\n- Looking for: historical facts, definitions, biographies, scientific concepts\n- Need: authoritative, encyclopedic information\n\n**EXAMPLES:**\n- ✅ \"Who invented the telephone?\"\n- ✅ \"What is quantum computing?\"\n- ✅ \"History of the Roman Empire\"\n\n### 3️⃣ Google Search Tool (Tool_GoogleSearch_WebResults)\n**USE WHEN:**\n- Query is: location-specific, time-sensitive, product research\n- Looking for: current prices, reviews, local information, recent events\n- Need: real-time web data not covered by other tools\n\n**EXAMPLES:**\n- ✅ \"Best restaurants in Cairo 2025\"\n- ✅ \"iPhone 16 price in Egypt\"\n- ✅ \"Weather forecast Alexandria\"\n\n## 🧠 Decision-Making Logic\n\n**STEP 1: Analyze Query Intent**\n- Is it tech/startup related? → HackerNews\n- Is it factual/encyclopedic? → Wikipedia  \n- Is it current/local/product? → Google\n\n**STEP 2: Execute Search**\n- Use ONLY ONE tool per query (most relevant)\n- Extract key information from results\n- Verify accuracy before responding\n\n**STEP 3: Format Response**\n- Start with direct answer (2-3 sentences max)\n- Add context if needed (1-2 sentences)\n- ALWAYS cite source: \"According to [Source]...\" or \"[Source] reports...\"\n- Keep total response under 150 words\n\n## 📋 Response Template\n\n```\n[Direct Answer in 2-3 sentences]\n\n[Optional Context - 1-2 sentences]\n\nSource: [Wikipedia/HackerNews/Google Search]\n```\n\n## ⚠️ Critical Rules\n\n1. **Single Tool Policy:** Use ONLY the most relevant tool - never multiple tools for one query\n2. **No Speculation:** If tools don't return results, say \"I couldn't find information on this\" - don't guess\n3. **Fresh Data Priority:** For time-sensitive queries, acknowledge if data might be outdated\n4. **Citation Mandatory:** Every response MUST include the source\n5. **Conciseness:** Keep responses focused and brief - users want answers, not essays\n6. **Error Handling:** If a tool fails, explain briefly and suggest alternative phrasing\n\n## 🎓 Quality Guidelines\n\n- **Accuracy > Speed:** Take time to parse results correctly\n- **Relevance > Completeness:** Return the most relevant snippet, not everything\n- **Clarity > Complexity:** Use simple language even for technical topics\n- **Skepticism:** If results seem contradictory, mention it\n\n## 🚫 What NOT to Do\n\n- ❌ Don't use multiple tools for simple queries\n- ❌ Don't return raw JSON or unformatted data dumps\n- ❌ Don't make up information if tools fail\n- ❌ Don't write responses longer than 150 words\n- ❌ Don't forget to cite the source\n\n## 💡 Example Workflows\n\n**Query:** \"What's the latest on GPT-5?\"\n→ Decision: Tech news → HackerNews\n→ Response: \"According to recent HackerNews discussions, GPT-5 development is underway with expected improvements in reasoning and multimodal capabilities. Beta testing may begin in late 2025. Source: HackerNews\"\n\n**Query:** \"Who founded Microsoft?\"\n→ Decision: Historical fact → Wikipedia\n→ Response: \"Microsoft was founded by Bill Gates and Paul Allen on April 4, 1975, in Albuquerque, New Mexico. The company initially focused on developing software for personal computers. Source: Wikipedia\"\n\n**Query:** \"Best coffee shops near me\"\n→ Decision: Local/current → Google Search\n→ Response: \"Top-rated coffee shops in your area include [results from Google]. These recommendations are based on recent reviews and ratings. Source: Google Search\"\n\nRemember: You are the user's research assistant. Be accurate, concise, and always cite your sources."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agentTool",
+      "typeVersion": 2.2,
+      "position": [
+        5984,
+        4176
+      ],
+      "id": "011c5237-ca2b-4762-964b-3c6909158ffc",
+      "name": "Agent_Search_WebResearch"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        7328,
+        3504
+      ],
+      "id": "eff9953f-788a-4332-aa78-bde882f32d34",
+      "name": "Loop Over Items1"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.File_ID }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        7552,
+        3664
+      ],
+      "id": "58708c67-8375-4ff4-b215-2377e24d4484",
+      "name": "Download file1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "tEGNyCZrBPzzEnxS",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        7664,
+        3392
+      ],
+      "id": "2ac1a5ff-3605-441d-9f57-ff5ae65c2156",
+      "name": "Extract from File1"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "function cleanString(str) {\n  if (typeof str !== 'string') return str;\n\n  // 1. إزالة null characters + أحرف تحكم\n  str = str.replace(/[\\u0000-\\u001F\\u007F-\\u009F]/g, '');\n\n  // 2. إزالة escape sequences غير مكتملة مثل \\u12\n  str = str.replace(/\\\\u[0-9a-fA-F]{0,3}(?![0-9a-fA-F])/g, '');\n\n  // 3. محاولة إصلاح UTF-8 encoding\n  try {\n    str = decodeURIComponent(encodeURIComponent(str));\n  } catch (e) {\n    console.warn('Encoding error:', e.message);\n  }\n\n  return str;\n}\n\nif (item.json.content) {\n  item.json.content = cleanString(item.json.content);\n}\n\nif (item.json.metadata) {\n  let meta = item.json.metadata;\n\n  if (typeof meta === 'string') {\n    meta = cleanString(meta);\n    try {\n      meta = JSON.parse(meta);\n    } catch (e) {\n      console.warn('Invalid metadata JSON:', e.message);\n      meta = {};\n    }\n  }\n\n  if (typeof meta === 'object' && meta !== null) {\n    for (const key in meta) {\n      if (typeof meta[key] === 'string') {\n        meta[key] = cleanString(meta[key]);\n      }\n    }\n  }\n\n  item.json.metadata = meta;\n}\n\nreturn item;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [
+        7936,
+        3392
+      ],
+      "id": "dfa29cee-7788-40ec-875a-f8efc50959cc",
+      "name": "Sanitize Data"
+    },
+    {
+      "parameters": {
+        "chunkOverlap": 200,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "typeVersion": 1,
+      "position": [
+        8432,
+        3824
+      ],
+      "id": "a39d87d5-b7f6-45c0-b6f1-b09d45db6437",
+      "name": "Recursive Character Text Splitter1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "40289568-6438-47d1-bd2a-2e2108b967ef",
+              "name": "File_ID",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "dbc3e75c-e57d-4cfc-8e50-654d6f51233d",
+              "name": "File_Type",
+              "value": "={{ $json.mimeType }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        7104,
+        3504
+      ],
+      "id": "edc8710b-1493-4d3a-9787-7606cad390fc",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "content": "## Embedding For Orchestrator Data ",
+        "height": 880,
+        "width": 1840
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        6784,
+        3184
+      ],
+      "typeVersion": 1,
+      "id": "0e114427-8d0f-4c25-9bfd-36ddbb8234eb",
+      "name": "Sticky Note26"
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "triggerOn": "specificFolder",
+        "folderToWatch": {
+          "__rl": true,
+          "value": "1hSK4pXjHOmr6sfeHFbGZQuNWpq-hqrxq",
+          "mode": "list",
+          "cachedResultName": "Orchestrator",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1hSK4pXjHOmr6sfeHFbGZQuNWpq-hqrxq"
+        },
+        "event": "fileCreated",
+        "options": {
+          "fileType": "all"
+        }
+      },
+      "type": "n8n-nodes-base.googleDriveTrigger",
+      "typeVersion": 1,
+      "position": [
+        6896,
+        3504
+      ],
+      "id": "43df45bc-95c2-4b5e-9541-39b50740fa1f",
+      "name": "Orchestrator Trigger",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "tEGNyCZrBPzzEnxS",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        8016,
+        3696
+      ],
+      "id": "0422cffe-441e-4807-a8dd-7776daa09f68",
+      "name": "Embeddings Orchestrator",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "2oe6nreVlfGHRk0g",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonMode": "expressionData",
+        "jsonData": "={{ $json.text }}",
+        "textSplittingMode": "custom",
+        "options": {
+          "metadata": {
+            "metadataValues": [
+              {
+                "name": "id",
+                "value": "={{ $('Edit Fields').item.json.File_ID }}"
+              },
+              {
+                "name": "version",
+                "value": "v1"
+              },
+              {
+                "name": "Creator",
+                "value": "={{ $('Orchestrator Trigger').item.json.lastModifyingUser.displayName }}"
+              },
+              {
+                "name": "Created_At",
+                "value": "={{ $('Orchestrator Trigger').item.json.createdTime }}"
+              },
+              {
+                "name": "Modified_At",
+                "value": "={{ $('Orchestrator Trigger').item.json.modifiedTime }}"
+              },
+              {
+                "name": "File_Name",
+                "value": "={{ $('Orchestrator Trigger').item.json.name }}"
+              },
+              {
+                "name": "File_Extension",
+                "value": "={{ $('Orchestrator Trigger').item.json.mimeType }}"
+              },
+              {
+                "name": "Folder_Path",
+                "value": "Customer Service"
+              }
+            ]
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        8272,
+        3616
+      ],
+      "id": "c5973f85-050e-4812-bedb-1705b0dff234",
+      "name": "Orchestrator Data Loader"
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "tableName": {
+          "__rl": true,
+          "value": "kayanova",
+          "mode": "list",
+          "cachedResultName": "kayanova"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        8176,
+        3392
+      ],
+      "id": "6c3a480c-5e25-4c49-b388-95163d2a67b6",
+      "name": "Orchestrator DB",
+      "credentials": {
+        "supabaseApi": {
+          "id": "SwPgyGjnZWNT2C66",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "# Embedding ",
+        "height": 2960,
+        "width": 3904,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        6704,
+        3040
+      ],
+      "typeVersion": 1,
+      "id": "e3f21a58-0cc7-46eb-8582-1ccb5a1cdbaf",
+      "name": "Sticky Note27"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        7328,
+        4448
+      ],
+      "id": "904bbbfa-4b8d-46b9-9f90-758cb1e9d2a5",
+      "name": "Loop Over Items2"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.File_ID }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        7552,
+        4608
+      ],
+      "id": "3701859a-0c6d-405a-8b10-54bebfb55f62",
+      "name": "Download file2",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "tEGNyCZrBPzzEnxS",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        7664,
+        4336
+      ],
+      "id": "8a60cd6d-a841-4692-8c11-d9c7bb902912",
+      "name": "Extract from File2"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "function cleanString(str) {\n  if (typeof str !== 'string') return str;\n\n  // 1. إزالة null characters + أحرف تحكم\n  str = str.replace(/[\\u0000-\\u001F\\u007F-\\u009F]/g, '');\n\n  // 2. إزالة escape sequences غير مكتملة مثل \\u12\n  str = str.replace(/\\\\u[0-9a-fA-F]{0,3}(?![0-9a-fA-F])/g, '');\n\n  // 3. محاولة إصلاح UTF-8 encoding\n  try {\n    str = decodeURIComponent(encodeURIComponent(str));\n  } catch (e) {\n    console.warn('Encoding error:', e.message);\n  }\n\n  return str;\n}\n\nif (item.json.content) {\n  item.json.content = cleanString(item.json.content);\n}\n\nif (item.json.metadata) {\n  let meta = item.json.metadata;\n\n  if (typeof meta === 'string') {\n    meta = cleanString(meta);\n    try {\n      meta = JSON.parse(meta);\n    } catch (e) {\n      console.warn('Invalid metadata JSON:', e.message);\n      meta = {};\n    }\n  }\n\n  if (typeof meta === 'object' && meta !== null) {\n    for (const key in meta) {\n      if (typeof meta[key] === 'string') {\n        meta[key] = cleanString(meta[key]);\n      }\n    }\n  }\n\n  item.json.metadata = meta;\n}\n\nreturn item;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [
+        7936,
+        4336
+      ],
+      "id": "4f4bacf8-361f-4516-8ba0-2158e2a886e4",
+      "name": "Sanitize Data2"
+    },
+    {
+      "parameters": {
+        "chunkOverlap": 200,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "typeVersion": 1,
+      "position": [
+        8432,
+        4768
+      ],
+      "id": "8367eb52-b7ef-43e5-88d1-cd113129b453",
+      "name": "Recursive Character Text Splitter2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "40289568-6438-47d1-bd2a-2e2108b967ef",
+              "name": "File_ID",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "dbc3e75c-e57d-4cfc-8e50-654d6f51233d",
+              "name": "File_Type",
+              "value": "={{ $json.mimeType }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        7104,
+        4448
+      ],
+      "id": "6ae39bbe-9890-447e-8ddd-1d8c55d993c6",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "content": "## Embedding For Sales Data ",
+        "height": 880,
+        "width": 1840,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        6784,
+        4128
+      ],
+      "typeVersion": 1,
+      "id": "00facb5d-e842-4071-980f-d5fb45279e03",
+      "name": "Sticky Note28"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        8016,
+        4640
+      ],
+      "id": "afbab0a9-03c9-4860-ae4e-1500a8892a7e",
+      "name": "Embeddings Orchestrator1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "2oe6nreVlfGHRk0g",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonMode": "expressionData",
+        "jsonData": "={{ $json.text }}",
+        "textSplittingMode": "custom",
+        "options": {
+          "metadata": {
+            "metadataValues": [
+              {
+                "name": "id",
+                "value": "={{ $('Edit Fields1').item.json.File_ID }}"
+              },
+              {
+                "name": "version",
+                "value": "v1"
+              },
+              {
+                "name": "Creator",
+                "value": "={{ $('Sales Trigger').item.json.lastModifyingUser.displayName }}"
+              },
+              {
+                "name": "Created_At",
+                "value": "={{ $('Sales Trigger').item.json.createdTime }}"
+              },
+              {
+                "name": "Modified_At",
+                "value": "={{ $('Sales Trigger').item.json.modifiedTime }}"
+              },
+              {
+                "name": "File_Name",
+                "value": "={{ $('Sales Trigger').item.json.name }}"
+              },
+              {
+                "name": "File_Extension",
+                "value": "={{ $('Sales Trigger').item.json.mimeType }}"
+              },
+              {
+                "name": "Folder_Path",
+                "value": "Customer Service"
+              }
+            ]
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        8272,
+        4560
+      ],
+      "id": "dc0e6fc2-5488-402d-84ef-61ab6b926d39",
+      "name": "Orchestrator Data Loader1"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        7328,
+        5376
+      ],
+      "id": "faea2785-42ed-4faa-8ec4-283a4936b0f1",
+      "name": "Loop Over Items3"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.File_ID }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        7552,
+        5536
+      ],
+      "id": "50448a42-6e89-4d34-a32c-7c081724ce57",
+      "name": "Download file3",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "tEGNyCZrBPzzEnxS",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        7664,
+        5264
+      ],
+      "id": "cd1bb6ab-d61c-460d-8794-055b2c14001b",
+      "name": "Extract from File3"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "function cleanString(str) {\n  if (typeof str !== 'string') return str;\n\n  // 1. إزالة null characters + أحرف تحكم\n  str = str.replace(/[\\u0000-\\u001F\\u007F-\\u009F]/g, '');\n\n  // 2. إزالة escape sequences غير مكتملة مثل \\u12\n  str = str.replace(/\\\\u[0-9a-fA-F]{0,3}(?![0-9a-fA-F])/g, '');\n\n  // 3. محاولة إصلاح UTF-8 encoding\n  try {\n    str = decodeURIComponent(encodeURIComponent(str));\n  } catch (e) {\n    console.warn('Encoding error:', e.message);\n  }\n\n  return str;\n}\n\nif (item.json.content) {\n  item.json.content = cleanString(item.json.content);\n}\n\nif (item.json.metadata) {\n  let meta = item.json.metadata;\n\n  if (typeof meta === 'string') {\n    meta = cleanString(meta);\n    try {\n      meta = JSON.parse(meta);\n    } catch (e) {\n      console.warn('Invalid metadata JSON:', e.message);\n      meta = {};\n    }\n  }\n\n  if (typeof meta === 'object' && meta !== null) {\n    for (const key in meta) {\n      if (typeof meta[key] === 'string') {\n        meta[key] = cleanString(meta[key]);\n      }\n    }\n  }\n\n  item.json.metadata = meta;\n}\n\nreturn item;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [
+        7936,
+        5264
+      ],
+      "id": "4790e0a7-5863-47ba-9222-a9f8403c4784",
+      "name": "Sanitize Data3"
+    },
+    {
+      "parameters": {
+        "chunkOverlap": 200,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "typeVersion": 1,
+      "position": [
+        8432,
+        5696
+      ],
+      "id": "8869730d-f898-4ad3-8111-ddea1a023b65",
+      "name": "Recursive Character Text Splitter3"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "40289568-6438-47d1-bd2a-2e2108b967ef",
+              "name": "File_ID",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "dbc3e75c-e57d-4cfc-8e50-654d6f51233d",
+              "name": "File_Type",
+              "value": "={{ $json.mimeType }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        7104,
+        5376
+      ],
+      "id": "d167eaed-680d-4687-8a93-18afb17ff53a",
+      "name": "Edit Fields3"
+    },
+    {
+      "parameters": {
+        "content": "## Embedding For Marketing Data ",
+        "height": 880,
+        "width": 1840,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        6784,
+        5056
+      ],
+      "typeVersion": 1,
+      "id": "cd18580a-d025-4541-99c5-916557c499a8",
+      "name": "Sticky Note29"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        8016,
+        5568
+      ],
+      "id": "9470cd4c-f595-4c99-a544-9ae806b330b5",
+      "name": "Embeddings Orchestrator2",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "2oe6nreVlfGHRk0g",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonMode": "expressionData",
+        "jsonData": "={{ $json.text }}",
+        "textSplittingMode": "custom",
+        "options": {
+          "metadata": {
+            "metadataValues": [
+              {
+                "name": "id",
+                "value": "={{ $('Edit Fields3').item.json.File_ID }}"
+              },
+              {
+                "name": "version",
+                "value": "v1"
+              },
+              {
+                "name": "Creator",
+                "value": "={{ $('Marketing Trigger').item.json.lastModifyingUser.displayName }}"
+              },
+              {
+                "name": "Created_At",
+                "value": "={{ $('Marketing Trigger').item.json.createdTime }}"
+              },
+              {
+                "name": "Modified_At",
+                "value": "={{ $('Marketing Trigger').item.json.modifiedTime }}"
+              },
+              {
+                "name": "File_Name",
+                "value": "={{ $('Marketing Trigger').item.json.name }}"
+              },
+              {
+                "name": "File_Extension",
+                "value": "={{ $('Marketing Trigger').item.json.mimeType }}"
+              },
+              {
+                "name": "Folder_Path",
+                "value": "Customer Service"
+              }
+            ]
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        8272,
+        5488
+      ],
+      "id": "5c11f31c-0616-40e0-859c-4c03648235bc",
+      "name": "Orchestrator Data Loader2"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        9264,
+        3520
+      ],
+      "id": "5c559e5a-544c-4622-a92b-d0fb517c33e8",
+      "name": "Loop Over Items4"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.File_ID }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        9488,
+        3680
+      ],
+      "id": "b122fba6-d04d-4996-9df5-bee507e65481",
+      "name": "Download file4",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "tEGNyCZrBPzzEnxS",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        9600,
+        3408
+      ],
+      "id": "fb95f630-837f-4edb-8967-43a29a7de089",
+      "name": "Extract from File4"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "function cleanString(str) {\n  if (typeof str !== 'string') return str;\n\n  // 1. إزالة null characters + أحرف تحكم\n  str = str.replace(/[\\u0000-\\u001F\\u007F-\\u009F]/g, '');\n\n  // 2. إزالة escape sequences غير مكتملة مثل \\u12\n  str = str.replace(/\\\\u[0-9a-fA-F]{0,3}(?![0-9a-fA-F])/g, '');\n\n  // 3. محاولة إصلاح UTF-8 encoding\n  try {\n    str = decodeURIComponent(encodeURIComponent(str));\n  } catch (e) {\n    console.warn('Encoding error:', e.message);\n  }\n\n  return str;\n}\n\nif (item.json.content) {\n  item.json.content = cleanString(item.json.content);\n}\n\nif (item.json.metadata) {\n  let meta = item.json.metadata;\n\n  if (typeof meta === 'string') {\n    meta = cleanString(meta);\n    try {\n      meta = JSON.parse(meta);\n    } catch (e) {\n      console.warn('Invalid metadata JSON:', e.message);\n      meta = {};\n    }\n  }\n\n  if (typeof meta === 'object' && meta !== null) {\n    for (const key in meta) {\n      if (typeof meta[key] === 'string') {\n        meta[key] = cleanString(meta[key]);\n      }\n    }\n  }\n\n  item.json.metadata = meta;\n}\n\nreturn item;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [
+        9872,
+        3408
+      ],
+      "id": "0e45ab8e-6739-46d6-86a0-1f19f41e3ddd",
+      "name": "Sanitize Data4"
+    },
+    {
+      "parameters": {
+        "chunkOverlap": 200,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "typeVersion": 1,
+      "position": [
+        10320,
+        3824
+      ],
+      "id": "2b3307bb-11da-49e1-ab07-c495ff2a64ab",
+      "name": "Recursive Character Text Splitter4"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "40289568-6438-47d1-bd2a-2e2108b967ef",
+              "name": "File_ID",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "dbc3e75c-e57d-4cfc-8e50-654d6f51233d",
+              "name": "File_Type",
+              "value": "={{ $json.mimeType }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        9040,
+        3520
+      ],
+      "id": "29346612-dbb9-4b4a-96b9-8ad6fc723645",
+      "name": "Edit Fields4"
+    },
+    {
+      "parameters": {
+        "content": "## Embedding For Tech Data ",
+        "height": 880,
+        "width": 1840,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        8720,
+        3200
+      ],
+      "typeVersion": 1,
+      "id": "d2217bfd-8886-408b-a306-b1821ebeeb05",
+      "name": "Sticky Note30"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        9952,
+        3712
+      ],
+      "id": "87a1d3c6-7617-4497-aa77-748ebde9de25",
+      "name": "Embeddings Orchestrator3",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "2oe6nreVlfGHRk0g",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonMode": "expressionData",
+        "jsonData": "={{ $json.text }}",
+        "textSplittingMode": "custom",
+        "options": {
+          "metadata": {
+            "metadataValues": [
+              {
+                "name": "id",
+                "value": "={{ $('Edit Fields4').item.json.File_ID }}"
+              },
+              {
+                "name": "version",
+                "value": "v1"
+              },
+              {
+                "name": "Creator",
+                "value": "={{ $('Tech Trigger').item.json.lastModifyingUser.displayName }}"
+              },
+              {
+                "name": "Created_At",
+                "value": "={{ $('Tech Trigger').item.json.createdTime }}"
+              },
+              {
+                "name": "Modified_At",
+                "value": "={{ $('Tech Trigger').item.json.modifiedTime }}"
+              },
+              {
+                "name": "File_Name",
+                "value": "={{ $('Tech Trigger').item.json.name }}"
+              },
+              {
+                "name": "File_Extension",
+                "value": "={{ $('Tech Trigger').item.json.mimeType }}"
+              },
+              {
+                "name": "Folder_Path",
+                "value": "Customer Service"
+              }
+            ]
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        10208,
+        3632
+      ],
+      "id": "d18279d5-28b5-490f-94c2-a68bebbb4e54",
+      "name": "Orchestrator Data Loader3"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        9264,
+        4464
+      ],
+      "id": "bdfd97f3-4ab5-4de7-b9e7-025b39d74433",
+      "name": "Loop Over Items5"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.File_ID }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        9488,
+        4624
+      ],
+      "id": "e5e73d91-a98d-4780-be46-af027f73815f",
+      "name": "Download file5",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "tEGNyCZrBPzzEnxS",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        9600,
+        4352
+      ],
+      "id": "dee89212-ab71-4e5b-8f94-40e62683cd9b",
+      "name": "Extract from File5"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "function cleanString(str) {\n  if (typeof str !== 'string') return str;\n\n  // 1. إزالة null characters + أحرف تحكم\n  str = str.replace(/[\\u0000-\\u001F\\u007F-\\u009F]/g, '');\n\n  // 2. إزالة escape sequences غير مكتملة مثل \\u12\n  str = str.replace(/\\\\u[0-9a-fA-F]{0,3}(?![0-9a-fA-F])/g, '');\n\n  // 3. محاولة إصلاح UTF-8 encoding\n  try {\n    str = decodeURIComponent(encodeURIComponent(str));\n  } catch (e) {\n    console.warn('Encoding error:', e.message);\n  }\n\n  return str;\n}\n\nif (item.json.content) {\n  item.json.content = cleanString(item.json.content);\n}\n\nif (item.json.metadata) {\n  let meta = item.json.metadata;\n\n  if (typeof meta === 'string') {\n    meta = cleanString(meta);\n    try {\n      meta = JSON.parse(meta);\n    } catch (e) {\n      console.warn('Invalid metadata JSON:', e.message);\n      meta = {};\n    }\n  }\n\n  if (typeof meta === 'object' && meta !== null) {\n    for (const key in meta) {\n      if (typeof meta[key] === 'string') {\n        meta[key] = cleanString(meta[key]);\n      }\n    }\n  }\n\n  item.json.metadata = meta;\n}\n\nreturn item;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [
+        9872,
+        4352
+      ],
+      "id": "4a6d5fb7-4abf-4569-854a-73e3d33d57cc",
+      "name": "Sanitize Data5"
+    },
+    {
+      "parameters": {
+        "chunkOverlap": 200,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "typeVersion": 1,
+      "position": [
+        10128,
+        4864
+      ],
+      "id": "e5f9b905-09a5-438a-9e7d-3ccf7e0b1550",
+      "name": "Recursive Character Text Splitter5"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "40289568-6438-47d1-bd2a-2e2108b967ef",
+              "name": "File_ID",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "dbc3e75c-e57d-4cfc-8e50-654d6f51233d",
+              "name": "File_Type",
+              "value": "={{ $json.mimeType }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        9040,
+        4464
+      ],
+      "id": "8a7da4eb-f9ea-4279-949c-5e4c0917d464",
+      "name": "Edit Fields5"
+    },
+    {
+      "parameters": {
+        "content": "## Embedding For Creative Data ",
+        "height": 880,
+        "width": 1840,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        8720,
+        4144
+      ],
+      "typeVersion": 1,
+      "id": "fcab8de6-b5fc-40e7-8fdf-d82e3bbdcc52",
+      "name": "Sticky Note31"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        9952,
+        4656
+      ],
+      "id": "6f94019c-ec73-410d-aab4-12e44929fe08",
+      "name": "Embeddings Orchestrator4",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "2oe6nreVlfGHRk0g",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonMode": "expressionData",
+        "jsonData": "={{ $json.text }}",
+        "textSplittingMode": "custom",
+        "options": {
+          "metadata": {
+            "metadataValues": [
+              {
+                "name": "id",
+                "value": "={{ $('Edit Fields5').item.json.File_ID }}"
+              },
+              {
+                "name": "version",
+                "value": "v1"
+              },
+              {
+                "name": "Creator",
+                "value": "={{ $('Creative Trigger').item.json.lastModifyingUser.displayName }}"
+              },
+              {
+                "name": "Created_At",
+                "value": "={{ $('Creative Trigger').item.json.createdTime }}"
+              },
+              {
+                "name": "Modified_At",
+                "value": "={{ $('Creative Trigger').item.json.modifiedTime }}"
+              },
+              {
+                "name": "File_Name",
+                "value": "={{ $('Creative Trigger').item.json.name }}"
+              },
+              {
+                "name": "File_Extension",
+                "value": "={{ $('Creative Trigger').item.json.mimeType }}"
+              },
+              {
+                "name": "Folder_Path",
+                "value": "Customer Service"
+              }
+            ]
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        10128,
+        4656
+      ],
+      "id": "000b5a9f-b7b8-48ec-af4c-161fd571e8d7",
+      "name": "Orchestrator Data Loader4"
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "triggerOn": "specificFolder",
+        "folderToWatch": {
+          "__rl": true,
+          "value": "1rWT-r43SXAOKwUH5XBnyVURqVm7GkaW8",
+          "mode": "list",
+          "cachedResultName": "Sales",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1rWT-r43SXAOKwUH5XBnyVURqVm7GkaW8"
+        },
+        "event": "fileCreated",
+        "options": {
+          "fileType": "all"
+        }
+      },
+      "type": "n8n-nodes-base.googleDriveTrigger",
+      "typeVersion": 1,
+      "position": [
+        6896,
+        4448
+      ],
+      "id": "7dd044f3-a99e-410a-8fba-dfdbd30537d8",
+      "name": "Sales Trigger",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "tEGNyCZrBPzzEnxS",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "tableName": {
+          "__rl": true,
+          "value": "sales_kayanova",
+          "mode": "list",
+          "cachedResultName": "sales_kayanova"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        8176,
+        4336
+      ],
+      "id": "d5538e08-7810-4d64-b1e4-ca181beda135",
+      "name": "Sales DB",
+      "credentials": {
+        "supabaseApi": {
+          "id": "SwPgyGjnZWNT2C66",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "triggerOn": "specificFolder",
+        "folderToWatch": {
+          "__rl": true,
+          "value": "15PIOARc_mu7MgWZAwJGVvfTbRgfz9Khm",
+          "mode": "list",
+          "cachedResultName": "Marketing",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/15PIOARc_mu7MgWZAwJGVvfTbRgfz9Khm"
+        },
+        "event": "fileCreated",
+        "options": {
+          "fileType": "all"
+        }
+      },
+      "type": "n8n-nodes-base.googleDriveTrigger",
+      "typeVersion": 1,
+      "position": [
+        6896,
+        5376
+      ],
+      "id": "2e0735b5-de9d-4ab6-8fcf-54359a3c6a68",
+      "name": "Marketing Trigger",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "tEGNyCZrBPzzEnxS",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "tableName": {
+          "__rl": true,
+          "value": "marketing_kayanova",
+          "mode": "list",
+          "cachedResultName": "marketing_kayanova"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        8176,
+        5264
+      ],
+      "id": "7d1374e8-1cfe-42d9-9704-d973a930eefe",
+      "name": "Marketing DB",
+      "credentials": {
+        "supabaseApi": {
+          "id": "SwPgyGjnZWNT2C66",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "triggerOn": "specificFolder",
+        "folderToWatch": {
+          "__rl": true,
+          "value": "17402jxXoI_RyTo-eSaIIIOUw6Md7e1t0",
+          "mode": "list",
+          "cachedResultName": "Tech",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/17402jxXoI_RyTo-eSaIIIOUw6Md7e1t0"
+        },
+        "event": "fileCreated",
+        "options": {
+          "fileType": "all"
+        }
+      },
+      "type": "n8n-nodes-base.googleDriveTrigger",
+      "typeVersion": 1,
+      "position": [
+        8832,
+        3520
+      ],
+      "id": "5b5df74a-3a4f-4888-aae7-cc9fc6c5f974",
+      "name": "Tech Trigger",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "tEGNyCZrBPzzEnxS",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "tableName": {
+          "__rl": true,
+          "value": "tech_kayanova",
+          "mode": "list",
+          "cachedResultName": "tech_kayanova"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        10112,
+        3408
+      ],
+      "id": "773455a9-353f-4437-bf01-9afddb101778",
+      "name": "Tech DB",
+      "credentials": {
+        "supabaseApi": {
+          "id": "SwPgyGjnZWNT2C66",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "triggerOn": "specificFolder",
+        "folderToWatch": {
+          "__rl": true,
+          "value": "1WdajnG5UEj4lulfFLVM2Dpz0wncEptpM",
+          "mode": "list",
+          "cachedResultName": "Creative",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1WdajnG5UEj4lulfFLVM2Dpz0wncEptpM"
+        },
+        "event": "fileCreated",
+        "options": {
+          "fileType": "all"
+        }
+      },
+      "type": "n8n-nodes-base.googleDriveTrigger",
+      "typeVersion": 1,
+      "position": [
+        8832,
+        4464
+      ],
+      "id": "b18bb0c3-e5c5-4272-ac60-95f252d19109",
+      "name": "Creative Trigger",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "tEGNyCZrBPzzEnxS",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "tableName": {
+          "__rl": true,
+          "value": "creative_kayanova",
+          "mode": "list",
+          "cachedResultName": "creative_kayanova"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        10112,
+        4352
+      ],
+      "id": "d9e4806c-5e66-41b8-92ad-036fd051dc1e",
+      "name": "Creative DB",
+      "credentials": {
+        "supabaseApi": {
+          "id": "SwPgyGjnZWNT2C66",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// تأكد أن الحقل المستخدم هنا (message) هو نفسه الذي يحتوي على النص الذي تريد تنظيفه\nconst rawText = $json.output; \n\nif (!rawText || typeof rawText !== 'string') {\n  return [{ json: { cleanedText: rawText || \"Input was empty or not a string. Please check the input field name.\" } }];\n}\n\nlet cleanedText = rawText;\n\n// 1. إزالة جميع رؤوس Markdown (#, ##, ###, إلخ) في بداية السطر\ncleanedText = cleanedText.replace(/^#+\\s*/gm, '');\n\n// 2. إزالة نقاط القائمة غير المرتبة (-، *، +) في بداية السطر\ncleanedText = cleanedText.replace(/^[*-+]\\s*/gm, '');\n\n// 3. إزالة النجوم المزدوجة (**) والشرطات السفلية المزدوجة (__) للخط الغامق\ncleanedText = cleanedText.replace(/(\\*\\*|__)(.*?)\\1/g, '$2');\n\n// 4. إزالة النجوم المفردة (_) أو الشرطات السفلية المفردة (_) للخط المائل\ncleanedText = cleanedText.replace(/(\\*|_)(.*?)\\1/g, '$2');\n\n// 5. إزالة علامات الاقتباس (>) في بداية السطر\ncleanedText = cleanedText.replace(/^>\\s*/gm, '');\n\n// 6. إزالة الفواصل الناتجة عن التنظيف (مثل وجود سطرين فارغين متتاليين)\ncleanedText = cleanedText.replace(/\\n{2,}/g, '\\n\\n');\n\n// 7. إزالة المسافات البيضاء الزائدة من البداية والنهاية\ncleanedText = cleanedText.trim();\n\n\n// إرجاع النص النظيف في حقل جديد\nreturn [\n  { \n    json: { \n      cleanedText: cleanedText \n    } \n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        5808,
+        3152
+      ],
+      "id": "4d2f6c5d-039c-48d6-bb85-37d754bed1cb",
+      "name": "Clean Output"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1d8b2396-90ad-4794-a532-8a0dbac0ecc2",
+              "name": "Response",
+              "value": "={{ $json.cleanedText }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        6064,
+        3152
+      ],
+      "id": "2406ddef-5864-4e5e-a33b-6803d2c66335",
+      "name": "Response"
+    }
+  ],
+  "pinData": {
+    "Webhook Trigger": [
+      {
+        "json": {
+          "headers": {
+            "host": "n8n-n8n.vwe4kq.easypanel.host",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+            "content-length": "131",
+            "accept": "application/json",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "accept-language": "en-US,en;q=0.8",
+            "content-type": "application/json",
+            "origin": "https://kayanovagency.com",
+            "priority": "u=1, i",
+            "referer": "https://kayanovagency.com/",
+            "sec-ch-ua": "\"Brave\";v=\"143\", \"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "sec-fetch-dest": "empty",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-site": "cross-site",
+            "sec-gpc": "1",
+            "x-forwarded-for": "156.194.28.66",
+            "x-forwarded-host": "n8n-n8n.vwe4kq.easypanel.host",
+            "x-forwarded-port": "443",
+            "x-forwarded-proto": "https",
+            "x-forwarded-server": "3a9bb3fc4644",
+            "x-real-ip": "156.194.28.66"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "message": "What technologies do you use?",
+            "session_id": "session_1765929189837_7dw6j4pcx",
+            "user_id": "user_1765929189837_rlt1rl5wf"
+          },
+          "webhookUrl": "https://n8n-n8n.vwe4kq.easypanel.host/webhook/orchestrator",
+          "executionMode": "production"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Parse User Input": {
+      "main": [
+        [
+          {
+            "node": "Orchestrator Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Orchestrator Agent": {
+      "main": [
+        [
+          {
+            "node": "Clean Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Parse User Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Orchestrator LLM (GPT-4o)": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Orchestrator Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Session Memory (100 msgs)": {
+      "ai_memory": [
+        [
+          {
+            "node": "Orchestrator Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Kayanova Knowledge Base RAG": {
+      "ai_tool": [
+        [
+          {
+            "node": "Orchestrator Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase Vector Store": {
+      "ai_vectorStore": [
+        [
+          {
+            "node": "Kayanova Knowledge Base RAG",
+            "type": "ai_vectorStore",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini Embeddings": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Supabase Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RAG Query LLM (GPT-4o-mini)": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Kayanova Knowledge Base RAG",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Strategic Thinking Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "Orchestrator Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tech Agent LLM (GPT-4o)": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Tech Solutions Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tech Knowledge Base RAG": {
+      "ai_tool": [
+        [
+          {
+            "node": "Tech Solutions Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase Vector Store (Tech)": {
+      "ai_vectorStore": [
+        [
+          {
+            "node": "Tech Knowledge Base RAG",
+            "type": "ai_vectorStore",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini Embeddings (Tech)": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Supabase Vector Store (Tech)",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Technical Thinking Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "Tech Solutions Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RAG Query LLM (GPT-4o-mini)1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Tech Knowledge Base RAG",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Marketing Agent LLM (GPT-4o)": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Marketing Growth Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Marketing Knowledge Base RAG": {
+      "ai_tool": [
+        [
+          {
+            "node": "Marketing Growth Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase Vector Store (Marketing)": {
+      "ai_vectorStore": [
+        [
+          {
+            "node": "Marketing Knowledge Base RAG",
+            "type": "ai_vectorStore",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini Embeddings (Marketing)": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Supabase Vector Store (Marketing)",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Marketing Strategy Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "Marketing Growth Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RAG Query LLM (GPT-4o-mini)2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Marketing Knowledge Base RAG",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sales Agent LLM (GPT-4o)": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Sales Consultant Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sales Knowledge Base RAG": {
+      "ai_tool": [
+        [
+          {
+            "node": "Sales Consultant Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase Vector Store (Sales)": {
+      "ai_vectorStore": [
+        [
+          {
+            "node": "Sales Knowledge Base RAG",
+            "type": "ai_vectorStore",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini Embeddings (Sales)": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Supabase Vector Store (Sales)",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sales Strategy Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "Sales Consultant Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RAG Query LLM (GPT-4o-mini)3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Sales Knowledge Base RAG",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Creative Agent LLM (GPT-4o)": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Creative Director Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Creative Knowledge Base RAG": {
+      "ai_tool": [
+        [
+          {
+            "node": "Creative Director Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase Vector Store (Creative)": {
+      "ai_vectorStore": [
+        [
+          {
+            "node": "Creative Knowledge Base RAG",
+            "type": "ai_vectorStore",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini Embeddings (Creative)": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Supabase Vector Store (Creative)",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Creative Strategy Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "Creative Director Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RAG Query LLM (GPT-4o-mini)4": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Creative Knowledge Base RAG",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tool_Wikipedia_Encyclopedia": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agent_Search_WebResearch",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tool_HackerNews_TechArticles": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agent_Search_WebResearch",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LLM_GoogleGemini_SearchReasoning": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Agent_Search_WebResearch",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tool_GoogleSearch_WebResults": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agent_Search_WebResearch",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Creative Director Agent": {
+      "ai_tool": [
+        [
+          {
+            "node": "Orchestrator Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sales Consultant Agent": {
+      "ai_tool": [
+        [
+          {
+            "node": "Orchestrator Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Marketing Growth Agent": {
+      "ai_tool": [
+        [
+          {
+            "node": "Orchestrator Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agent_Search_WebResearch": {
+      "ai_tool": [
+        [
+          {
+            "node": "Orchestrator Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tech Solutions Agent": {
+      "ai_tool": [
+        [
+          {
+            "node": "Orchestrator Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items1": {
+      "main": [
+        [
+          {
+            "node": "Extract from File1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Download file1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download file1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File1": {
+      "main": [
+        [
+          {
+            "node": "Sanitize Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sanitize Data": {
+      "main": [
+        [
+          {
+            "node": "Orchestrator DB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recursive Character Text Splitter1": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Orchestrator Data Loader",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Orchestrator Trigger": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Orchestrator": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Orchestrator DB",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Orchestrator Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Orchestrator DB",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items2": {
+      "main": [
+        [
+          {
+            "node": "Extract from File2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Download file2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download file2": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File2": {
+      "main": [
+        [
+          {
+            "node": "Sanitize Data2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sanitize Data2": {
+      "main": [
+        [
+          {
+            "node": "Sales DB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recursive Character Text Splitter2": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Orchestrator Data Loader1",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Orchestrator1": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Sales DB",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Orchestrator Data Loader1": {
+      "ai_document": [
+        [
+          {
+            "node": "Sales DB",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items3": {
+      "main": [
+        [
+          {
+            "node": "Extract from File3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Download file3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download file3": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File3": {
+      "main": [
+        [
+          {
+            "node": "Sanitize Data3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sanitize Data3": {
+      "main": [
+        [
+          {
+            "node": "Marketing DB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recursive Character Text Splitter3": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Orchestrator Data Loader2",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields3": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Orchestrator2": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Marketing DB",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Orchestrator Data Loader2": {
+      "ai_document": [
+        [
+          {
+            "node": "Marketing DB",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items4": {
+      "main": [
+        [
+          {
+            "node": "Extract from File4",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Download file4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download file4": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File4": {
+      "main": [
+        [
+          {
+            "node": "Sanitize Data4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sanitize Data4": {
+      "main": [
+        [
+          {
+            "node": "Tech DB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recursive Character Text Splitter4": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Orchestrator Data Loader3",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields4": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Orchestrator3": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Tech DB",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Orchestrator Data Loader3": {
+      "ai_document": [
+        [
+          {
+            "node": "Tech DB",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items5": {
+      "main": [
+        [
+          {
+            "node": "Extract from File5",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Download file5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download file5": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File5": {
+      "main": [
+        [
+          {
+            "node": "Sanitize Data5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sanitize Data5": {
+      "main": [
+        [
+          {
+            "node": "Creative DB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recursive Character Text Splitter5": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Orchestrator Data Loader4",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields5": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Orchestrator4": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Creative DB",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Orchestrator Data Loader4": {
+      "ai_document": [
+        [
+          {
+            "node": "Creative DB",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sales Trigger": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Marketing Trigger": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tech Trigger": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Creative Trigger": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clean Output": {
+      "main": [
+        [
+          {
+            "node": "Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Response": {
+      "main": [
+        [
+          {
+            "node": "Send Response to User",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "d9eb7f5d-926f-4f38-a0c2-cbb0f6dacb6e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b89dab3f2b0122a80c2f295775dd56db13b5aff073f33e6665bd79933e62cb6d"
+  },
+  "id": "S8GV6EnKen2QAHkn",
+  "tags": []
+}

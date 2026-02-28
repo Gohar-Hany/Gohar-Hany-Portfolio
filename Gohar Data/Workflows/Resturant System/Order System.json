@@ -1,0 +1,5224 @@
+{
+  "name": "Order System",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "new-order",
+        "responseMode": "responseNode",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              },
+              {
+                "name": "Access-Control-Allow-Methods",
+                "value": "GET, POST, OPTIONS"
+              },
+              {
+                "name": "Access-Control-Allow-Headers",
+                "value": "Content-Type"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -8592,
+        304
+      ],
+      "id": "60c49361-3e87-4fc4-8701-15aa5ca10d7b",
+      "name": "Webhook",
+      "webhookId": "f3b86b00-0579-4e15-a474-0f7acb4449ca"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1AwtIox0nUjHVfOVHHFeWqF6WywbNb5aOuTUuR2HlCOc",
+          "mode": "list",
+          "cachedResultName": "Orders",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1AwtIox0nUjHVfOVHHFeWqF6WywbNb5aOuTUuR2HlCOc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1AwtIox0nUjHVfOVHHFeWqF6WywbNb5aOuTUuR2HlCOc/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "orderType": "={{ $json.orderType }}",
+            "customerName": "={{ $json.customerName }}",
+            "phone": "={{ $json.phone }}",
+            "address": "={{ $json.address }}",
+            "tableNumber": "={{ $json.tableNumber }}",
+            "items": "={{ $json.items }}",
+            "status": "={{ $json.status }}",
+            "totalPrice": "={{ $json.total_price }}",
+            "order_ID": "={{ $json.orderId }}",
+            "createdAt": "={{ $json.createdAt }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "order_ID",
+              "displayName": "order_ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "orderType",
+              "displayName": "orderType",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "customerName",
+              "displayName": "customerName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "phone",
+              "displayName": "phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "address",
+              "displayName": "address",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "items",
+              "displayName": "items",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "totalPrice",
+              "displayName": "totalPrice",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "discount",
+              "displayName": "discount",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "tableNumber",
+              "displayName": "tableNumber",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "createdAt",
+              "displayName": "createdAt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "updatedAt",
+              "displayName": "updatedAt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        -7872,
+        176
+      ],
+      "id": "8fa45541-73fe-4192-9152-1161836e5422",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jy58BxClZutdZdvF",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ddcf663e-e322-444c-afe2-014739006616",
+              "name": "orderId",
+              "value": "={{(() => {\n  const body = $json.body;\n  return body.orderId || Date.now();\n})()}}",
+              "type": "string"
+            },
+            {
+              "id": "39842e99-4312-474e-849e-0a498fefe789",
+              "name": "orderType",
+              "value": "={{ $json.body.orderType }}",
+              "type": "string"
+            },
+            {
+              "id": "edffbbef-1276-4137-8903-8b8426de9c9f",
+              "name": "customerName",
+              "value": "={{ $json.body.customerInfo.customerName }}",
+              "type": "string"
+            },
+            {
+              "id": "76dacc5a-e1e5-44b7-83d7-cc26828520b0",
+              "name": "tableNumber",
+              "value": "={{ $json.body.customerInfo.tableNumber }}",
+              "type": "string"
+            },
+            {
+              "id": "28901c43-2aa3-4b66-b1c0-a8422042e06f",
+              "name": "phone",
+              "value": "={{ $json.body.customerInfo.phone }}",
+              "type": "string"
+            },
+            {
+              "id": "af7706ea-064e-4175-96a0-deab0eea79de",
+              "name": "address",
+              "value": "={{ $json.body.customerInfo.address }}",
+              "type": "string"
+            },
+            {
+              "id": "a3ee66bd-3cef-4c76-a404-36f36bd0d07f",
+              "name": "items",
+              "value": "={{(() => {\n  const items = $json.body.items;\n  return items.map(i => {\n    // نتحقق إذا كان هناك 'notes' لهذا الصنف\n    const notesString = i.notes ? ` (${i.notes})` : '';\n    return `${i.quantity}x ${i.name}${notesString}`;\n  }).join('\\n');\n})()}}",
+              "type": "string"
+            },
+            {
+              "id": "b0c8ae1a-5be6-4474-a987-ab20f946f985",
+              "name": "status",
+              "value": "Received",
+              "type": "string"
+            },
+            {
+              "id": "cdef6b0d-ed30-48df-ab46-daa442b1ec5f",
+              "name": "createdAt",
+              "value": "={{(() => {\n  const now = new Date();\n  now.setHours(now.getHours() + 3); \n  const pad = n => n.toString().padStart(2, '0');\n  const day = pad(now.getDate());\n  const month = pad(now.getMonth() + 1);\n  const year = now.getFullYear();\n  const hours = now.getHours();\n  const minutes = pad(now.getMinutes());\n  const ampm = hours >= 12 ? 'PM' : 'AM';\n  const hour12 = pad((hours % 12) || 12);\n  return `${day}-${month}-${year} ${hour12}:${minutes} ${ampm}`;\n})()}}",
+              "type": "string"
+            },
+            {
+              "id": "5b584dee-828a-4285-8738-224ab44bcc2b",
+              "name": "message",
+              "value": "={{ $json.body.body.message }}",
+              "type": "string"
+            },
+            {
+              "id": "80fe9eda-4b8f-4230-b6f5-5c11cb5252df",
+              "name": "session_id",
+              "value": "={{ $json.body.body.sessionId }}",
+              "type": "string"
+            },
+            {
+              "id": "8326e68f-66dc-42ee-857c-baedeb5d1e03",
+              "name": "price_of_each_one",
+              "value": "={{ $json.body.items.map(item => `${item.quantity} ${item.name} = ${item.price * item.quantity}`).join('\\n') }}",
+              "type": "string"
+            },
+            {
+              "id": "a485185e-4b51-470d-8ac2-3c8f961f25b7",
+              "name": "total_price",
+              "value": "={{ $json.body.items.map(item => item.price * item.quantity).reduce((sum, current) => sum + current, 0).toFixed(2) }}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -8368,
+        304
+      ],
+      "id": "f315a919-5acf-4d57-8fe2-f8c74dd11a57",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "update-order",
+        "responseMode": "responseNode",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Methods",
+                "value": "GET, POST, OPTIONS"
+              },
+              {
+                "name": "Access-Control-Allow-Headers",
+                "value": "Content-Type"
+              },
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -8528,
+        1104
+      ],
+      "id": "ec871fce-92da-4d95-9531-6014764c4661",
+      "name": "Webhook1",
+      "webhookId": "cc1ee193-b92d-42d6-98d1-fceac96defde"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1AwtIox0nUjHVfOVHHFeWqF6WywbNb5aOuTUuR2HlCOc",
+          "mode": "list",
+          "cachedResultName": "Orders",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1AwtIox0nUjHVfOVHHFeWqF6WywbNb5aOuTUuR2HlCOc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1AwtIox0nUjHVfOVHHFeWqF6WywbNb5aOuTUuR2HlCOc/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "status": "={{ $json.Newstatus }}",
+            "order_ID": "={{ $json.orderId }}",
+            "updatedAt": "={{ $json.updatedAt }}"
+          },
+          "matchingColumns": [
+            "order_ID"
+          ],
+          "schema": [
+            {
+              "id": "order_ID",
+              "displayName": "order_ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "orderType",
+              "displayName": "orderType",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "customerName",
+              "displayName": "customerName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "phone",
+              "displayName": "phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "address",
+              "displayName": "address",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "items",
+              "displayName": "items",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "totalPrice",
+              "displayName": "totalPrice",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "discount",
+              "displayName": "discount",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "tableNumber",
+              "displayName": "tableNumber",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "createdAt",
+              "displayName": "createdAt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "updatedAt",
+              "displayName": "updatedAt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        -8096,
+        1104
+      ],
+      "id": "2e54bd87-0392-4321-a152-fd83178b06ae",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jy58BxClZutdZdvF",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.orderType }}",
+                    "rightValue": "=delivery",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "e0f16628-bdb9-4beb-b24c-e10731d7d335"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Delivery"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "0f260c61-fab1-4a9b-80d1-3ba5b2e6fe0c",
+                    "leftValue": "={{ $json.orderType }}",
+                    "rightValue": "dine-in",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Dine In"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -8176,
+        304
+      ],
+      "id": "1b9c820e-7e6c-4c7c-ad4b-24ec0ea6f243",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1AwtIox0nUjHVfOVHHFeWqF6WywbNb5aOuTUuR2HlCOc",
+          "mode": "list",
+          "cachedResultName": "Orders",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1AwtIox0nUjHVfOVHHFeWqF6WywbNb5aOuTUuR2HlCOc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1AwtIox0nUjHVfOVHHFeWqF6WywbNb5aOuTUuR2HlCOc/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "orderType": "={{ $json.orderType }}",
+            "customerName": "={{ $json.customerName }}",
+            "phone": "={{ $json.phone }}",
+            "address": "={{ $json.address }}",
+            "tableNumber": "={{ $json.tableNumber }}",
+            "items": "={{ $json.items }}",
+            "status": "={{ $json.status }}",
+            "totalPrice": "={{ $json.total_price }}",
+            "order_ID": "={{ $json.orderId }}",
+            "createdAt": "={{ $json.createdAt }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "order_ID",
+              "displayName": "order_ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "orderType",
+              "displayName": "orderType",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "customerName",
+              "displayName": "customerName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "phone",
+              "displayName": "phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "address",
+              "displayName": "address",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "items",
+              "displayName": "items",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "totalPrice",
+              "displayName": "totalPrice",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "discount",
+              "displayName": "discount",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "tableNumber",
+              "displayName": "tableNumber",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "createdAt",
+              "displayName": "createdAt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "updatedAt",
+              "displayName": "updatedAt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        -7872,
+        368
+      ],
+      "id": "c18be956-660b-4c45-85ab-bf1f8e1bdb0b",
+      "name": "Append row in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jy58BxClZutdZdvF",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "triggerOn": "specificFolder",
+        "folderToWatch": {
+          "__rl": true,
+          "value": "1WBWsP9L7iwStpY0izj2G6Jrh-FiNMp83",
+          "mode": "list",
+          "cachedResultName": "Restaurant",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1WBWsP9L7iwStpY0izj2G6Jrh-FiNMp83"
+        },
+        "event": "fileCreated",
+        "options": {
+          "fileType": "all"
+        }
+      },
+      "type": "n8n-nodes-base.googleDriveTrigger",
+      "typeVersion": 1,
+      "position": [
+        -8528,
+        3456
+      ],
+      "id": "a6e57b21-d405-4543-9989-c6ef87591ae2",
+      "name": "Google Drive Trigger",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "tEGNyCZrBPzzEnxS",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -8096,
+        3456
+      ],
+      "id": "c2dbded6-b646-4449-ac56-f5acecf717bf",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.File_ID }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -7872,
+        3616
+      ],
+      "id": "7989608e-233b-4398-9c2e-625b5b490eb1",
+      "name": "Download file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "tEGNyCZrBPzzEnxS",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        -7760,
+        3328
+      ],
+      "id": "fc2bfa6e-ec7c-4381-a9a1-ec9c06de4f8c",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "tableName": {
+          "__rl": true,
+          "value": "documents",
+          "mode": "list",
+          "cachedResultName": "documents"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        -7248,
+        3328
+      ],
+      "id": "ae1ab14f-072e-474a-a5b1-3cf23b25f5f2",
+      "name": "Supabase Vector Store",
+      "credentials": {
+        "supabaseApi": {
+          "id": "SwPgyGjnZWNT2C66",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "function cleanString(str) {\n  if (typeof str !== 'string') return str;\n\n  // 1. إزالة null characters + أحرف تحكم\n  str = str.replace(/[\\u0000-\\u001F\\u007F-\\u009F]/g, '');\n\n  // 2. إزالة escape sequences غير مكتملة مثل \\u12\n  str = str.replace(/\\\\u[0-9a-fA-F]{0,3}(?![0-9a-fA-F])/g, '');\n\n  // 3. محاولة إصلاح UTF-8 encoding\n  try {\n    str = decodeURIComponent(encodeURIComponent(str));\n  } catch (e) {\n    console.warn('Encoding error:', e.message);\n  }\n\n  return str;\n}\n\nif (item.json.content) {\n  item.json.content = cleanString(item.json.content);\n}\n\nif (item.json.metadata) {\n  let meta = item.json.metadata;\n\n  if (typeof meta === 'string') {\n    meta = cleanString(meta);\n    try {\n      meta = JSON.parse(meta);\n    } catch (e) {\n      console.warn('Invalid metadata JSON:', e.message);\n      meta = {};\n    }\n  }\n\n  if (typeof meta === 'object' && meta !== null) {\n    for (const key in meta) {\n      if (typeof meta[key] === 'string') {\n        meta[key] = cleanString(meta[key]);\n      }\n    }\n  }\n\n  item.json.metadata = meta;\n}\n\nreturn item;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [
+        -7488,
+        3328
+      ],
+      "id": "3322e05c-8d08-41f6-9948-d5d7e06bef4f",
+      "name": "Sanitize Data1"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -7408,
+        3648
+      ],
+      "id": "6f2b903a-b121-48d7-bb7b-bf4fe830918b",
+      "name": "Embeddings Google Gemini",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "2oe6nreVlfGHRk0g",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonMode": "expressionData",
+        "jsonData": "={{ $json.text }}",
+        "textSplittingMode": "custom",
+        "options": {
+          "metadata": {
+            "metadataValues": [
+              {
+                "name": "id",
+                "value": "={{ $('Edit Fields2').item.json.File_ID }}"
+              },
+              {
+                "name": "version",
+                "value": "v1"
+              },
+              {
+                "name": "Creator",
+                "value": "={{ $('Google Drive Trigger').item.json.lastModifyingUser.displayName }}"
+              },
+              {
+                "name": "Created_At",
+                "value": "={{ $('Google Drive Trigger').item.json.createdTime }}"
+              },
+              {
+                "name": "Modified_At",
+                "value": "={{ $('Google Drive Trigger').item.json.modifiedTime }}"
+              },
+              {
+                "name": "File_Name",
+                "value": "={{ $('Google Drive Trigger').item.json.name }}"
+              },
+              {
+                "name": "File_Extension",
+                "value": "={{ $('Google Drive Trigger').item.json.mimeType }}"
+              },
+              {
+                "name": "Folder_Path",
+                "value": "Customer Service"
+              }
+            ]
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        -7152,
+        3568
+      ],
+      "id": "a5cb98c3-b249-4709-987e-1fe9d6ee942c",
+      "name": "Default Data Loader"
+    },
+    {
+      "parameters": {
+        "chunkOverlap": 200,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "typeVersion": 1,
+      "position": [
+        -7152,
+        3760
+      ],
+      "id": "5e962452-15e3-4f95-94bf-f8866e9c4535",
+      "name": "Recursive Character Text Splitter"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "40289568-6438-47d1-bd2a-2e2108b967ef",
+              "name": "File_ID",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "dbc3e75c-e57d-4cfc-8e50-654d6f51233d",
+              "name": "File_Type",
+              "value": "={{ $json.mimeType }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -8320,
+        3456
+      ],
+      "id": "7c2a18b3-5078-4856-947f-a130566f6b8c",
+      "name": "Edit Fields2"
+    },
+    {
+      "parameters": {
+        "content": "## Embedding For Data",
+        "height": 896,
+        "width": 1840,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -8640,
+        3120
+      ],
+      "typeVersion": 1,
+      "id": "c13f8e03-f34a-4779-b807-5be516122528",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Update Status",
+        "height": 300,
+        "width": 952,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -8624,
+        992
+      ],
+      "typeVersion": 1,
+      "id": "595eb786-c240-4758-a8ac-de19fd47972d",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Order System",
+        "height": 440,
+        "width": 1720,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -8640,
+        128
+      ],
+      "typeVersion": 1,
+      "id": "b1dc2c32-bab3-4b42-9b15-9eb45d9bb4bc",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1AwtIox0nUjHVfOVHHFeWqF6WywbNb5aOuTUuR2HlCOc",
+          "mode": "list",
+          "cachedResultName": "Orders",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1AwtIox0nUjHVfOVHHFeWqF6WywbNb5aOuTUuR2HlCOc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1AwtIox0nUjHVfOVHHFeWqF6WywbNb5aOuTUuR2HlCOc/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "orderType": "={{ $json.orderType }}",
+            "customerName": "={{ $json.customerName }}",
+            "phone": "={{ $json.phone }}",
+            "address": "={{ $json.address }}",
+            "tableNumber": "={{ $json.tableNumber }}",
+            "items": "={{ $json.items }}",
+            "status": "={{ $json.status }}",
+            "createdAt": "={{ $json.createdAt }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "order_ID",
+              "displayName": "order_ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "orderType",
+              "displayName": "orderType",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "customerName",
+              "displayName": "customerName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "phone",
+              "displayName": "phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "address",
+              "displayName": "address",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "items",
+              "displayName": "items",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "totalPrice",
+              "displayName": "totalPrice",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "discount",
+              "displayName": "discount",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "tableNumber",
+              "displayName": "tableNumber",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "createdAt",
+              "displayName": "createdAt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "updatedAt",
+              "displayName": "updatedAt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        -768,
+        176
+      ],
+      "id": "23c53084-a48f-416c-b9cb-c104012be407",
+      "name": "Append row in sheet2",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jy58BxClZutdZdvF",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ddcf663e-e322-444c-afe2-014739006616",
+              "name": "orderId",
+              "value": "={{(() => {\n  const body = $json.body;\n  return body.orderId || Date.now();\n})()}}",
+              "type": "string"
+            },
+            {
+              "id": "39842e99-4312-474e-849e-0a498fefe789",
+              "name": "orderType",
+              "value": "={{ $json.body.orderType }}",
+              "type": "string"
+            },
+            {
+              "id": "edffbbef-1276-4137-8903-8b8426de9c9f",
+              "name": "customerName",
+              "value": "={{ $json.body.customer.name }}",
+              "type": "string"
+            },
+            {
+              "id": "76dacc5a-e1e5-44b7-83d7-cc26828520b0",
+              "name": "tableNumber",
+              "value": "={{ $json.body.tableNumber }}",
+              "type": "string"
+            },
+            {
+              "id": "28901c43-2aa3-4b66-b1c0-a8422042e06f",
+              "name": "phone",
+              "value": "={{ $json.body.customer.phone }}",
+              "type": "string"
+            },
+            {
+              "id": "af7706ea-064e-4175-96a0-deab0eea79de",
+              "name": "address",
+              "value": "={{ $json.body.customer.address }}",
+              "type": "string"
+            },
+            {
+              "id": "a3ee66bd-3cef-4c76-a404-36f36bd0d07f",
+              "name": "items",
+              "value": "={{(() => {\n  const items = $json.body.items;\n  return items.map(i => `${i.quantity}x ${i.name}`).join('\\n');\n})()}}",
+              "type": "string"
+            },
+            {
+              "id": "b0c8ae1a-5be6-4474-a987-ab20f946f985",
+              "name": "status",
+              "value": "تم الاستلام",
+              "type": "string"
+            },
+            {
+              "id": "cdef6b0d-ed30-48df-ab46-daa442b1ec5f",
+              "name": "createdAt",
+              "value": "={{(() => {\n  const now = new Date();\n  now.setHours(now.getHours() + 3); \n  const pad = n => n.toString().padStart(2, '0');\n  const day = pad(now.getDate());\n  const month = pad(now.getMonth() + 1);\n  const year = now.getFullYear();\n  const hours = now.getHours();\n  const minutes = pad(now.getMinutes());\n  const ampm = hours >= 12 ? 'PM' : 'AM';\n  const hour12 = pad((hours % 12) || 12);\n  return `${day}-${month}-${year} ${hour12}:${minutes} ${ampm}`;\n})()}}",
+              "type": "string"
+            },
+            {
+              "id": "5b584dee-828a-4285-8738-224ab44bcc2b",
+              "name": "message",
+              "value": "={{ $json.body.message }}",
+              "type": "string"
+            },
+            {
+              "id": "80fe9eda-4b8f-4230-b6f5-5c11cb5252df",
+              "name": "session_id",
+              "value": "={{ $json.body.session_id }}",
+              "type": "string"
+            },
+            {
+              "id": "e718548b-85a0-496a-8f81-31437a8c0e61",
+              "name": "session",
+              "value": "={{ $json.sessionId }}",
+              "type": "string"
+            },
+            {
+              "id": "969d725d-c520-4501-843b-bbb23604fb08",
+              "name": "mes",
+              "value": "={{ $json.chatInput }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1376,
+        544
+      ],
+      "id": "4a761159-4896-4637-a3fa-8007fad27700",
+      "name": "Edit Fields3"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('When chat message received').item.json.chatInput }}",
+        "options": {
+          "systemMessage": "You are a smart, friendly, and persuasive assistant working for Bahri Plaza Restaurant. Your job is to help customers by answering their questions based strictly on the restaurant's official data — including the menu, working hours, location, services, and delivery options. Always be concise, professional, and sales-oriented — aim to guide customers toward placing an order when possible.\n\nYou can also take customer orders. When the user starts placing an order, ask whether they prefer to dine in or get delivery.\n\n- If dine-in: ask for the table number and the full order.\n- If delivery: ask for the full delivery address, phone number, and order details.\n\nOnce all the required details are collected, confirm the order with the customer and calculate the total price based on the menu (include the 10 EGP delivery fee if it's delivery). Then thank the customer and let them know the order is being processed.\n\n👉 After confirming the order, automatically trigger the node named **New_Order** to store the order in the system (e.g., Google Sheet). The order must include:\n- An `orderId`, generated using: `{{(() => { const body = $json.body; return body.orderId || Date.now(); })()}}`\n- Customer info (table number or delivery address and phone)\n- Order items\n- Total price\n- Delivery method\n\nIf the user asks something outside the available restaurant data, politely respond that the information is not available.\n\nAfter the customer confirms the order, and you use the \"New_Order\" tool, respond with the full order details in this format:\n\n```order_data\n{\n  \"order_ID\": \"use the existing orderId\",\n  \"order_Type\": \"dine-in or delivery\",\n  \"Customer_Name\": \"Customer name here\",\n  \"items\": \"2x Shawarma (No pickles)\\n1x Fries\\n1x Pepsi\",\n  \"status\": \"تم الاستلام\",\n  \"total_price\": 245,\n  \"createdAt\": \"formatted date here\",\n  \"tableNumber\": null or the actual table number\n}\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        -816,
+        608
+      ],
+      "id": "78d63792-3f15-4456-b3d0-69bb8cc56d79",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('When chat message received').item.json.sessionId }}",
+        "contextWindowLength": 20
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -800,
+        960
+      ],
+      "id": "2e62d978-db09-4d22-9e10-dbf40b310f56",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "description": "A simple PDF with Bahri Plaza restaurant data for use in an ordering system or chatbot."
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolVectorStore",
+      "typeVersion": 1.1,
+      "position": [
+        -592,
+        880
+      ],
+      "id": "79d43a92-e195-494b-802b-59053b908788",
+      "name": "Answer questions with a vector store"
+    },
+    {
+      "parameters": {
+        "tableName": {
+          "__rl": true,
+          "value": "restaurant",
+          "mode": "list",
+          "cachedResultName": "restaurant"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        -672,
+        1120
+      ],
+      "id": "f9e5be4c-0841-4ae9-9e7b-4bbd52f8ddd3",
+      "name": "Supabase Vector Store7",
+      "credentials": {
+        "supabaseApi": {
+          "id": "SwPgyGjnZWNT2C66",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -672,
+        1264
+      ],
+      "id": "fa0985c0-9c69-429d-82be-1a2537753da1",
+      "name": "Embeddings Google Gemini7",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "2oe6nreVlfGHRk0g",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -272,
+        1104
+      ],
+      "id": "412dcd75-1280-46d1-b722-411efe7934ad",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "2oe6nreVlfGHRk0g",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-4o-mini",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        -1056,
+        960
+      ],
+      "id": "2dbadbfe-103e-41ce-990f-a34eef735293",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "P1ypSnrhgffz0a9Q",
+          "name": "HRfoush"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// الكود ده هيعمل \"escaping\" لعلامات التنصيص المزدوجة\n// وهيشيل أي أحرف تحكم غير صالحة في JSON.\n// وهييشيل كمان علامات النجوم (*).\nfor (const item of items) {\n  if (item.json && item.json.output) {\n    let cleanedOutput = item.json.output;\n\n    // اهرب علامات التنصيص المزدوجة اللي مش مهربة بالفعل\n    cleanedOutput = cleanedOutput.replace(/(?<!\\\\)\"/g, '\\\\\"');\n\n    // شيل الأحرف التحكمية (control characters) غير الصالحة في JSON\n    cleanedOutput = cleanedOutput.replace(/[\\u0000-\\u001F\\u007F-\\u009F]/g, '');\n\n    // شيل علامات النجوم (*)\n    cleanedOutput = cleanedOutput.replace(/\\*/g, ''); //\n\n    item.json.output = cleanedOutput;\n  }\n}\nreturn items;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -400,
+        608
+      ],
+      "id": "acf09f64-4f05-4d37-8870-c19774d55658",
+      "name": "Code1"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.orderType }}",
+                    "rightValue": "=Delivery",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "e0f16628-bdb9-4beb-b24c-e10731d7d335"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Delivery"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "0f260c61-fab1-4a9b-80d1-3ba5b2e6fe0c",
+                    "leftValue": "={{ $json.orderType }}",
+                    "rightValue": "dine-in",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Dine In"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "76bdf8a0-add4-46ee-b012-717b404fcfb5",
+                    "leftValue": "={{ $json.orderType }}",
+                    "rightValue": "null",
+                    "operator": {
+                      "type": "string",
+                      "operation": "notExists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Chatbot"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -1200,
+        528
+      ],
+      "id": "982267fd-59b4-4194-bc0f-826a7d854227",
+      "name": "Switch1"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1AwtIox0nUjHVfOVHHFeWqF6WywbNb5aOuTUuR2HlCOc",
+          "mode": "list",
+          "cachedResultName": "Orders",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1AwtIox0nUjHVfOVHHFeWqF6WywbNb5aOuTUuR2HlCOc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1AwtIox0nUjHVfOVHHFeWqF6WywbNb5aOuTUuR2HlCOc/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "orderType": "={{ $json.orderType }}",
+            "customerName": "={{ $json.customerName }}",
+            "phone": "={{ $json.phone }}",
+            "address": "={{ $json.address }}",
+            "tableNumber": "={{ $json.tableNumber }}",
+            "items": "={{ $json.items }}",
+            "status": "={{ $json.status }}",
+            "createdAt": "={{ $json.createdAt }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "order_ID",
+              "displayName": "order_ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "orderType",
+              "displayName": "orderType",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "customerName",
+              "displayName": "customerName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "phone",
+              "displayName": "phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "address",
+              "displayName": "address",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "items",
+              "displayName": "items",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "totalPrice",
+              "displayName": "totalPrice",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "discount",
+              "displayName": "discount",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "tableNumber",
+              "displayName": "tableNumber",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "createdAt",
+              "displayName": "createdAt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "updatedAt",
+              "displayName": "updatedAt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        -768,
+        384
+      ],
+      "id": "8bebca04-e253-48cb-b029-ed7f738e35a3",
+      "name": "Append row in sheet3",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jy58BxClZutdZdvF",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1AwtIox0nUjHVfOVHHFeWqF6WywbNb5aOuTUuR2HlCOc",
+          "mode": "list",
+          "cachedResultName": "Orders",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1AwtIox0nUjHVfOVHHFeWqF6WywbNb5aOuTUuR2HlCOc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1AwtIox0nUjHVfOVHHFeWqF6WywbNb5aOuTUuR2HlCOc/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "orderId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('orderId', ``, 'string') }}",
+            "orderType": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('orderType', ``, 'string') }}",
+            "customerName": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('customerName', ``, 'string') }}",
+            "phone": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('phone', ``, 'string') }}",
+            "address": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('address', ``, 'string') }}",
+            "tableNumber": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('tableNumber', ``, 'string') }}",
+            "items": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('items', ``, 'string') }}",
+            "status": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('status', ``, 'string') }}",
+            "createdAt": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('createdAt', ``, 'string') }}",
+            "updatedAt": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('updatedAt', ``, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "orderId",
+              "displayName": "orderId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "orderType",
+              "displayName": "orderType",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "customerName",
+              "displayName": "customerName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "phone",
+              "displayName": "phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "address",
+              "displayName": "address",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "tableNumber",
+              "displayName": "tableNumber",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "items",
+              "displayName": "items",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "createdAt",
+              "displayName": "createdAt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "updatedAt",
+              "displayName": "updatedAt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.6,
+      "position": [
+        -160,
+        864
+      ],
+      "id": "5c9869bd-2354-44b7-89a2-f9778cf00edf",
+      "name": "New_Order1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jy58BxClZutdZdvF",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Test",
+        "height": 1400,
+        "width": 1720,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1680,
+        96
+      ],
+      "typeVersion": 1,
+      "id": "360cf513-8141-4352-b7c1-824ca846ffae",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        -176,
+        608
+      ],
+      "id": "93be45da-1874-4540-8c5e-c74e83061f51",
+      "name": "Respond to Webhook1"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -1552,
+        544
+      ],
+      "id": "d18e39ea-2626-4ee9-8eaa-2ae95f19e666",
+      "name": "When chat message received",
+      "webhookId": "33cd3131-1af3-47d0-ad68-37ba4882681d"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        -7872,
+        1104
+      ],
+      "id": "e8a051ed-214e-4285-a0aa-a65ebec02e6a",
+      "name": "Respond to Webhook2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b6502c84-72ae-4a01-bf1b-51d7dbc2feaa",
+              "name": "orderId",
+              "value": "={{ $json.body.orderId }}",
+              "type": "string"
+            },
+            {
+              "id": "31ec5ecb-ab1f-41aa-8def-d6397d39b31a",
+              "name": "Newstatus",
+              "value": "={{ $json.body.status }}",
+              "type": "string"
+            },
+            {
+              "id": "472e3ce6-f035-4ebd-af7f-2e44b2e081cb",
+              "name": "updatedAt",
+              "value": "={{(() => {\n  const now = new Date();\n  now.setHours(now.getHours() + 3); // توقيت مصر مع الصيفي\n  const pad = n => n.toString().padStart(2, '0');\n  const day = pad(now.getDate());\n  const month = pad(now.getMonth() + 1);\n  const year = now.getFullYear();\n  const hours = now.getHours();\n  const minutes = pad(now.getMinutes());\n  const ampm = hours >= 12 ? 'PM' : 'AM';\n  const hour12 = pad((hours % 12) || 12);\n  return `${day}-${month}-${year} ${hour12}:${minutes} ${ampm}`;\n})()}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -8320,
+        1104
+      ],
+      "id": "a4b192ec-6a05-4ab2-8301-ae41908a0eaa",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "chatbot",
+        "responseMode": "responseNode",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              },
+              {
+                "name": "Access-Control-Allow-Headers",
+                "value": "Content-Type"
+              },
+              {
+                "name": "Access-Control-Allow-Methods",
+                "value": "GET, POST, OPTIONS"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -8544,
+        2016
+      ],
+      "id": "2319bfb5-36ba-45ec-bdce-e5ce413217c3",
+      "name": "Webhook2",
+      "webhookId": "f3b86b00-0579-4e15-a474-0f7acb4449ca"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -7952,
+        2752
+      ],
+      "id": "6023fa77-052e-4d6e-bf70-fff9ef240fdf",
+      "name": "Embeddings Google Gemini8",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "2oe6nreVlfGHRk0g",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -7552,
+        2576
+      ],
+      "id": "382c1ea6-e07b-4c76-867b-0f672f51dcf0",
+      "name": "Google Gemini Chat Model10",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "2oe6nreVlfGHRk0g",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Chatbot\n",
+        "height": 1224,
+        "width": 2568,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -8640,
+        1728
+      ],
+      "typeVersion": 1,
+      "id": "3a84bd98-f58c-4983-a7e7-3b199ae82b5c",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "path": "get-orders",
+        "responseMode": "responseNode",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              },
+              {
+                "name": "Access-Control-Allow-Methods",
+                "value": "GET, POST, OPTIONS"
+              },
+              {
+                "name": "Access-Control-Allow-Headers",
+                "value": "Content-Type"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -8544,
+        736
+      ],
+      "id": "98f6daff-237b-4c96-8e5e-bcb09cf770fa",
+      "name": "Webhook-Get-Orders",
+      "webhookId": "5966f6d8-6f4b-4bf2-bbbc-ef21c7ca631e"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1AwtIox0nUjHVfOVHHFeWqF6WywbNb5aOuTUuR2HlCOc",
+          "mode": "list",
+          "cachedResultName": "Orders",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1AwtIox0nUjHVfOVHHFeWqF6WywbNb5aOuTUuR2HlCOc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1AwtIox0nUjHVfOVHHFeWqF6WywbNb5aOuTUuR2HlCOc/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        -8320,
+        736
+      ],
+      "id": "9b4423be-5b9d-4fe3-aad5-c190c240e39b",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jy58BxClZutdZdvF",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        -8112,
+        736
+      ],
+      "id": "b106c0e0-4952-4431-a9fd-501ca0a8ae62",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "content": "## Get Orders",
+        "height": 224,
+        "width": 768,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -8624,
+        672
+      ],
+      "typeVersion": 1,
+      "id": "58d70504-f221-41a3-a696-d4e47d15953f",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "path": "get-status",
+        "responseMode": "responseNode",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              },
+              {
+                "name": "Access-Control-Allow-Methods",
+                "value": "GET, POST, OPTIONS"
+              },
+              {
+                "name": "Access-Control-Allow-Headers",
+                "value": "Content-Type"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -8528,
+        1456
+      ],
+      "id": "83fb986d-62b6-4198-9de2-0d498038d270",
+      "name": "Get-Status",
+      "webhookId": "d369d43f-878a-4257-9346-42d58cd43910"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1AwtIox0nUjHVfOVHHFeWqF6WywbNb5aOuTUuR2HlCOc",
+          "mode": "list",
+          "cachedResultName": "Orders",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1AwtIox0nUjHVfOVHHFeWqF6WywbNb5aOuTUuR2HlCOc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1AwtIox0nUjHVfOVHHFeWqF6WywbNb5aOuTUuR2HlCOc/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "order_ID",
+              "lookupValue": "={{ $json.query.orderId }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        -8320,
+        1456
+      ],
+      "id": "c25b072e-9f57-4f70-8701-01f32c933a8e",
+      "name": "Get row(s) in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jy58BxClZutdZdvF",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        -7872,
+        1456
+      ],
+      "id": "5945b7c4-5663-456c-a7e7-7fdda971b618",
+      "name": "Respond to Webhook6"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "502d7af5-3407-4a9c-9b46-3ce474dd5055",
+              "name": "status",
+              "value": "={{ $json.status }}",
+              "type": "string"
+            },
+            {
+              "id": "1d839cc6-fc90-4055-b3d4-dc512f12a683",
+              "name": "updatedAt",
+              "value": "={{ $json.updatedAt }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -8096,
+        1456
+      ],
+      "id": "9740b462-20e7-47ac-8d84-c7af3a40c573",
+      "name": "Edit Fields7"
+    },
+    {
+      "parameters": {
+        "content": "## Get Status",
+        "height": 240,
+        "width": 976
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -8624,
+        1392
+      ],
+      "typeVersion": 1,
+      "id": "7e59d846-0c6d-4629-bdc3-257033a04e62",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "196iJzQ8FVrBGye_v0n1MbzpxcTG3oxflMDc9ugXT7Dw",
+          "mode": "list",
+          "cachedResultName": "menu",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/196iJzQ8FVrBGye_v0n1MbzpxcTG3oxflMDc9ugXT7Dw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/196iJzQ8FVrBGye_v0n1MbzpxcTG3oxflMDc9ugXT7Dw/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('Generate Menu Item').first().json.id }}",
+            "name": "={{ $('Generate Menu Item').first().json.name }}",
+            "price": "={{ $('Generate Menu Item').first().json.price }}",
+            "category": "={{ $('Generate Menu Item').first().json.category }}",
+            "description": "={{ $('Generate Menu Item').first().json.description }}",
+            "image": "={{ $('Generate Menu Item').first().json.image }}",
+            "normalizedName": "={{ $('Generate Menu Item').first().json.normalizedName }}",
+            "nameAr": "={{ $('Generate Menu Item').first().json.nameAr }}",
+            "descriptionAr": "={{ $('Generate Menu Item').first().json.descriptionAr }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "nameAr",
+              "displayName": "nameAr",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "price",
+              "displayName": "price",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "category",
+              "displayName": "category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "descriptionAr",
+              "displayName": "descriptionAr",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "description",
+              "displayName": "description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "image",
+              "displayName": "image",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "normalizedName",
+              "displayName": "normalizedName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        -4816,
+        416
+      ],
+      "id": "4c438c61-c833-4e69-b639-5bb743d6b525",
+      "name": "Append row in sheet4",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jy58BxClZutdZdvF",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "adba3c92-7042-4ff4-9292-7080ceefa45c",
+              "leftValue": "={{ $json.exists }}",
+              "rightValue": "=true",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -5056,
+        304
+      ],
+      "id": "b0f74da7-8965-42e9-b56a-df29981c3409",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "196iJzQ8FVrBGye_v0n1MbzpxcTG3oxflMDc9ugXT7Dw",
+          "mode": "list",
+          "cachedResultName": "menu",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/196iJzQ8FVrBGye_v0n1MbzpxcTG3oxflMDc9ugXT7Dw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/196iJzQ8FVrBGye_v0n1MbzpxcTG3oxflMDc9ugXT7Dw/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        -5440,
+        304
+      ],
+      "id": "719e902d-ba95-4f94-9cef-1324d58efc7e",
+      "name": "Read menu sheet (Get All)",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jy58BxClZutdZdvF",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const newItem = $('Generate Menu Item').first().json.normalizedName\n\nconst duplicates = items.filter(item => {\n  return item.json.normalizedName === newItem;\n});\n\nif (duplicates.length > 0) {\n  // عنصر مكرر\n  return [{ json: { exists: true } }];\n} else {\n  // عنصر جديد\n  return [{ json: { exists: false } }];\n}\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -5248,
+        304
+      ],
+      "id": "b9d1453a-7972-41a5-b6df-5e5ee006c113",
+      "name": "Check for Duplicate (Code Node)"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c270431b-a4b9-4c62-bb45-62c0557e598d",
+              "name": "id",
+              "value": "={{ \n  'menu-' + \n  $json.body.name\n    .toLowerCase()\n    .replace(/[^a-z0-9]+/g, '-') +\n  '-' +\n  Date.now().toString().slice(-4)\n}}",
+              "type": "string"
+            },
+            {
+              "id": "c13a49dc-8449-4544-b110-9177ecb16296",
+              "name": "name",
+              "value": "={{ $json.body.name }}",
+              "type": "string"
+            },
+            {
+              "id": "418adf49-e4d3-4cd4-b701-549b1f90ec12",
+              "name": "price",
+              "value": "={{ $json.body.price }}",
+              "type": "number"
+            },
+            {
+              "id": "f0fd4ee5-e591-4ae0-a1f5-264553a8c998",
+              "name": "category",
+              "value": "={{ $json.body.category }}",
+              "type": "string"
+            },
+            {
+              "id": "9b9e3d57-cee0-495d-b141-716fbdaad3b8",
+              "name": "description",
+              "value": "={{ $json.body.description }}",
+              "type": "string"
+            },
+            {
+              "id": "1197add5-72b6-40c8-b886-7961dbff069a",
+              "name": "image",
+              "value": "={{ $json.body.image }}",
+              "type": "string"
+            },
+            {
+              "id": "26571863-41c2-4dde-9e8b-be3140faed0f",
+              "name": "normalizedName",
+              "value": "={{    $json.body.name     .toLowerCase()     .replace(/[^a-z0-9]+/g, '-')   // أي رموز أو مسافات تتحول ل \"-\"     .replace(/^-+|-+$/g, '')       // نشيل \"-\" من البداية والنهاية }}",
+              "type": "string"
+            },
+            {
+              "id": "aeebbd9d-f304-49dd-9285-4a2cb1b07ff6",
+              "name": "nameAr",
+              "value": "={{ $json.body.nameAr }}",
+              "type": "string"
+            },
+            {
+              "id": "f26bdbc2-12d0-44e8-a476-f4f177e90acd",
+              "name": "descriptionAr",
+              "value": "={{ $json.body.descriptionAr }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -5648,
+        304
+      ],
+      "id": "2068472e-995a-46e7-9e81-10447c56974d",
+      "name": "Generate Menu Item"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"error\": \"Item '{{ $('Generate Menu Item').first().json.name }}' already exists in the menu.\"\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        -4816,
+        208
+      ],
+      "id": "6ca11317-a050-4be6-9381-ddb4c131403d",
+      "name": "Exists"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"message\": \"Item '{{ $('Generate Menu Item').first().json.name }}' added successfully.\"\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        -4592,
+        416
+      ],
+      "id": "7d6c049a-a2c5-4336-ae27-862380268770",
+      "name": "Not Exists"
+    },
+    {
+      "parameters": {
+        "content": "## Add New Item",
+        "height": 496,
+        "width": 1568,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -5920,
+        128
+      ],
+      "typeVersion": 1,
+      "id": "d556fc28-3c93-42e5-8bad-8ba4c2eb755b",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "add-menu-item",
+        "responseMode": "responseNode",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Headers",
+                "value": "Content-Type"
+              },
+              {
+                "name": "Access-Control-Allow-Methods",
+                "value": "GET, POST, OPTIONS"
+              },
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -5856,
+        304
+      ],
+      "id": "39a25f39-6174-45fc-979d-b037358e5052",
+      "name": "Add-New-Item",
+      "webhookId": "74dfe415-defc-436d-b8ee-61e049057343"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "196iJzQ8FVrBGye_v0n1MbzpxcTG3oxflMDc9ugXT7Dw",
+          "mode": "list",
+          "cachedResultName": "menu",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/196iJzQ8FVrBGye_v0n1MbzpxcTG3oxflMDc9ugXT7Dw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/196iJzQ8FVrBGye_v0n1MbzpxcTG3oxflMDc9ugXT7Dw/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $json.body.id }}",
+            "name": "={{ $json.body.name }}",
+            "price": "={{ $json.body.price }}",
+            "category": "={{ $json.body.category }}",
+            "description": "={{ $json.body.description }}",
+            "image": "={{ $json.body.image }}",
+            "normalizedName": "={{ \n  $json.body.name\n    .toLowerCase()\n    .replace(/[^a-z0-9]+/g, '-') \n    .replace(/^-+|-+$/g, '') \n}}\n",
+            "nameAr": "={{ $json.body.nameAr }}",
+            "descriptionAr": "={{ $json.body.descriptionAr }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "nameAr",
+              "displayName": "nameAr",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "price",
+              "displayName": "price",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "category",
+              "displayName": "category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "descriptionAr",
+              "displayName": "descriptionAr",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "description",
+              "displayName": "description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "image",
+              "displayName": "image",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "normalizedName",
+              "displayName": "normalizedName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        -5632,
+        864
+      ],
+      "id": "13c06792-9777-4e69-8ef1-886b282908d5",
+      "name": "Update Item By ID",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jy58BxClZutdZdvF",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "expression",
+        "numberOutputs": 2,
+        "output": "={{ Object.keys($json).length > 0 ? 0 : 1 }}"
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -5424,
+        864
+      ],
+      "id": "150c5323-1a02-4ac7-96da-1918ad6d90d6",
+      "name": "Switch2"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"error\": \"Item '{{ $('Update-Item').item.json.body.name }}' with ID '{{ $('Update-Item').item.json.body.id }}' not found.\"\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        -5136,
+        992
+      ],
+      "id": "6a0c581a-07b4-43fe-9159-d76751ea212d",
+      "name": "Not Found"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"message\": \"Item '{{ $json.name }}' updated successfully.\"\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        -5136,
+        736
+      ],
+      "id": "f17508d8-64ee-474c-bbe9-52cef36915b0",
+      "name": "Success"
+    },
+    {
+      "parameters": {
+        "content": "## Update Item",
+        "height": 480,
+        "width": 1072,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -5920,
+        688
+      ],
+      "typeVersion": 1,
+      "id": "a6136c2e-70da-4f6e-819b-d97dd3767b51",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "httpMethod": "DELETE",
+        "path": "delete-menu-item",
+        "responseMode": "responseNode",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              },
+              {
+                "name": "Access-Control-Allow-Methods",
+                "value": "GET, POST, OPTIONS"
+              },
+              {
+                "name": "Access-Control-Allow-Headers",
+                "value": "Content-Type"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -5872,
+        1408
+      ],
+      "id": "dfb94f30-f8f0-4dab-91de-4eee7e71ff39",
+      "name": "Delete-Item",
+      "webhookId": "8b5372d3-9272-4159-a769-3a3632fcef3a"
+    },
+    {
+      "parameters": {
+        "mode": "expression",
+        "numberOutputs": 2,
+        "output": "={{ Object.keys($json).length > 0 ? 0 : 1 }}"
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -5456,
+        1408
+      ],
+      "id": "37a5b182-f1ed-4c83-a4cf-f201a9791688",
+      "name": "Switch3"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "196iJzQ8FVrBGye_v0n1MbzpxcTG3oxflMDc9ugXT7Dw",
+          "mode": "list",
+          "cachedResultName": "menu",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/196iJzQ8FVrBGye_v0n1MbzpxcTG3oxflMDc9ugXT7Dw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/196iJzQ8FVrBGye_v0n1MbzpxcTG3oxflMDc9ugXT7Dw/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "id",
+              "lookupValue": "={{ $json.body.id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        -5664,
+        1408
+      ],
+      "id": "ba9df787-f7da-417d-8968-043a6f79ee05",
+      "name": "Get row(s) in sheet2",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jy58BxClZutdZdvF",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "documentId": {
+          "__rl": true,
+          "value": "196iJzQ8FVrBGye_v0n1MbzpxcTG3oxflMDc9ugXT7Dw",
+          "mode": "list",
+          "cachedResultName": "menu",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/196iJzQ8FVrBGye_v0n1MbzpxcTG3oxflMDc9ugXT7Dw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/196iJzQ8FVrBGye_v0n1MbzpxcTG3oxflMDc9ugXT7Dw/edit#gid=0"
+        },
+        "startIndex": "={{ $json.row_number }}"
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        -5216,
+        1312
+      ],
+      "id": "af0fd98c-c3d9-4d15-9411-6871c2db288b",
+      "name": "Delete-Item1",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jy58BxClZutdZdvF",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"message\": \"Item '{{ $('Get row(s) in sheet2').item.json.name }}' Deleted successfully.\"\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        -5040,
+        1312
+      ],
+      "id": "ffc736e5-cbe8-43a0-9a0a-932b0c7d2717",
+      "name": "Deleted"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"error\": \"Item with ID '{{ $('Delete-Item').item.json.body.id }}' not found.\"\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        -5216,
+        1520
+      ],
+      "id": "462248cb-3167-4cee-a581-b3848939c614",
+      "name": "Not Found2"
+    },
+    {
+      "parameters": {
+        "content": "## Delete Item",
+        "height": 448,
+        "width": 1136,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -5920,
+        1248
+      ],
+      "typeVersion": 1,
+      "id": "947dba66-dd23-4aee-8486-5fd73a776240",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "path": "get-menu",
+        "responseMode": "responseNode",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              },
+              {
+                "name": "Access-Control-Allow-Methods",
+                "value": "GET, POST, OPTIONS"
+              },
+              {
+                "name": "Access-Control-Allow-Methods",
+                "value": "Content-Type"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -5872,
+        1824
+      ],
+      "id": "81571c60-889a-489d-8ab2-03e6b8ad8d55",
+      "name": "Get-Menu",
+      "webhookId": "888718ed-98f0-4454-b6c0-9b29214bc5f8"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "196iJzQ8FVrBGye_v0n1MbzpxcTG3oxflMDc9ugXT7Dw",
+          "mode": "list",
+          "cachedResultName": "menu",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/196iJzQ8FVrBGye_v0n1MbzpxcTG3oxflMDc9ugXT7Dw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/196iJzQ8FVrBGye_v0n1MbzpxcTG3oxflMDc9ugXT7Dw/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        -5664,
+        1824
+      ],
+      "id": "3de26b0a-5444-419e-9020-3cf135ac2889",
+      "name": "Get All Menu",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jy58BxClZutdZdvF",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Get Menu",
+        "height": 240,
+        "width": 720,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -5920,
+        1760
+      ],
+      "typeVersion": 1,
+      "id": "5b8e7fdf-2449-4f32-890e-03af1a1445c2",
+      "name": "Sticky Note10"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "order-to-stock",
+        "responseMode": "responseNode",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              },
+              {
+                "name": "Access-Control-Allow-Methods",
+                "value": "GET, POST, OPTIONS"
+              },
+              {
+                "name": "Access-Control-Allow-Headers",
+                "value": "Content-Type"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -3968,
+        304
+      ],
+      "id": "769214a2-3a6a-40dc-b39b-f5a911d7f3d2",
+      "name": "New Order Webhook",
+      "webhookId": "07582b8b-78e5-47e4-8fe7-e353ac407d2f"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "76dacc5a-e1e5-44b7-83d7-cc26828520b0",
+              "name": "orderItems",
+              "value": "={{ $json.body.items }}",
+              "type": "json"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -3760,
+        304
+      ],
+      "id": "78341d93-88f2-44c3-8b1a-74afdab88dcc",
+      "name": "Extract Order Items"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ JSON.stringify($json.orderItems) }}",
+        "options": {
+          "systemMessage": "=You are a specialized kitchen inventory assistant. Your job is to take a customer order in JSON format, identify the raw ingredients and quantities needed for each item, and produce a new JSON array detailing the total components to be deducted from stock. \n\nUse the 'Get-Menu-Components' tool to look up each menu item. The tool returns a list of components and their quantities. For example, if 'Chicken Burger' needs '1x Burger Bun' and '1x Chicken Patty', and the order quantity is 2, the total deduction should be '2x Burger Bun' and '2x Chicken Patty'.\n\nEnsure the final output is a single, clean JSON array of all components, with quantities summed up for duplicate items. \n\nExample Input:\n`[{\"name\":\"Chicken Burger\",\"quantity\":2},{\"name\":\"French Fries\",\"quantity\":1}]`\n\nExample Output:\n`[\n  {\"componentName\": \"Chicken Patty\", \"quantity\": 2},\n  {\"componentName\": \"Burger Bun\", \"quantity\": 2},\n  {\"componentName\": \"Potato\", \"quantity\": 150, \"unit\": \"gm\"}\n]`\n\nDo not add any extra text, explanations, or comments. Just the JSON array."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        -3568,
+        304
+      ],
+      "id": "1602df50-c4c4-49c8-8122-12bebc1dce10",
+      "name": "AI Agent - Deduct Components"
+    },
+    {
+      "parameters": {
+        "jsCode": "const inputItems = $input.all();\nconst results = [];\nconst aggregatedComponents = {};\n\nfor (const item of inputItems) {\n    const output = item.json.output;\n    let parsedJson;\n\n    // Use a regex to extract the raw JSON string from the markdown block\n    const jsonMatch = output.match(/```json\\n([\\s\\S]*?)\\n```/);\n\n    if (jsonMatch && jsonMatch[1]) {\n        try {\n            parsedJson = JSON.parse(jsonMatch[1]);\n        } catch (e) {\n            console.error('Error parsing JSON from AI Agent output:', e);\n            continue; // Skip this item and move to the next one\n        }\n    } else {\n        // If no markdown block is found, assume the output is raw JSON\n        try {\n            parsedJson = JSON.parse(output);\n        } catch (e) {\n            console.error('Error parsing raw JSON from AI Agent output:', e);\n            continue; // Skip this item\n        }\n    }\n    \n    if (parsedJson) {\n        for (const comp of parsedJson) {\n            const name = comp.componentName;\n            const quantity = parseFloat(comp.quantity);\n\n            if (name && !isNaN(quantity)) {\n                if (aggregatedComponents[name]) {\n                    aggregatedComponents[name] += quantity;\n                } else {\n                    aggregatedComponents[name] = quantity;\n                }\n            }\n        }\n    }\n}\n\nfor (const name in aggregatedComponents) {\n    results.push({\n        json: {\n            \"componentName\": name,\n            \"quantity\": aggregatedComponents[name]\n        }\n    });\n}\n\nreturn results;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -3200,
+        304
+      ],
+      "id": "d747d4d8-ff43-473a-a71a-db82a43734b1",
+      "name": "Aggregate Components"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -2944,
+        304
+      ],
+      "id": "9443276f-6f4f-4ea8-9729-401f41e6f18f",
+      "name": "Loop Over Components"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1WLsTMlDUBt6GbsP5hGpPWlPk-jwJ4k0wvrhG663i9-Y",
+          "mode": "list",
+          "cachedResultName": "Stock",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WLsTMlDUBt6GbsP5hGpPWlPk-jwJ4k0wvrhG663i9-Y/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WLsTMlDUBt6GbsP5hGpPWlPk-jwJ4k0wvrhG663i9-Y/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Item": "={{ $json.Item }}",
+            "quantity": "={{ $json.quantity - $('Loop Over Components').item.json.quantity  }}",
+            "row_number": 0
+          },
+          "matchingColumns": [
+            "Item"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Item",
+              "displayName": "Item",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "quantity",
+              "displayName": "quantity",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "unit",
+              "displayName": "unit",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "price",
+              "displayName": "price",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "MinThreshold",
+              "displayName": "MinThreshold",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        -2272,
+        480
+      ],
+      "id": "7e57bfc9-c7a6-45e9-a815-1c3084d01e58",
+      "name": "Update Stock Sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jy58BxClZutdZdvF",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1WLsTMlDUBt6GbsP5hGpPWlPk-jwJ4k0wvrhG663i9-Y",
+          "mode": "list",
+          "cachedResultName": "Stock",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WLsTMlDUBt6GbsP5hGpPWlPk-jwJ4k0wvrhG663i9-Y/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WLsTMlDUBt6GbsP5hGpPWlPk-jwJ4k0wvrhG663i9-Y/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Item",
+              "lookupValue": "={{ $json.componentName }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        -2624,
+        384
+      ],
+      "id": "3ad526ad-2fbb-47dc-b6b4-91220b16342d",
+      "name": "Get Current Stock",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jy58BxClZutdZdvF",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1jZ59Ty6N9W0-COIwvn42yToSBqSFyQuDkr3PveTF_aU",
+          "mode": "list",
+          "cachedResultName": "Menu Components",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jZ59Ty6N9W0-COIwvn42yToSBqSFyQuDkr3PveTF_aU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jZ59Ty6N9W0-COIwvn42yToSBqSFyQuDkr3PveTF_aU/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.6,
+      "position": [
+        -3424,
+        512
+      ],
+      "id": "ae5a5cc9-f79c-4d2f-b0b0-a44d346a69dd",
+      "name": "Get-Menu-Components",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jy58BxClZutdZdvF",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Order To Stock",
+        "height": 592,
+        "width": 2032,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -4080,
+        128
+      ],
+      "typeVersion": 1,
+      "id": "fd0ca5a9-beb9-46a7-b28d-be4b4d5061d5",
+      "name": "Sticky Note11"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1d3fbec5-a536-43c5-a622-59eb0de4a475",
+              "name": "body.message",
+              "value": "={{ $json.body.message }}",
+              "type": "string"
+            },
+            {
+              "id": "cd99f893-f729-49e9-b164-85b7d6cd8c90",
+              "name": "body.sessionId",
+              "value": "={{ $json.body.sessionId }}",
+              "type": "string"
+            },
+            {
+              "id": "70e32af0-041e-41ea-a4c2-cb2d0e8141b3",
+              "name": "createdAt",
+              "value": "={{(() => {   const now = new Date();   now.setHours(now.getHours() + 3);    const pad = n => n.toString().padStart(2, '0');   const day = pad(now.getDate());   const month = pad(now.getMonth() + 1);   const year = now.getFullYear();   const hours = now.getHours();   const minutes = pad(now.getMinutes());   const ampm = hours >= 12 ? 'PM' : 'AM';   const hour12 = pad((hours % 12) || 12);   return `${day}-${month}-${year} ${hour12}:${minutes} ${ampm}`; })()}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -8304,
+        2016
+      ],
+      "id": "89dad5c4-8664-420b-bad1-0b45459f111d",
+      "name": "Edits"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1AwtIox0nUjHVfOVHHFeWqF6WywbNb5aOuTUuR2HlCOc",
+          "mode": "list",
+          "cachedResultName": "Orders",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1AwtIox0nUjHVfOVHHFeWqF6WywbNb5aOuTUuR2HlCOc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1AwtIox0nUjHVfOVHHFeWqF6WywbNb5aOuTUuR2HlCOc/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "orderType": "={{ $json.orderType }}",
+            "customerName": "={{ $json.customerName }}",
+            "phone": "={{ $json.phone }}",
+            "address": "={{ $json.address }}",
+            "items": "={{ $json.items }}",
+            "status": "={{ $json.status }}",
+            "totalPrice": "={{ $json.totalPrice }}",
+            "tableNumber": "={{ $json.tableNumber }}",
+            "order_ID": "={{Date.now()}}",
+            "createdAt": "={{(() => {\n  const now = new Date();\n  now.setHours(now.getHours() + 3); \n  const pad = n => n.toString().padStart(2, '0');\n  const day = pad(now.getDate());\n  const month = pad(now.getMonth() + 1);\n  const year = now.getFullYear();\n  const hours = now.getHours();\n  const minutes = pad(now.getMinutes());\n  const ampm = hours >= 12 ? 'PM' : 'AM';\n  const hour12 = pad((hours % 12) || 12);\n  return `${day}-${month}-${year} ${hour12}:${minutes} ${ampm}`;\n})()}}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "order_ID",
+              "displayName": "order_ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "orderType",
+              "displayName": "orderType",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "customerName",
+              "displayName": "customerName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "phone",
+              "displayName": "phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "address",
+              "displayName": "address",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "items",
+              "displayName": "items",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "totalPrice",
+              "displayName": "totalPrice",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "discount",
+              "displayName": "discount",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "tableNumber",
+              "displayName": "tableNumber",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "createdAt",
+              "displayName": "createdAt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "updatedAt",
+              "displayName": "updatedAt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        -6976,
+        1856
+      ],
+      "id": "ec3cf08d-c613-4b82-8520-7700118f31b7",
+      "name": "New-Order-Chatbot",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jy58BxClZutdZdvF",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        -6976,
+        2096
+      ],
+      "id": "769b4fa3-59c9-4490-a5de-48fd58faae34",
+      "name": "Respond to Chat"
+    },
+    {
+      "parameters": {
+        "jsCode": "for (const item of items) {\n  if (item.json && item.json.output) {\n    let cleanedOutput = item.json.output;\n\n    // ❌ شيلنا خطوة الـ escaping لعلامات التنصيص المزدوجة\n    // cleanedOutput = cleanedOutput.replace(/(?<!\\\\)\"/g, '\\\\\"');\n\n    // شيل الأحرف التحكمية (control characters) غير الصالحة في JSON\n    cleanedOutput = cleanedOutput.replace(/[\\u0000-\\u001F\\u007F-\\u009F]/g, '');\n\n    // شيل علامات النجوم (*)\n    cleanedOutput = cleanedOutput.replace(/\\*/g, '');\n\n    item.json.output = cleanedOutput;\n  }\n}\nreturn items;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -7232,
+        2096
+      ],
+      "id": "7bde5e2c-2f09-4f58-968d-7a2b2e84e9ea",
+      "name": "Clean-Output"
+    },
+    {
+      "parameters": {
+        "jsCode": "const input = items[0].json;\nlet dataToReturn = {};\n\nif (input.output && typeof input.output === 'string') {\n  try {\n    // هات اللي بين ```json و ```\n    const match = input.output.match(/```json\\s*([\\s\\S]*?)```/);\n    if (match && match[1]) {\n      const cleanStr = match[1].trim();\n      const parsed = JSON.parse(cleanStr);\n\n      if (Array.isArray(parsed)) {\n        const dataObject = parsed.find(item => item.data);\n        if (dataObject) {\n          dataToReturn = dataObject.data;\n        }\n      } else if (parsed.data) {\n        dataToReturn = parsed.data;\n      }\n    }\n  } catch (e) {\n    console.log(\"Error parsing the input string:\", e);\n  }\n} else if (input.data) {\n  dataToReturn = input.data;\n}\n\nreturn [{ json: dataToReturn }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -7232,
+        1856
+      ],
+      "id": "448f9b11-55ea-4a92-8906-7e65d91df45b",
+      "name": "Extract-JSON"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "129d54f9-9a32-42de-9408-7ff4d9fbc1e3",
+              "leftValue": "={{ $json.output }}",
+              "rightValue": "\"action\": \"create_order\"",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -7648,
+        2016
+      ],
+      "id": "54101ad7-8b5b-4e9d-a8b5-64a3b6c18ec2",
+      "name": "New-Order?"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1AwtIox0nUjHVfOVHHFeWqF6WywbNb5aOuTUuR2HlCOc",
+          "mode": "list",
+          "cachedResultName": "Orders",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1AwtIox0nUjHVfOVHHFeWqF6WywbNb5aOuTUuR2HlCOc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1AwtIox0nUjHVfOVHHFeWqF6WywbNb5aOuTUuR2HlCOc/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.6,
+      "position": [
+        -7536,
+        2336
+      ],
+      "id": "c1510c8d-71e6-4309-bba4-333a4c2cbc8d",
+      "name": "Search",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jy58BxClZutdZdvF",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.body.message }}",
+        "options": {
+          "systemMessage": "=You are Bahri, the smart and friendly AI assistant for Bahri Plaza Restaurant! 🍽️\n\nYour mission is to provide excellent customer service by guiding customers through their ordering experience step by step, whether they're dining in or ordering for delivery.\n\n## Core Responsibilities:\n1. **Welcome & Identify Order Type**: Always start with a warm greeting and ask if they want to dine-in or order delivery\n2. **Order Status Tracking**: Help customers check their existing order status using Order ID\n3. **Collect Required Information**: Gather all necessary details based on their choice\n4. **Validate Information**: Ensure phone numbers and addresses are correct\n5. **Check Table Availability**: For dine-in, verify table availability before confirming\n6. **Present Clear Summaries**: Show well-formatted order summaries for confirmation\n7. **Process Final Orders**: Generate proper JSON when order is confirmed\n\n## Conversation Flow:\n\n### Step 1: Welcome & Order Type\n- Start with: \"Welcome to Bahri Plaza Restaurant! 🌟 I'm Bahri, your friendly assistant. How can I help you today?\"\n- Ask: \"Would you like to:\n  1. Place a new order (dine-in or delivery) 🍽️\n  2. Check your existing order status 📋\n  3. Ask about our menu 📖\"\n\n### Step 1.5: Order Status Tracking (If Customer Chooses Option 2)\n**When customer wants to check order status:**\n1. Ask for their Order ID: \"Please provide your Order ID so I can check your order status for you 🔍\"\n2. Use the Search tool to find the order by searching for the Order ID\n3. Present the status in this format:\n```\n🔍 Order Status Update:\nOrder ID: [Order_ID]\nCustomer: [Customer Name]\nItems: [Order Items]\nStatus: [Current Status]\nOrder Time: [Created Time]\n\nStatus Meanings:\n• \"Received\" = Order confirmed, waiting to be prepared 📝\n• \"Preparing\" = Chef is preparing your order 👨‍🍳\n• \"Ready\" = Order is ready for pickup/delivery 🍽️\n• \"Complete\" = Order has been delivered/picked up ✅\n```\n4. If order not found: \"I couldn't find an order with that ID. Please check the Order ID and try again, or contact us directly 📞\"\n\n### Step 2: Information Collection (For New Orders)\n\n**For DINE-IN Orders:**\n1. Customer name\n2. Phone number (Egyptian format: 01XXXXXXXXX - 11 digits starting with 01)\n3. Preferred table number (1-20 available)\n4. Order items and quantities\n5. **IMPORTANT**: Before confirming, use the Search tool to check if the requested table is available by searching for existing orders with the same table number and status not \"Complete\"\n\n**For DELIVERY Orders:**\n1. Customer name  \n2. Phone number (Egyptian format: 01XXXXXXXXX)\n3. Full delivery address (must include area, street, building details)\n4. Order items and quantities\n\n### Step 3: Validation Rules\n- **Phone Number**: Must be Egyptian format (01XXXXXXXXX - exactly 11 digits starting with 01)\n- **Address**: For delivery, must be complete and logical (not random words)\n- **Table Number**: For dine-in, must be 1-20 and currently available\n- **Items**: Must be from our menu (use the Answer questions tool to check menu items)\n\n### Step 3.5: Price Calculation\n**IMPORTANT**: You must calculate the total order cost and inform the customer:\n1. Use the \"Answer questions\" tool to get individual item prices from the menu\n2. Calculate subtotal: (item price × quantity) for each item\n3. Add delivery fee if applicable: +20 EGP for delivery orders\n4. Present the breakdown clearly to the customer before confirmation\n\n**Price Calculation Format:**\n```\n💰 Order Cost Breakdown:\n[Item 1]: [Price] EGP × [Quantity] = [Subtotal] EGP\n[Item 2]: [Price] EGP × [Quantity] = [Subtotal] EGP\nSubtotal: [Items Total] EGP\nDelivery Fee: [20 EGP for delivery / 0 EGP for dine-in]\n────────────────────────\nTOTAL: [Final Amount] EGP\n```\n\n### Step 4: Table Availability Check (Dine-in Only)\nBefore confirming any dine-in order:\n1. Use the Search tool to check if the requested table number has any existing orders with status other than \"Complete\"\n2. If table is occupied, politely inform the customer and suggest alternative tables\n3. Only proceed if table is confirmed available\n\n### Step 5: Order Summary Format\nPresent orders in this exact format:\n```\n✅ Here is your order summary:\nOrder Type: [Dine-in/Delivery]\nCustomer Name: [Name]\nPhone: [Phone Number]\nAddress: [Address for delivery / \"N/A\" for dine-in]\nTable Number: [Number for dine-in / \"N/A\" for delivery]\nItems: [Clear description like \"2x Classic Burger, 1x Fries, 2x Cola\"]\nTotal Price: [Amount] EGP\nStatus: Received\n\nPlease confirm if everything is correct so I can process your order! ✅\n```\n\n### Step 6: Final JSON Output\nWhen customer confirms the order is correct, respond with ONLY this JSON (no extra text):\n\n```json\n{\n  \"action\": \"create_order\",\n  \"data\": {\n    \"orderType\": \"dine-in or delivery\",\n    \"customerName\": \"customer's full name\",\n    \"phone\": \"01XXXXXXXXX\",\n    \"address\": \"full address for delivery or N/A for dine-in\",\n    \"tableNumber\": \"table number for dine-in or N/A for delivery\",\n    \"items\": \"clear item description like '2x Classic Burger, 1x Large Fries, 2x Cola'\",\n    \"totalPrice\": \"total amount as number\",\n    \"status\": \"Received\"\n  }\n}\n```\n\n## Communication Guidelines:\n- Always be warm, friendly, and professional\n- Use emojis appropriately to create a welcoming atmosphere\n- Ask one question at a time to avoid overwhelming customers\n- Provide helpful suggestions when customers seem unsure\n- **For order status inquiries**: Always use the \"Search\" tool to find orders by Order ID\n- **For menu questions**: Use the \"Answer questions\" tool\n- **For table availability**: Always use the \"Search\" tool to verify\n- Be patient and helpful if customers need to make changes\n- Confirm understanding before moving to the next step\n\n## Error Handling:\n- **Invalid Phone**: \"I need a valid Egyptian phone number (11 digits starting with 01). Could you please provide that?\"\n- **Incomplete Address**: \"For delivery, I need your complete address including area, street, and building details.\"\n- **Table Unavailable**: \"I'm sorry, table [X] is currently occupied. Would you like table [Y] or [Z] instead?\"\n- **Invalid Menu Item**: \"I don't see that item on our menu. Let me show you what we have available...\"\n- **Order ID Not Found**: \"I couldn't find an order with ID [XXX]. Please double-check your Order ID or contact our restaurant directly.\"\n- **Search Tool Issues**: \"I'm having trouble accessing the order database right now. Please try again in a moment or contact us directly.\"\n\n## Remember:\n- **Order Status**: Always use the Search tool when customers ask about their order status\n- **Order ID Format**: Order IDs are timestamps (like 1694975596515) - help customers locate them\n- Never create an order without confirming table availability for dine-in\n- Always validate phone numbers and addresses before final confirmation\n- Use the available tools (Search and Answer questions) when needed\n- Keep the conversation natural and helpful\n- Only output JSON when the customer has confirmed their final NEW order\n- For status inquiries, provide clear status information without JSON output"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        -8048,
+        2016
+      ],
+      "id": "c97ca4fd-f406-4f6e-aad8-17517745adbc",
+      "name": "Bahri Plaza - AI"
+    },
+    {
+      "parameters": {
+        "description": "A simple PDF with Bahri Plaza restaurant data for use in an ordering system or chatbot."
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolVectorStore",
+      "typeVersion": 1.1,
+      "position": [
+        -7888,
+        2336
+      ],
+      "id": "272a92e7-6725-4a99-8f8b-c033acabe466",
+      "name": "Answer questions"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-4o-mini",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        -8272,
+        2336
+      ],
+      "id": "aafef95f-8dad-4013-992d-684f67039eeb",
+      "name": "GPT-4o-mini",
+      "credentials": {
+        "openRouterApi": {
+          "id": "k2GUXjwIpXlgJnfH",
+          "name": "HR"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Edits').item.json.body.sessionId }}",
+        "contextWindowLength": 20
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -8096,
+        2336
+      ],
+      "id": "6f3fa1fd-af15-4791-87ba-2be609c299eb",
+      "name": "Memory"
+    },
+    {
+      "parameters": {
+        "tableName": {
+          "__rl": true,
+          "value": "restaurant",
+          "mode": "list",
+          "cachedResultName": "restaurant"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        -7952,
+        2576
+      ],
+      "id": "2827d8f0-ce48-463b-80f0-4a4c87cee920",
+      "name": "Restaurant Info",
+      "credentials": {
+        "supabaseApi": {
+          "id": "SwPgyGjnZWNT2C66",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        -5456,
+        1824
+      ],
+      "id": "7d48c219-99cb-4089-bd4b-b6fbdfd63a63",
+      "name": "Respond Get All Menu"
+    },
+    {
+      "parameters": {
+        "httpMethod": "PUT",
+        "path": "update-item",
+        "responseMode": "responseNode",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              },
+              {
+                "name": "Access-Control-Allow-Methods",
+                "value": "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+              },
+              {
+                "name": "Access-Control-Allow-Headers",
+                "value": "*"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -5840,
+        864
+      ],
+      "id": "db833f53-2ac5-4957-988b-6c06a54a30a1",
+      "name": "Update-Item1",
+      "webhookId": "61adc36b-40ef-490d-9f80-466bf96bc9b7"
+    },
+    {
+      "parameters": {
+        "channel": "new-orders",
+        "eventName": "order-created",
+        "payload": "={{ JSON.stringify($('New-Order-Chatbot').item.json) }}"
+      },
+      "id": "7d3c2696-6ab9-43dc-9b36-c07228a2bdda",
+      "name": "Pusher-New-Order1",
+      "type": "n8n-nodes-pusher.pusher",
+      "typeVersion": 1,
+      "position": [
+        -6752,
+        1856
+      ],
+      "credentials": {
+        "pusherApi": {
+          "id": "dZB99S7obwIdeL8Z",
+          "name": "Pusher account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        -7216,
+        176
+      ],
+      "id": "b171acfb-9a4a-41f1-ab9b-8127d37eb8c3",
+      "name": "Respond to Delivery"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        -7216,
+        368
+      ],
+      "id": "173a8825-c732-4e20-82b7-c99002f54c2a",
+      "name": "Respond to Dine-in"
+    },
+    {
+      "parameters": {
+        "channel": "new-orders",
+        "eventName": "order-created",
+        "payload": "={{ JSON.stringify($('Edit Fields Delivery').item.json) }}"
+      },
+      "type": "n8n-nodes-pusher.pusher",
+      "typeVersion": 1,
+      "position": [
+        -7424,
+        176
+      ],
+      "id": "47382da8-4429-405b-9f42-c436dea80eab",
+      "name": "Pusher Delivery",
+      "credentials": {
+        "pusherApi": {
+          "id": "dZB99S7obwIdeL8Z",
+          "name": "Pusher account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "channel": "new-orders",
+        "eventName": "order-created",
+        "payload": "={{ JSON.stringify($('Edit Fields Dine-in').item.json) }}"
+      },
+      "type": "n8n-nodes-pusher.pusher",
+      "typeVersion": 1,
+      "position": [
+        -7424,
+        368
+      ],
+      "id": "2d7f8fb1-20e1-48af-9ca0-3779f1359414",
+      "name": "Pusher Dine-in",
+      "credentials": {
+        "pusherApi": {
+          "id": "dZB99S7obwIdeL8Z",
+          "name": "Pusher account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "25c053bb-23b4-4140-8302-230b08f52830",
+              "name": "order_ID",
+              "value": "={{ $json.order_ID }}",
+              "type": "string"
+            },
+            {
+              "id": "42999402-5599-4264-8d67-fbba5efd26cb",
+              "name": "order_Type",
+              "value": "={{ $json.orderType }}",
+              "type": "string"
+            },
+            {
+              "id": "80bb97ac-3a68-42e9-a24f-7748c5d7638f",
+              "name": "Customer_Name",
+              "value": "={{ $json.customerName }}",
+              "type": "string"
+            },
+            {
+              "id": "d626adeb-b461-4a22-b625-66b1eb88e924",
+              "name": "address",
+              "value": "={{ $json.address }}",
+              "type": "string"
+            },
+            {
+              "id": "3cea724d-b122-4e23-a076-13de9144a672",
+              "name": "items",
+              "value": "={{ $('Edit Fields').item.json.items }}",
+              "type": "string"
+            },
+            {
+              "id": "44022556-a9fd-4355-aae7-8cafe2c2589c",
+              "name": "status",
+              "value": "={{ $('Edit Fields').item.json.status }}",
+              "type": "string"
+            },
+            {
+              "id": "50e705fc-779a-4543-90c4-c68bc787b78d",
+              "name": "total_price",
+              "value": "={{ $('Edit Fields').item.json.total_price }}",
+              "type": "number"
+            },
+            {
+              "id": "2b266193-f7fd-4ff6-8433-3cc09b5aebb2",
+              "name": "phone",
+              "value": "={{ $('Edit Fields').item.json.phone }}",
+              "type": "number"
+            },
+            {
+              "id": "5a1d74b6-1654-4a5f-8d0c-b6d643f0afdb",
+              "name": "createdAt",
+              "value": "={{ $('Edit Fields').item.json.createdAt }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -7632,
+        176
+      ],
+      "id": "b922870f-5060-4ea2-9bdf-1920f1066075",
+      "name": "Edit Fields Delivery"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "25c053bb-23b4-4140-8302-230b08f52830",
+              "name": "order_ID",
+              "value": "={{ $json.order_ID }}",
+              "type": "string"
+            },
+            {
+              "id": "42999402-5599-4264-8d67-fbba5efd26cb",
+              "name": "order_Type",
+              "value": "={{ $json.orderType }}",
+              "type": "string"
+            },
+            {
+              "id": "80bb97ac-3a68-42e9-a24f-7748c5d7638f",
+              "name": "Customer_Name",
+              "value": "={{ $json.customerName }}",
+              "type": "string"
+            },
+            {
+              "id": "3cea724d-b122-4e23-a076-13de9144a672",
+              "name": "items",
+              "value": "={{ $('Edit Fields').item.json.items }}",
+              "type": "string"
+            },
+            {
+              "id": "44022556-a9fd-4355-aae7-8cafe2c2589c",
+              "name": "status",
+              "value": "={{ $('Edit Fields').item.json.status }}",
+              "type": "string"
+            },
+            {
+              "id": "50e705fc-779a-4543-90c4-c68bc787b78d",
+              "name": "total_price",
+              "value": "={{ $('Edit Fields').item.json.total_price }}",
+              "type": "number"
+            },
+            {
+              "id": "8cde1f09-05fb-4840-a308-d7cbce394d77",
+              "name": "createdAt",
+              "value": "={{ $('Edit Fields').item.json.createdAt }}",
+              "type": "string"
+            },
+            {
+              "id": "1e95792c-bf51-4ab0-9386-bc43ffbb1c1c",
+              "name": "tableNumber",
+              "value": "={{ $('Edit Fields').item.json.tableNumber }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -7632,
+        368
+      ],
+      "id": "ea0c8148-c512-4975-9806-e521b06749a5",
+      "name": "Edit Fields Dine-in"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -3568,
+        512
+      ],
+      "id": "217bba70-daef-4253-ac5e-af2b9fb17b20",
+      "name": "Brain-Gemini"
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        -2624,
+        192
+      ],
+      "id": "ca7f18fc-93b9-4554-9cbe-3ec80cf1c101",
+      "name": "Respond to New Stock"
+    },
+    {
+      "parameters": {
+        "jsCode": "const input = items[0].json.payload;\n\nconst orderId = input.order_ID;\n\nconst message = `✅ Your order has been placed successfully!\nYour Order ID is: ${orderId}\nKeep this ID if you want to track your order status.`;\n\nreturn [\n  {\n    json: {\n      message,\n      orderId\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -6544,
+        1856
+      ],
+      "id": "b1e9a09b-c3c2-4382-8ac5-d76e58f7e98f",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.message }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        -6336,
+        1856
+      ],
+      "id": "f0e66282-2c8b-4ec1-8027-23da60a2907d",
+      "name": "Confirm-Order"
+    }
+  ],
+  "pinData": {
+    "Update-Item1": [
+      {
+        "json": {
+          "headers": {
+            "host": "primary-production-c413.up.railway.app",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+            "content-length": "385",
+            "accept": "*/*",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "accept-language": "en-US,en;q=0.9,la;q=0.8",
+            "content-type": "application/json",
+            "origin": "http://localhost:5173",
+            "priority": "u=1, i",
+            "referer": "http://localhost:5173/",
+            "sec-ch-ua": "\"Not)A;Brand\";v=\"8\", \"Chromium\";v=\"138\", \"Google Chrome\";v=\"138\"",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "sec-fetch-dest": "empty",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-site": "cross-site",
+            "x-forwarded-for": "156.212.185.218",
+            "x-forwarded-host": "primary-production-c413.up.railway.app",
+            "x-forwarded-proto": "https",
+            "x-railway-edge": "railway/europe-west4-drams3a",
+            "x-railway-request-id": "MgmC_UWITDOuzZZLm3z_FQ",
+            "x-real-ip": "156.212.185.218",
+            "x-request-start": "1754919196074"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "id": "menu-classic-burger-101",
+            "name": "Classic Burgerr",
+            "nameAr": "كلاسيك برجر",
+            "description": "A classic juicy beef burger with special sauce and fresh vegetables.",
+            "descriptionAr": "برجر لحم كلاسيكي غني بالعصارة مع صوص خاص وخضروات طازجة.",
+            "image": "http://example.com/images/classic-burger.jpg",
+            "price": 110,
+            "category": "Sandwiches"
+          },
+          "webhookUrl": "https://primary-production-c413.up.railway.app/webhook/update-item",
+          "executionMode": "production"
+        }
+      }
+    ],
+    "Webhook": [
+      {
+        "json": {
+          "headers": {
+            "host": "primary-production-c413.up.railway.app",
+            "user-agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1",
+            "content-length": "394",
+            "accept": "application/json, text/plain, */*",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "accept-language": "en-US,en;q=0.9,la;q=0.8",
+            "content-type": "application/json",
+            "origin": "https://resturant-user.vercel.app",
+            "priority": "u=1, i",
+            "referer": "https://resturant-user.vercel.app/",
+            "sec-fetch-dest": "empty",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-site": "cross-site",
+            "x-forwarded-for": "156.212.185.218",
+            "x-forwarded-host": "primary-production-c413.up.railway.app",
+            "x-forwarded-proto": "https",
+            "x-railway-edge": "railway/europe-west4-drams3a",
+            "x-railway-request-id": "3aW9WBJOQoGH2TYu0-QtfA",
+            "x-real-ip": "156.212.185.218",
+            "x-request-start": "1755015951374"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "timestamp": "2025-08-12T16:25:50.435Z",
+            "orderType": "dine-in",
+            "customerInfo": {
+              "customerName": "Ezzat",
+              "tableNumber": "7"
+            },
+            "items": [
+              {
+                "id": "menu-classic-burger-101",
+                "name": "Classic Burgerrق",
+                "price": 110,
+                "image": "http://example.com/images/classic-burger.jpg",
+                "description": "A classic juicy beef burger with special sauce and fresh vegetables.",
+                "quantity": 1,
+                "notes": ""
+              }
+            ],
+            "total": 110,
+            "language": "en"
+          },
+          "webhookUrl": "https://primary-production-c413.up.railway.app/webhook/new-order",
+          "executionMode": "production"
+        }
+      }
+    ],
+    "Webhook1": [
+      {
+        "json": {
+          "headers": {
+            "host": "primary-production-c413.up.railway.app",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+            "content-length": "51",
+            "accept": "application/json, text/plain, */*",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "accept-language": "en-US,en;q=0.9,la;q=0.8",
+            "content-type": "application/json",
+            "origin": "http://localhost:5175",
+            "priority": "u=1, i",
+            "referer": "http://localhost:5175/",
+            "sec-ch-ua": "\"Not;A=Brand\";v=\"99\", \"Google Chrome\";v=\"139\", \"Chromium\";v=\"139\"",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "sec-fetch-dest": "empty",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-site": "cross-site",
+            "x-forwarded-for": "156.212.145.102",
+            "x-forwarded-host": "primary-production-c413.up.railway.app",
+            "x-forwarded-proto": "https",
+            "x-railway-edge": "railway/europe-west4-drams3a",
+            "x-railway-request-id": "CPWyU-DvQUOcLoIHN8N_Fg",
+            "x-real-ip": "156.212.145.102",
+            "x-request-start": "1755637368823"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "orderId": "1755637336960",
+            "newStatus": "cancelled"
+          },
+          "webhookUrl": "https://primary-production-c413.up.railway.app/webhook/update-order",
+          "executionMode": "production"
+        }
+      }
+    ],
+    "Webhook2": [
+      {
+        "json": {
+          "headers": {
+            "host": "n8n-n8n.vwe4kq.easypanel.host",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 Edg/140.0.0.0",
+            "content-length": "230",
+            "accept": "application/json, text/plain, */*",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "accept-language": "en-US,en;q=0.9,ar;q=0.8",
+            "content-type": "application/json",
+            "origin": "https://resturant-user.vercel.app",
+            "priority": "u=1, i",
+            "referer": "https://resturant-user.vercel.app/",
+            "sec-ch-ua": "\"Chromium\";v=\"140\", \"Not=A?Brand\";v=\"24\", \"Microsoft Edge\";v=\"140\"",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "sec-fetch-dest": "empty",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-site": "cross-site",
+            "x-forwarded-for": "156.194.172.20",
+            "x-forwarded-host": "n8n-n8n.vwe4kq.easypanel.host",
+            "x-forwarded-port": "443",
+            "x-forwarded-proto": "https",
+            "x-forwarded-server": "ccf6dd0d8c77",
+            "x-real-ip": "156.194.172.20"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "message": "ok thank you.",
+            "timestamp": "2025-09-17T18:33:16.515Z",
+            "sessionId": "f73249bd-061e-4c0a-9659-618bde781b3d",
+            "pusherData": {
+              "channel": "new-orders",
+              "event": "order-created",
+              "sessionId": "f73249bd-061e-4c0a-9659-618bde781b3d"
+            }
+          },
+          "webhookUrl": "https://n8n-n8n.vwe4kq.easypanel.host/webhook/chatbot",
+          "executionMode": "production"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Append row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive Trigger": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Download file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download file": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Sanitize Data1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sanitize Data1": {
+      "main": [
+        [
+          {
+            "node": "Supabase Vector Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Google Gemini": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Supabase Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Supabase Vector Store",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recursive Character Text Splitter": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Default Data Loader",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields3": {
+      "main": [
+        [
+          {
+            "node": "Switch1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Answer questions with a vector store": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase Vector Store7": {
+      "ai_vectorStore": [
+        [
+          {
+            "node": "Answer questions with a vector store",
+            "type": "ai_vectorStore",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Google Gemini7": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Supabase Vector Store7",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Answer questions with a vector store",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch1": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Append row in sheet3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "New_Order1": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields Delivery",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields Dine-in",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook2": {
+      "main": [
+        [
+          {
+            "node": "Edits",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Google Gemini8": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Restaurant Info",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model10": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Answer questions",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook-Get-Orders": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get-Status": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields7": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet4": {
+      "main": [
+        [
+          {
+            "node": "Not Exists",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Exists",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Append row in sheet4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read menu sheet (Get All)": {
+      "main": [
+        [
+          {
+            "node": "Check for Duplicate (Code Node)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for Duplicate (Code Node)": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Menu Item": {
+      "main": [
+        [
+          {
+            "node": "Read menu sheet (Get All)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add-New-Item": {
+      "main": [
+        [
+          {
+            "node": "Generate Menu Item",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Item By ID": {
+      "main": [
+        [
+          {
+            "node": "Switch2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch2": {
+      "main": [
+        [
+          {
+            "node": "Success",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Not Found",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete-Item": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch3": {
+      "main": [
+        [
+          {
+            "node": "Delete-Item1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Not Found2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet2": {
+      "main": [
+        [
+          {
+            "node": "Switch3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete-Item1": {
+      "main": [
+        [
+          {
+            "node": "Deleted",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get-Menu": {
+      "main": [
+        [
+          {
+            "node": "Get All Menu",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get All Menu": {
+      "main": [
+        [
+          {
+            "node": "Respond Get All Menu",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "New Order Webhook": {
+      "main": [
+        [
+          {
+            "node": "Extract Order Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Order Items": {
+      "main": [
+        [
+          {
+            "node": "AI Agent - Deduct Components",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent - Deduct Components": {
+      "main": [
+        [
+          {
+            "node": "Aggregate Components",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate Components": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Components",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Components": {
+      "main": [
+        [
+          {
+            "node": "Respond to New Stock",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get Current Stock",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Stock Sheet": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Components",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Current Stock": {
+      "main": [
+        [
+          {
+            "node": "Update Stock Sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get-Menu-Components": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent - Deduct Components",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edits": {
+      "main": [
+        [
+          {
+            "node": "Bahri Plaza - AI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clean-Output": {
+      "main": [
+        [
+          {
+            "node": "Respond to Chat",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract-JSON": {
+      "main": [
+        [
+          {
+            "node": "New-Order-Chatbot",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "New-Order?": {
+      "main": [
+        [
+          {
+            "node": "Extract-JSON",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Clean-Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search": {
+      "ai_tool": [
+        [
+          {
+            "node": "Bahri Plaza - AI",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Bahri Plaza - AI": {
+      "main": [
+        [
+          {
+            "node": "New-Order?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Answer questions": {
+      "ai_tool": [
+        [
+          {
+            "node": "Bahri Plaza - AI",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GPT-4o-mini": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Bahri Plaza - AI",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Bahri Plaza - AI",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Restaurant Info": {
+      "ai_vectorStore": [
+        [
+          {
+            "node": "Answer questions",
+            "type": "ai_vectorStore",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update-Item1": {
+      "main": [
+        [
+          {
+            "node": "Update Item By ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "New-Order-Chatbot": {
+      "main": [
+        [
+          {
+            "node": "Pusher-New-Order1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pusher-New-Order1": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pusher Delivery": {
+      "main": [
+        [
+          {
+            "node": "Respond to Delivery",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pusher Dine-in": {
+      "main": [
+        [
+          {
+            "node": "Respond to Dine-in",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields Delivery": {
+      "main": [
+        [
+          {
+            "node": "Pusher Delivery",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields Dine-in": {
+      "main": [
+        [
+          {
+            "node": "Pusher Dine-in",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Brain-Gemini": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent - Deduct Components",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Confirm-Order",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "94e43398-0164-41eb-bc1a-9e2994ef8645",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b89dab3f2b0122a80c2f295775dd56db13b5aff073f33e6665bd79933e62cb6d"
+  },
+  "id": "Mygr6XZfopwEyIS4",
+  "tags": [
+    {
+      "updatedAt": "2025-09-05T11:48:13.033Z",
+      "createdAt": "2025-09-05T11:48:13.033Z",
+      "id": "An6DoUL1HecfXE7E",
+      "name": "Restaurant"
+    }
+  ]
+}

@@ -1,0 +1,809 @@
+{
+  "name": "Marketing Strategy",
+  "nodes": [
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1mOapyC4f4VFJMpAgG0SVv9WCAqsPkH8k9YZjoSWz2Tw",
+          "mode": "list",
+          "cachedResultName": "New Company",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1mOapyC4f4VFJMpAgG0SVv9WCAqsPkH8k9YZjoSWz2Tw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 660145604,
+          "mode": "list",
+          "cachedResultName": "Report",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1mOapyC4f4VFJMpAgG0SVv9WCAqsPkH8k9YZjoSWz2Tw/edit#gid=660145604"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -2144,
+        1280
+      ],
+      "id": "e458e339-c267-4a0e-8c8c-8824d9d5a9a8",
+      "name": "Fetch Market Research Data",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jy58BxClZutdZdvF",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1mOapyC4f4VFJMpAgG0SVv9WCAqsPkH8k9YZjoSWz2Tw",
+          "mode": "list",
+          "cachedResultName": "New Company",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1mOapyC4f4VFJMpAgG0SVv9WCAqsPkH8k9YZjoSWz2Tw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 165385919,
+          "mode": "list",
+          "cachedResultName": "Marketing Plan",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1mOapyC4f4VFJMpAgG0SVv9WCAqsPkH8k9YZjoSWz2Tw/edit#gid=165385919"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -1568,
+        1280
+      ],
+      "id": "eab8c3bc-73c8-4306-944f-e9a3c4312197",
+      "name": "Fetch Generated Marketing Plan",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jy58BxClZutdZdvF",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Market Analysis and Search Report\n\nData:\n{{ JSON.stringify($json) }}",
+        "options": {
+          "systemMessage": "=Role: You are a Universal Senior Content Strategist & Master Art Director. You specialize in transforming complex business strategies into high-impact, visual-first content matrices.\n\nObjective: Based on the provided \"Market Research\" and \"Strategy Plan\", you must build a 30-day content calendar as a single, comprehensive JSON array.\n\nTask Requirements:\n\nStrategic Alignment: Every post must link back to a specific \"Authority Pillar\" and address a \"Psychological Pain Point\" found in the research.\n\nPlatform Logic: Dynamically select the best platform (LinkedIn, Instagram, X, or TikTok) and the specific format (Post, Reel, Carousel, or Thread) based on the target audience's behavior.\n\nThe Hook & Caption: Write world-class, persuasive copy. The Hook must be a \"scroll-stopper\" and the Caption must follow the AIDA framework.\n\nMasterpiece Art Direction Prompt: Provide ultra-precise technical descriptions including: Atmosphere & Lighting (Volumetric, cinematic), Composition & Layers (Foreground depth, bokeh), Typography Details (Font names, weight, placement), and Textures & Colors (Matte metallic, frosted glass).\n\nOutput Format (CRITICAL): You must output a valid JSON Array containing 30 objects. Do not use any tools to save data. Simply return the array. Each object must have the following keys:\n\nDay_Number\n\nAuthority_Pillar\n\nPlatform_Target\n\nContent_Format\n\nThe_Hook\n\nFull_Caption\n\nArt_Direction_Prompt\n\nVisual_Text_Overlay\n\nStrategic_Goal\n\nDesign_Reference_Style"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -1344,
+        1280
+      ],
+      "id": "ebdd912e-c8fa-4a90-b3ed-c272a539f4a4",
+      "name": "AI Agent - Generate Content Calendar",
+      "retryOnFail": true,
+      "maxTries": 3
+    },
+    {
+      "parameters": {
+        "jsCode": "// Safely parse and validate content calendar JSON from AI agent output\ntry {\n  const rawOutput = $input.all()[0]?.json?.output;\n  \n  if (!rawOutput) {\n    throw new Error('No output received from AI agent');\n  }\n  \n  // Clean JSON string from markdown code blocks\n  const cleanJsonString = rawOutput\n    .replace(/```json\\n?/g, '')\n    .replace(/```\\n?/g, '')\n    .trim();\n  \n  // Parse the JSON array\n  const calendarArray = JSON.parse(cleanJsonString);\n  \n  // Validate it's an array\n  if (!Array.isArray(calendarArray)) {\n    throw new Error('Parsed content is not an array');\n  }\n  \n  // Validate array is not empty\n  if (calendarArray.length === 0) {\n    throw new Error('Content calendar array is empty');\n  }\n  \n  // Map each day to a separate item for batch processing\n  return calendarArray.map((item, index) => {\n    // Validate required fields\n    const requiredFields = ['Day_Number', 'Authority_Pillar', 'Platform_Target', 'Content_Format'];\n    const missingFields = requiredFields.filter(field => !item[field]);\n    \n    if (missingFields.length > 0) {\n      console.warn(`Item ${index + 1} missing fields: ${missingFields.join(', ')}`);\n    }\n    \n    return {\n      json: item,\n      pairedItem: { item: 0 }\n    };\n  });\n  \n} catch (error) {\n  // Return error item for debugging\n  return [{\n    json: {\n      error: true,\n      message: error.message,\n      rawInput: $input.all()[0]?.json?.output?.substring(0, 500) || 'No input'\n    },\n    pairedItem: { item: 0 }\n  }];\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -992,
+        1280
+      ],
+      "id": "d497918e-79f5-441a-a771-70c0993f4fcd",
+      "name": "Parse Content Calendar JSON"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -768,
+        1280
+      ],
+      "id": "e84c1399-63bb-4658-a91c-430e54e8bee1",
+      "name": "Batch Process Content Items"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "b8e9c3a1-4f5e-6d7c-8a9b-0c1d2e3f4a5b",
+              "leftValue": "={{ $json.error }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "notExists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {
+          "looseTypeValidation": true
+        }
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        -544,
+        1280
+      ],
+      "id": "d9ec57e8-cff6-47b3-a3ef-9873fa88f155",
+      "name": "Check for Errors"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1mOapyC4f4VFJMpAgG0SVv9WCAqsPkH8k9YZjoSWz2Tw",
+          "mode": "list",
+          "cachedResultName": "New Company",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1mOapyC4f4VFJMpAgG0SVv9WCAqsPkH8k9YZjoSWz2Tw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 9523482,
+          "mode": "list",
+          "cachedResultName": "Content Calendar",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1mOapyC4f4VFJMpAgG0SVv9WCAqsPkH8k9YZjoSWz2Tw/edit#gid=9523482"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Day_Number": "={{ $json.Day_Number || 'N/A' }}",
+            "Authority_Pillar": "={{ $json.Authority_Pillar || '' }}",
+            "Platform_Target": "={{ $json.Platform_Target || '' }}",
+            "Content_Format": "={{ $json.Content_Format || '' }}",
+            "The_Hook": "={{ $json.The_Hook || '' }}",
+            "Full_Caption": "={{ $json.Full_Caption || '' }}",
+            "Art_Direction_Prompt": "={{ $json.Art_Direction_Prompt || '' }}",
+            "Visual_Text_Overlay": "={{ $json.Visual_Text_Overlay || '' }}",
+            "Strategic_Goal": "={{ $json.Strategic_Goal || '' }}",
+            "Design_Reference_Style": "={{ $json.Design_Reference_Style || '' }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Day_Number",
+              "displayName": "Day_Number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Authority_Pillar",
+              "displayName": "Authority_Pillar",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Platform_Target",
+              "displayName": "Platform_Target",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Content_Format",
+              "displayName": "Content_Format",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "The_Hook",
+              "displayName": "The_Hook",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Full_Caption",
+              "displayName": "Full_Caption",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Art_Direction_Prompt",
+              "displayName": "Art_Direction_Prompt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Visual_Text_Overlay",
+              "displayName": "Visual_Text_Overlay",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Strategic_Goal",
+              "displayName": "Strategic_Goal",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Design_Reference_Style",
+              "displayName": "Design_Reference_Style",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Design URL",
+              "displayName": "Design URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -320,
+        1184
+      ],
+      "id": "00d7a2fb-c9a9-4f96-a0b8-2ad1943cb672",
+      "name": "Append Content to Calendar Sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jy58BxClZutdZdvF",
+          "name": "Google Sheets account"
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        -96,
+        1360
+      ],
+      "id": "aa675a5a-f9b3-47e2-b32e-5e4d69769ded",
+      "name": "Rate Limit Delay",
+      "webhookId": "7b49ecee-f82b-42d5-aae8-45818f1d119a"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Log error details for debugging\nconst errorItem = $input.all()[0].json;\n\nreturn [{\n  json: {\n    error: true,\n    errorType: 'Content Calendar Parsing Failed',\n    message: errorItem.message || 'Unknown error',\n    timestamp: new Date().toISOString(),\n    rawInputPreview: errorItem.rawInput || 'No data'\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -320,
+        1376
+      ],
+      "id": "995f87b2-dbb1-4ce9-a0ab-e2aaf9288f89",
+      "name": "Log Error Details"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -1280,
+        1504
+      ],
+      "id": "83210f40-6cf6-4b58-9752-3ec3ffb9505c",
+      "name": "LLM - Google Gemini (Content)",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "VSRbk69EWdjWsb45",
+          "name": "Hackathon"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1mOapyC4f4VFJMpAgG0SVv9WCAqsPkH8k9YZjoSWz2Tw",
+          "mode": "list",
+          "cachedResultName": "New Company",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1mOapyC4f4VFJMpAgG0SVv9WCAqsPkH8k9YZjoSWz2Tw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 9523482,
+          "mode": "list",
+          "cachedResultName": "Content Calendar",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1mOapyC4f4VFJMpAgG0SVv9WCAqsPkH8k9YZjoSWz2Tw/edit#gid=9523482"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -544,
+        992
+      ],
+      "id": "1532c557-4647-4b72-98cb-eea8dc66b20f",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jy58BxClZutdZdvF",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        -320,
+        992
+      ],
+      "id": "45952fd3-9477-490e-8fa2-0b4b86d61482",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "Content-Calender-n",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -2368,
+        1280
+      ],
+      "id": "2895bf6f-1cbd-4a6a-87ea-e6742e3527db",
+      "name": "Webhook",
+      "webhookId": "5419029f-6d47-4261-8e0c-7f7ad946848a"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Comprehensive Market Analysis Data\n\nInput Data:\n{{ JSON.stringify($json) }}",
+        "options": {
+          "systemMessage": "=Role: You are a world-class Chief Marketing Officer and Strategic Business Consultant with 20+ years of experience crafting enterprise-level marketing plans for Fortune 500 companies. You specialize in data-driven strategy, customer psychology, and measurable ROI-focused execution.\n\nTask: You will receive comprehensive JSON data containing Market Research, Competitor Analysis (36 competitors), and Technical/Strategic positioning. Your mission is to synthesize this into a professional, executive-ready Marketing Plan across 12 strategic sections.\n\nOutput Format: Populate the Marketing_Plan_Professional tool with the following structure:\n\n1. EXECUTIVE SUMMARY\n   - Business Overview: 2-3 paragraph strategic overview of the company's market position\n   - Market Opportunity: Quantified market size, growth rate, and addressable segments\n   - Key Objectives: 3-5 SMART objectives that align with business goals\n   - Expected ROI: Specific, time-bound projections (e.g., \"25% revenue increase in 12 months\")\n\n2. MARKET ANALYSIS\n   - Industry Overview: Current state, trends, and future outlook of the industry\n   - Target Market: Detailed TAM/SAM/SOM breakdown with specific numbers\n   - Competitive Landscape: Analysis of the 36 competitors - identify market leaders, gaps, and white space opportunities\n   - SWOT Analysis: Comprehensive matrix with 5+ points per quadrant, grounded in competitor data\n\n3. STRATEGIC POSITIONING\n   - Brand Positioning: Clear positioning statement following the format: \"For [target], who [need], [brand] is [category] that [benefit]. Unlike [competitors], we [differentiation]\"\n   - Unique Value Proposition: Single, powerful UVP that makes competitors irrelevant\n   - Key Messages: Primary message + 3-5 supporting messages tailored by audience segment\n   - Voice & Tone: Specific guidelines (e.g., \"authoritative yet approachable, technical but accessible\")\n   - Differentiation Strategy: How we win against each competitor category\n\n4. CUSTOMER INSIGHTS\n   - Customer Personas: 2-4 detailed personas with:\n     * Name, title, company profile\n     * Demographics/firmographics\n     * 5+ specific pain points\n     * Goals and motivations\n     * Buying journey stages\n     * Decision criteria and objections\n   - Pain Points Matrix: Deep psychological and operational pain points\n   - Psychological Triggers: Specific emotional drivers (fear, aspiration, urgency)\n\n5. MARKETING OBJECTIVES\n   - Business Alignment: How marketing directly supports company revenue/growth goals\n   - SMART Goals by Category:\n     * Awareness: Specific reach/impression targets\n     * Engagement: Interaction and quality metrics\n     * Conversion: Lead and sales targets with $ values\n     * Retention: LTV and churn reduction goals\n   - Success Metrics: Quantified KPIs with baseline and target numbers\n\n6. MARKETING STRATEGY\n   - Go-to-Market Strategy: Phased approach (launch, scale, optimize)\n   - Customer Acquisition Strategy: Multi-channel approach with expected CAC\n   - Full Funnel Strategy:\n     * TOFU (Awareness): 5+ specific channels and tactics\n     * MOFU (Consideration): Nurture sequences, content types, qualification criteria\n     * BOFU (Conversion): Sales enablement, closing tactics, objection handling\n   - Channel Strategy: Specific channel mix with rationale (e.g., \"40% LinkedIn for B2B targeting\")\n   - Content Strategy: Content pillars, types by stage, distribution plan\n\n7. TACTICAL EXECUTION\n   - Campaign Overview: Next 90 days summary\n   - Priority Initiatives: 3-5 major campaigns with:\n     * Name and objective\n     * Target audience\n     * Key activities and timeline\n     * Budget allocation\n     * Success metrics\n     * Responsible owner\n   - Campaign Calendar: Quarter-by-quarter breakdown\n   - Quick Wins: 5+ actions that can be completed in 30 days\n\n8. BUDGET & RESOURCES\n   - Total Budget: Specific dollar amount or percentage of revenue\n   - Budget Breakdown: Percentage allocation across:\n     * Content creation (40%)\n     * Paid advertising (30%)\n     * Technology/tools (15%)\n     * Events/PR (10%)\n     * Team/agency (5%)\n   - Funnel Allocation: Budget split between TOFU/MOFU/BOFU\n   - ROI Projections: Expected return at 3, 6, 12 months\n   - Resource Requirements: Team, tools, partners needed\n\n9. MEASUREMENT & KPIs\n   - North Star Metric: Single most important success indicator\n   - Leading Indicators: Early signals of success (traffic, engagement, MQLs)\n   - Lagging Indicators: Business outcome metrics (revenue, customers, LTV)\n   - Measurement Framework: How we track, report, and optimize\n   - Attribution Model: How we credit channels and touchpoints\n   - Success Benchmarks: Industry standards vs our targets\n\n10. RISK MANAGEMENT\n    - Risk Assessment: 5+ potential risks with:\n      * Description of risk\n      * Probability (High/Medium/Low)\n      * Impact (High/Medium/Low)\n      * Mitigation plan\n    - Contingency Plans: Backup strategies if primary approach fails\n\n11. IMPLEMENTATION ROADMAP\n    - 30-Day Plan: Week-by-week activities and deliverables\n    - 60-Day Plan: Major milestones and checkpoints\n    - 90-Day Plan: Optimization and scaling phase\n    - Key Milestones: Critical dates with owners\n    - Dependencies: What needs to happen first\n    - Review Schedule: When and how we evaluate progress\n\n12. COMPETITOR ATTACK PLAN (Integrated Throughout)\n    - Exploit specific weaknesses identified in the 36 competitors\n    - Position against each competitor segment\n    - Win-back strategies for competitor customers\n    - Defensive strategies to protect market share\n\nCritical Requirements:\n- BE SPECIFIC: Use actual numbers, percentages, timelines, and dollar amounts\n- BE ACTIONABLE: Every strategy must have clear next steps\n- BE DATA-DRIVEN: Ground all recommendations in the competitor analysis provided\n- BE EXECUTIVE-READY: Write as if presenting to a CEO/Board\n- EXPLOIT COMPETITOR GAPS: Identify and attack the \"Primary Weaknesses\" found in research (e.g., fragmented services, lack of regional focus, poor technical stack)\n- QUANTIFY EVERYTHING: ROI, market size, budget, targets - all must have numbers\n\nDo not be generic. Every insight must be grounded in the specific competitor weaknesses and market gaps found in the input JSON. This plan should be so specific that it can only apply to this company in this market at this time."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -1920,
+        1280
+      ],
+      "id": "13732d1e-f429-4bc9-917e-af9d1fd2102c",
+      "name": "AI Agent - Generate Professional Marketing Plan"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -1920,
+        1504
+      ],
+      "id": "f3c556f4-ba74-41a9-9413-6e0c1d61d10e",
+      "name": "LLM - Google Gemini (Marketing Plan)",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "VSRbk69EWdjWsb45",
+          "name": "Hackathon"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1mOapyC4f4VFJMpAgG0SVv9WCAqsPkH8k9YZjoSWz2Tw",
+          "mode": "list",
+          "cachedResultName": "New Company",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1mOapyC4f4VFJMpAgG0SVv9WCAqsPkH8k9YZjoSWz2Tw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 165385919,
+          "mode": "list",
+          "cachedResultName": "Marketing Plan",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1mOapyC4f4VFJMpAgG0SVv9WCAqsPkH8k9YZjoSWz2Tw/edit#gid=165385919"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Executive Summary": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Executive_Summary', ``, 'string') }}",
+            "Market Analysis": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Market_Analysis', ``, 'string') }}",
+            "Strategic Positioning": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Strategic_Positioning', ``, 'string') }}",
+            "Customer Insights": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Customer_Insights', ``, 'string') }}",
+            "Marketing Objectives": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Marketing_Objectives', ``, 'string') }}",
+            "Marketing Strategy": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Marketing_Strategy', ``, 'string') }}",
+            "Tactical Execution": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Tactical_Execution', ``, 'string') }}",
+            "Measurement & KPIs": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Measurement___KPIs', ``, 'string') }}",
+            "Risk Management": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Risk_Management', ``, 'string') }}",
+            "Implementation Roadmap": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Implementation_Roadmap', ``, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Executive Summary",
+              "displayName": "Executive Summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Market Analysis",
+              "displayName": "Market Analysis",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Strategic Positioning",
+              "displayName": "Strategic Positioning",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Customer Insights",
+              "displayName": "Customer Insights",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Marketing Objectives",
+              "displayName": "Marketing Objectives",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Marketing Strategy",
+              "displayName": "Marketing Strategy",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Tactical Execution",
+              "displayName": "Tactical Execution",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Measurement & KPIs",
+              "displayName": "Measurement & KPIs",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Risk Management",
+              "displayName": "Risk Management",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Implementation Roadmap",
+              "displayName": "Implementation Roadmap",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        -1792,
+        1504
+      ],
+      "id": "201b4bd6-b591-45c6-958b-a9e3f20e4b44",
+      "name": "Tool - Save Professional Marketing Plan1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jy58BxClZutdZdvF",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -2368,
+        1536
+      ],
+      "id": "a4b2e13b-caed-4b6c-9743-8dcdb32eba28",
+      "name": "When clicking ‘Execute workflow’"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Fetch Market Research Data": {
+      "main": [
+        [
+          {
+            "node": "AI Agent - Generate Professional Marketing Plan",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Generated Marketing Plan": {
+      "main": [
+        [
+          {
+            "node": "AI Agent - Generate Content Calendar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent - Generate Content Calendar": {
+      "main": [
+        [
+          {
+            "node": "Parse Content Calendar JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Content Calendar JSON": {
+      "main": [
+        [
+          {
+            "node": "Batch Process Content Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Batch Process Content Items": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Check for Errors",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for Errors": {
+      "main": [
+        [
+          {
+            "node": "Append Content to Calendar Sheet",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Log Error Details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append Content to Calendar Sheet": {
+      "main": [
+        [
+          {
+            "node": "Rate Limit Delay",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rate Limit Delay": {
+      "main": [
+        [
+          {
+            "node": "Batch Process Content Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LLM - Google Gemini (Content)": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent - Generate Content Calendar",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Fetch Market Research Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LLM - Google Gemini (Marketing Plan)": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent - Generate Professional Marketing Plan",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent - Generate Professional Marketing Plan": {
+      "main": [
+        [
+          {
+            "node": "Fetch Generated Marketing Plan",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tool - Save Professional Marketing Plan1": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent - Generate Professional Marketing Plan",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Fetch Market Research Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "711920ce-5423-40e9-8e30-fb58947c7bf6",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b89dab3f2b0122a80c2f295775dd56db13b5aff073f33e6665bd79933e62cb6d"
+  },
+  "id": "JWWujeiFaHEAEPt6",
+  "tags": []
+}

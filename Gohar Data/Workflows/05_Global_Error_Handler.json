@@ -1,0 +1,259 @@
+{
+  "name": "05_Global_Error_Handler",
+  "nodes": [
+    {
+      "parameters": {
+        "jsCode": "const errorData = $input.first().json;\nconst errorDetails = errorData.execution?.error || {}; // علامة ؟ تمنع توقف الكود لو لا يوجد تفاصيل\nconst lastNode = errorData.execution?.lastNodeExecuted || 'Unknown Node';\n\n// ضبط الوقت وتحديد المنطقة الزمنية (مهم جداً للسيرفرات)\nconst now = new Date();\nconst options = { \n    timeZone: 'Africa/Cairo', // تم ضبطه لتوقيت القاهرة\n    hour12: false, // نظام 24 ساعة\n    year: 'numeric', month: '2-digit', day: '2-digit', \n    hour: '2-digit', minute: '2-digit', second: '2-digit' \n};\n\n// النتيجة: 02/12/2025 22:15:30\nconst formattedDate = now.toLocaleString('en-GB', options).replace(',', ''); \n\nreturn {\n  timestamp: formattedDate,\n  failed_node: lastNode,\n  error_message: errorDetails.message || 'No error message provided',\n  stack_trace: errorDetails.stack || 'No stack trace',\n  execution_link: errorData.execution?.url, // إضافة مفيدة: رابط مباشر للتنفيذ\n  execution_id: errorData.execution?.id\n};"
+      },
+      "id": "600724dd-8fdb-4a4a-a5b8-73d2032c8948",
+      "name": "error_extract_details",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2736,
+        -2880
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "5783ddf2-81f1-4ec9-b753-58583222d016",
+      "name": "Error Trigger",
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        -2912,
+        -2880
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1GOhmvvgWX-gETlVRicEOXPbbh18DTTUCEenUUjEOCqw",
+          "mode": "list",
+          "cachedResultName": "Errors",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1GOhmvvgWX-gETlVRicEOXPbbh18DTTUCEenUUjEOCqw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Customer_Service",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1GOhmvvgWX-gETlVRicEOXPbbh18DTTUCEenUUjEOCqw/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "timestamp",
+              "displayName": "timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "failed_node",
+              "displayName": "failed_node",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "error_message",
+              "displayName": "error_message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "stack_trace",
+              "displayName": "stack_trace",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "customer_id",
+              "displayName": "customer_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "execution_id",
+              "displayName": "execution_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "execution_link",
+              "displayName": "execution_link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "handlingExtraData": "insertInNewColumn"
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -2560,
+        -2880
+      ],
+      "id": "8ea29578-47a9-4975-8cc1-eeb6ecfe9f49",
+      "name": "Error_log_to_sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jy58BxClZutdZdvF",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Error Trigger",
+        "height": 432,
+        "width": 800,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2960,
+        -3024
+      ],
+      "typeVersion": 1,
+      "id": "1202088d-208a-400d-abd3-836fdd761cbe",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "chatId": "1359742780",
+        "text": "=🚨 Workflow Error: {{ $json.failed_node }} failed for customer {{ $json.customer_id }}.\n\nError: {{ $json.error_message }}\n\nLink : {{ $json.execution_link }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "acd1769c-353b-44ad-ae44-26037999217a",
+      "name": "Error send admin alert",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -2368,
+        -2976
+      ],
+      "webhookId": "8b266ac5-8803-4c26-99c1-5e10980e5241",
+      "credentials": {
+        "telegramApi": {
+          "id": "VYOEVqG3s0JGokPO",
+          "name": "R&D Team"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.customer_id }}",
+        "text": "I apologize, but I'm experiencing a technical issue. A team member will reach out to you within 2 hours to help. Thank you for your patience! 🙏",
+        "additionalFields": {}
+      },
+      "id": "2e7c3ee5-404b-40b6-8973-307381bb0296",
+      "name": "Error_send_user_message",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -2368,
+        -2768
+      ],
+      "webhookId": "428cc8ff-5eca-4b5c-bc63-cd4e4e199cf8",
+      "credentials": {
+        "telegramApi": {
+          "id": "VYOEVqG3s0JGokPO",
+          "name": "R&D Team"
+        }
+      },
+      "disabled": true
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "error_extract_details": {
+      "main": [
+        [
+          {
+            "node": "Error_log_to_sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "error_extract_details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Error_log_to_sheet": {
+      "main": [
+        [
+          {
+            "node": "Error send admin alert",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Error_send_user_message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "6f28ae13-76b4-42b6-a689-bdbfaeccefa5",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b89dab3f2b0122a80c2f295775dd56db13b5aff073f33e6665bd79933e62cb6d"
+  },
+  "id": "9R62CU7phSwsRtIX",
+  "tags": []
+}

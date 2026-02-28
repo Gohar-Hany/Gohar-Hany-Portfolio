@@ -1,0 +1,192 @@
+[
+    {
+        "basic_info": {
+            "fullname": "Gohar Hany",
+            "first_name": "Gohar",
+            "last_name": "Hany",
+            "headline": "AI Automation Engineer | Agentic AI & GenAI Developer | n8n Workflow Architect | Strategic PR & Growth Leader | Scalable Smart Systems Builder | 2025 CS Graduate | YLF Finalist",
+            "public_identifier": "goharhany",
+            "profile_url": "https://linkedin.com/in/goharhany",
+            "profile_picture_url": "https://media.licdn.com/dms/image/v2/D4D03AQEon14HfDDPDA/profile-displayphoto-shrink_800_800/B4DZbvCSUZG8Ac-/0/1747767077340?e=1770249600&v=beta&t=NmxXG7Ho8X--3GcrLUUzC0JVg_33OHR6ajIu1tPEalM",
+            "about": "AI should be agentic, adaptable, and aligned with people.\n\nI’m Gohar Hany — a CS graduate (2025) focused on Agentic AI, automation, and GenAI-driven solutions. I design and deploy intelligent systems that automate decision-making, enhance user experience, and scale across workflows.\n\nMy toolkit includes Gemini API, LangChain, FAISS, Supabase, and n8n — tools I’ve used to build AI agents, learning assistants, inventory bots, and customer support solutions serving 500+ users.\n\nMy background in public relations and education allows me to bridge the gap between technical systems and human needs. I’ve led 80+ partnerships, delivered nationwide campaigns, and trained individuals in communication, tech, and leadership.\n\nI’m particularly passionate about Agentic AI — creating modular agents that reason, remember, and act with autonomy. I’m excited about roles and collaborations where I can apply automation and GenAI to build systems that matter.",
+            "location": {
+                "country": "Egypt",
+                "city": "Alexandria",
+                "full": "Alexandria, Egypt",
+                "country_code": "EG"
+            },
+            "creator_hashtags": [],
+            "is_creator": false,
+            "is_influencer": false,
+            "is_premium": true,
+            "open_to_work": false,
+            "created_timestamp": 1668023388974,
+            "show_follower_count": false,
+            "background_picture_url": "https://media.licdn.com/dms/image/v2/D4D16AQGuSQ12jLLY-A/profile-displaybackgroundimage-shrink_350_1400/B4DZhyUVVOGQAc-/0/1754264594632?e=1770249600&v=beta&t=Nbxr3rzW019Lx-xtDPJq1Av7cvFwFEhrZ9NOIlFyHMw",
+            "urn": "ACoAAD8a9HwBWptT5Id5Q-2ku_XB8E0uyg2sPK4",
+            "follower_count": 3396,
+            "connection_count": 3399,
+            "current_company": "Hawk Insight - STP",
+            "current_company_urn": "108807548",
+            "current_company_url": "https://www.linkedin.com/company/hawk-insight-stp",
+            "top_skills": [
+                "Agentic AI",
+                "Generative AI",
+                "Intelligent Automation",
+                "Workflow Automation (n8n)",
+                "Machine Learning"
+            ],
+            "email": null
+        },
+        "experience": [
+            {
+                "title": "Coach",
+                "company": "Hawk Insight - STP",
+                "location": "Egypt",
+                "description": "As a dedicated Coach at Hawk Insight, I play a crucial role in guiding participants through every stage of developing their own projects. My responsibilities include:\n\nComprehensive Business Planning:\n\nCollaborate with participants to create all-encompassing plans necessary for building a business from scratch, including:\nBusiness Model Canvas (BMC): Designing a clear and strategic framework for the business model.\nOperational Plan: Outlining the day-to-day operations and processes to ensure smooth functioning.\nFinancial Plan: Developing detailed financial projections and budgeting to manage resources effectively.\nMarketing Plan: Crafting strategies to promote the business and reach the target audience.\nSkills Training and Development:\n\nProvide training on essential soft skills required for effective communication and project management.\nTeach presentation skills to help participants deliver compelling and impactful pitches.\nWorkshop Preparation and Delivery:\n\nDesign and facilitate workshops tailored to the specific needs of participants, focusing on practical application and collaborative learning.\nConduct interactive sessions to enhance participants' understanding and application of key concepts.\nProject Mentorship:\n\nOffer continuous support and mentorship throughout the project development phase, providing valuable feedback and guidance to refine ideas and achieve success.\nThrough these efforts, I aim to empower participants with the necessary tools and knowledge to build successful businesses and make a significant impact in their respective fields.",
+                "duration": "Jul 2024 - Oct 2024 · 4 mos",
+                "start_date": {
+                    "year": 2024,
+                    "month": "Jul"
+                },
+                "end_date": {
+                    "year": 2024,
+                    "month": "Oct"
+                },
+                "is_current": false,
+                "company_linkedin_url": "https://www.linkedin.com/company/108807548/",
+                "company_logo_url": "https://media.licdn.com/dms/image/v2/D4D0BAQFYgeYisXHMOQ/company-logo_400_400/B4DZkG0lFOGgAc-/0/1756756071789?e=1770249600&v=beta&t=WxwvAatGkhc6qZhs4i-2KG2YRFtnm6FroFM6K78v1G4",
+                "employment_type": "Internship",
+                "skills": [
+                    "Public Speaking",
+                    "Presentation Skills"
+                ],
+                "company_id": "108807548",
+                "skills_url": "https://www.linkedin.com/in/goharhany/overlay/urn:li:fsd_profilePosition:(ACoAAD8a9HwBWptT5Id5Q-2ku_XB8E0uyg2sPK4,2440805446)/skill-associations-details?profileUrn=urn%3Ali%3Afsd_profile%3AACoAAD8a9HwBWptT5Id5Q-2ku_XB8E0uyg2sPK4"
+            },
+            {
+                "title": "Internship Trainee",
+                "company": "Information Technology Institute (ITI)",
+                "location": "Alexandria, Egypt",
+                "description": "During my summer internship at the Information Technology Institute (ITI), I gained comprehensive experience in supervised machine learning. The training covered:\n\nFeature Data Types: Exploring how to classify and analyze different types of data for effective use in models.\nData Quality: Understanding how to assess and improve data quality to ensure model accuracy and minimize errors.\nStrategies for Handling Missing Values: Applying techniques to address missing values and maintain the integrity of analysis.\nTransforming Categorical Data: Learning how to convert categorical data into formats suitable for model analysis.\nHandling Outliers: Identifying and managing outliers to enhance model performance.\nScaling: Implementing data scaling techniques to improve model performance and accuracy.\nI also worked with a variety of machine learning models, including:\n\nLinear Regression\nLogistic Regression\nSupport Vector Machines (SVM)\nPolynomial SVM\nK-Nearest Neighbors (KNN)\nDecision Trees\nAdditionally, I developed a solid understanding of key concepts such as:\n\nGradient Descent\nConfusion Matrix\nAccuracy, Recall, Precision, F-score\nData Pipeline\nCorrect Data Splitting Techniques to Avoid Data Leakage\nThis internship provided me with a robust foundation in supervised machine learning and practical skills that I am excited to apply to future projects.",
+                "duration": "Aug 2024 - Aug 2024 · 1 mo",
+                "start_date": {
+                    "year": 2024,
+                    "month": "Aug"
+                },
+                "end_date": {
+                    "year": 2024,
+                    "month": "Aug"
+                },
+                "is_current": false,
+                "company_linkedin_url": "https://www.linkedin.com/company/294614/",
+                "company_logo_url": "https://media.licdn.com/dms/image/v2/C560BAQGK3uuhQer46g/company-logo_400_400/company-logo_400_400/0/1631351788797?e=1770249600&v=beta&t=rX4HllOii2njFlSVhvT33fHRlOXfAJWXdT6CUQPu_QA",
+                "employment_type": "Internship",
+                "location_type": "Remote",
+                "skills": [
+                    "Python",
+                    "Machine Learning"
+                ],
+                "company_id": "294614",
+                "skills_url": "https://www.linkedin.com/in/goharhany/overlay/urn:li:fsd_profilePosition:(ACoAAD8a9HwBWptT5Id5Q-2ku_XB8E0uyg2sPK4,2452224879)/skill-associations-details?profileUrn=urn%3Ali%3Afsd_profile%3AACoAAD8a9HwBWptT5Id5Q-2ku_XB8E0uyg2sPK4"
+            },
+            {
+                "title": "Public Relations Specialist",
+                "company": "Make Your Miracle - MYM",
+                "location": "Alexandria, Egypt",
+                "description": "As a Public Relations member, I had the opportunity to develop and apply a range of skills through various activities and partnerships. My experience included:\n\nSkills Acquired:\n\nCommunication: Enhanced my ability to communicate effectively with diverse audiences and stakeholders.\nNetworking: Developed strong networking skills through building and maintaining relationships with different chapters and organizations.\nEvent Management: Gained hands-on experience in planning and executing events, including coordination with partners and managing logistics.\nStrategic Planning: Learned to create and implement strategic plans to foster partnerships and maximize the impact of our events.\nKey Achievements:\n\nPartnerships: Successfully established and nurtured partnerships with multiple chapters, leading to fruitful collaborations and shared goals.\nEvents: Played a significant role in organizing and executing events in collaboration with our partners, ensuring successful outcomes and positive feedback.\nThis role allowed me to gain valuable experience in public relations, project management, and strategic partnership development, all of which I am eager to apply in future endeavors.",
+                "duration": "Dec 2023 - Jun 2024 · 7 mos",
+                "start_date": {
+                    "year": 2023,
+                    "month": "Dec"
+                },
+                "end_date": {
+                    "year": 2024,
+                    "month": "Jun"
+                },
+                "is_current": false,
+                "company_linkedin_url": "https://www.linkedin.com/company/98017730/",
+                "company_logo_url": "https://media.licdn.com/dms/image/v2/D560BAQEeyqSJhgN-XQ/company-logo_400_400/company-logo_400_400/0/1709666821911/mym_make_your_miracle_logo?e=1770249600&v=beta&t=N1OTbcKJEbPKUki169tC4trB-f14GH7v7wHrqMqB9dA",
+                "employment_type": "Internship",
+                "location_type": "Remote",
+                "skills": [
+                    "Public Relations",
+                    "Negotiation"
+                ],
+                "company_id": "98017730",
+                "skills_url": "https://www.linkedin.com/in/goharhany/overlay/urn:li:fsd_profilePosition:(ACoAAD8a9HwBWptT5Id5Q-2ku_XB8E0uyg2sPK4,2452240238)/skill-associations-details?profileUrn=urn%3Ali%3Afsd_profile%3AACoAAD8a9HwBWptT5Id5Q-2ku_XB8E0uyg2sPK4"
+            },
+            {
+                "title": "Internship Trainee",
+                "company": "iCareer",
+                "location": "Alexandria, Egypt",
+                "description": "During my recent professional development training, I gained essential skills and knowledge crucial for career advancement and personal growth. The training covered:\n\nSkills Acquired:\n\nCV Writing: Learned how to create a comprehensive and professional CV that effectively showcases my qualifications and experiences.\nInterview Preparation: Developed strategies for preparing for interviews, including techniques for presenting myself confidently and handling various interview scenarios.\nSelf-Awareness: Enhanced my self-awareness, helping me understand my strengths and areas for growth to align my career goals with my personal attributes.\nEmotional Intelligence: Gained insights into emotional intelligence, learning how to manage and apply emotions to improve communication, relationships, and decision-making.\nIndustry Exposure:\n\nInternational and Multinational Companies: Familiarized myself with the names and fields of numerous international and multinational companies, broadening my understanding of the global business landscape and potential career opportunities.\nThis training has equipped me with valuable tools and insights to navigate my career path more effectively and approach professional challenges with confidence.",
+                "duration": "Jul 2022 - Aug 2022 · 2 mos",
+                "start_date": {
+                    "year": 2022,
+                    "month": "Jul"
+                },
+                "end_date": {
+                    "year": 2022,
+                    "month": "Aug"
+                },
+                "is_current": false,
+                "company_linkedin_url": "https://www.linkedin.com/company/10064918/",
+                "company_logo_url": "https://media.licdn.com/dms/image/v2/C4D0BAQGQCcuPg7KCLA/company-logo_400_400/company-logo_400_400/0/1630562932397/icareeregy_logo?e=1770249600&v=beta&t=PEgat5DYxKs7X2ukgqjikqKsazNHl4B_T69t5c8gICg",
+                "employment_type": "Internship",
+                "location_type": "On-site",
+                "skills": [
+                    "Time Management and Team Management"
+                ],
+                "company_id": "10064918",
+                "skills_url": "https://www.linkedin.com/in/goharhany/overlay/urn:li:fsd_profilePosition:(ACoAAD8a9HwBWptT5Id5Q-2ku_XB8E0uyg2sPK4,2452224912)/skill-associations-details?profileUrn=urn%3Ali%3Afsd_profile%3AACoAAD8a9HwBWptT5Id5Q-2ku_XB8E0uyg2sPK4"
+            }
+        ],
+        "education": [
+            {
+                "school": "Alexandria University",
+                "degree": "Bachelor of Computer Science - CS, علوم الحاسب الآلي",
+                "degree_name": "Bachelor of Computer Science - CS",
+                "field_of_study": "علوم الحاسب الآلي",
+                "duration": "Oct 2022 - Oct 2025",
+                "school_linkedin_url": "https://www.linkedin.com/company/2049284/",
+                "description": "Graduation Project: Agentic AI Learning Assistant – Rated High Excellence\n\nStudied a comprehensive and advanced curriculum focused on building intelligent, automated, and user-centered systems.\n\n✅ Key Technical Areas:\n\nArtificial Intelligence & GenAI: AI fundamentals, smart systems, intelligent agents, and digital image processing.\n\nAutomation & Systems Design: Distributed and parallel systems, operating systems, system programming, and simulation.\n\nProgramming & Engineering: OOP (Java), advanced programming, software engineering, HCI, and software testing.\n\nData & Algorithms: Data structures, algorithms, discrete math, linear algebra, numerical methods, and statistics.\n\nDatabases & Information Retrieval: Relational DBs, storage & retrieval techniques, and information access systems.\n\n✅ Practical Experience:\nApplied theoretical concepts in capstone projects and labs. Built automation workflows, AI-powered bots, and agentic systems.",
+                "activities": "I actively contribute to various organizations, focusing on leadership, communication, and project management. Roles include Organization member at Empower, OC and HR member at Circle for Training and Consultancy (British Council collaboration), PR & Media member at 3ommar Team and Space E, and PR at MA SUSA(in Suez). I've also served as President of ZeroOne Team, gaining experience in project management at i-Code, directorship at 3ommarX, and training at iCareer, Hawk Insight, and ITI.",
+                "skills": "Java, Go (Programming Language) and +9 skills",
+                "school_logo_url": "https://media.licdn.com/dms/image/v2/C4D0BAQEERLbGevtwNw/company-logo_400_400/company-logo_400_400/0/1630455874440/alexandria_university_logo?e=1770249600&v=beta&t=XNldp96st_QAmdAHJJt9zAoX8nToYfdXXmg82BM4JuA",
+                "start_date": {
+                    "year": 2022,
+                    "month": "Oct"
+                },
+                "end_date": {
+                    "year": 2025,
+                    "month": "Oct"
+                },
+                "school_id": "2049284"
+            }
+        ],
+        "certifications": [
+            {
+                "name": "AI Automation Kickstart",
+                "issuer": "Udemy",
+                "issued_date": "Issued Jul 2025"
+            },
+            {
+                "name": "AI for Startups",
+                "issuer": "Udemy",
+                "issued_date": "Issued Jul 2025"
+            }
+        ],
+        "languages": [
+            {
+                "language": "English",
+                "proficiency": "Professional working proficiency"
+            },
+            {
+                "language": "العربية",
+                "proficiency": "Native or bilingual proficiency"
+            }
+        ],
+        "profileUrl": "https://www.linkedin.com/in/goharhany"
+    }
+]

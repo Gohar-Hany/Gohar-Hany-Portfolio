@@ -1,0 +1,781 @@
+{
+  "name": "Replaying to Comment&DM",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Comments Customer Service",
+        "height": 1116,
+        "width": 2204,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -32,
+        16
+      ],
+      "typeVersion": 1,
+      "id": "690e9df9-b05f-4176-bdef-ac9df6c11e78",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n    \"sentiment\": \"positive or negative\" \n}\n"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        576,
+        960
+      ],
+      "id": "1bea6a13-2b25-4d0c-a705-010f056e0820",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "method": "DELETE",
+        "url": "=https://graph.facebook.com/{{ $('Extract Comment Data').item.json.comment_id }}?access_token=EAASMIFhq6ZAgBPCoNOvOsf6OQWiZBwQi2gVLOiUvuU6nGxy8fL31YBRrZCJ3ZBmxrZAsZAxv2rp6dCErhJtDi0nX1CzB7dGR3PtQZBGPvmiJiBCpejmZB9pIaPUVu0Jc65cislrxnacZCrUDGA866YzZCr7lH1CcmPoAIZCoI6dzZAgAIXBEmRycbq2lAlHKXB4TzeF8Rmji35iM",
+        "options": {}
+      },
+      "id": "9414e08c-455d-4fc5-b961-bb3417c4dc46",
+      "name": "Delete Negative Comment",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1008,
+        928
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "1359742780",
+        "text": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Text', ``, 'string') }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegramTool",
+      "typeVersion": 1.2,
+      "position": [
+        1344,
+        432
+      ],
+      "id": "644421f8-4bb8-4894-bb46-d496bb6fe9e3",
+      "name": "Telegram",
+      "webhookId": "22c5175d-ef0c-4722-b467-90900731ddc8",
+      "credentials": {
+        "telegramApi": {
+          "id": "UtCDsLxXt3XBzNAF",
+          "name": "Hazem El-Rayan"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "multipleMethods": true,
+        "path": "messenger-webhook",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        80,
+        304
+      ],
+      "id": "662f2b54-3f34-40ca-9353-d4c84c537382",
+      "name": "Facebook Webhook Trigger",
+      "webhookId": "c223e42f-481f-4895-945a-2e2c8fee8588"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.query[\"hub.challenge\"] }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        384,
+        160
+      ],
+      "id": "ef01d7f0-5f26-4ba0-a4a8-9c046635fa17",
+      "name": "FB Webhook Verification"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.body.entry[0].changes ? 'comment' : 'messenger' }}",
+                    "rightValue": "messenger",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "cae62648-d0a0-4a88-9679-d74bb12b512b"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Messenger"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "29888d84-b66b-4ce4-b5fe-8a4bf95fb2e3",
+                    "leftValue": "={{ $json.body.entry[0].changes ? 'comment' : 'messenger' }}",
+                    "rightValue": "comment",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Comment"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        384,
+        320
+      ],
+      "id": "1a229489-dc25-4b26-90dd-330bdeb9046a",
+      "name": "Route: Comment vs Messenger"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.comment_text }}",
+        "hasOutputParser": true,
+        "messages": {
+          "messageValues": [
+            {
+              "message": "={\n  \"role\": \"sentiment_analyzer\",\n  \"version\": \"2.1\",\n  \"language\": \"Egyptian Arabic & Standard Arabic\",\n  \"context\": \"Political candidate social media comments analysis\",\n\n  \"objective\": \"تصنيف كل تعليق باعتباره إيجابي أو سلبي بدقة عالية، مع مراعاة لهجات المصريين، والسخرية، والنقد الضمني، والسياق الثقافي والسياسي.\",\n\n  \"classification_rules\": {\n\n    \"questions\": {\n      \"rule\": \"الأسئلة تُقيّم حسب النية والنبرة:\",\n      \"positive_questions\": \"أسئلة استفسارية أو فضولية حقيقية بدون سخرية أو تشكيك، مثل: من هو المرشح؟ إيه برنامجه؟ فين صفحته الرسمية؟\",\n      \"neutral_tone\": \"الأسئلة اللي بصيغة فصحى أو هادئة من غير ألفاظ عامية زي (يجدعان، بقى كده؟) تُعتبر غير سلبية.\",\n      \"negative_questions\": \"أسئلة استنكارية أو تهكمية: هو دا مين؟ فين الوعود؟ عملت إيه؟ يعني انت فاكر نفسك مين؟\",\n      \"contextual_signals\": [\n        \"لو السؤال فيه تعبير عامي ساخر أو كلمة بتوحي بالتهكم → سلبي\",\n        \"لو السؤال رسمي ومحايد → إيجابي أو على الأقل غير سلبي\"\n      ]\n    },\n\n    \"positive_indicators\": {\n      \"explicit_support\": [\n        \"دعم مباشر أو غير مباشر للمرشح\",\n        \"كلمات مثل: معاك، هنتخبك، صوتي ليك، وراك، هنساندك\",\n        \"تعبيرات الثقة: واثقين فيك، نعتمد عليك، الأمل فيك\"\n      ],\n      \"praise_and_compliments\": [\n        \"مدح الشخصية أو الإنجازات: محترم، راجل محترم، أصيل، شريف\",\n        \"إشادة بالأفعال: عملت كتير، فعلا بتشتغل، شفنا شغلك\",\n        \"تقدير المواقف: موقفك عجبني، كلامك صح، رأيك سليم\"\n      ],\n      \"prayers_and_blessings\": [\n        \"أدعية إيجابية: ربنا يوفقك، الله ينصرك، بالتوفيق، يارب تنجح\",\n        \"تمنيات خير: إن شاء الله تكسب، يارب الفوز ليك\"\n      ],\n      \"encouragement\": [\n        \"تحفيز وتشجيع: كمل، استمر، إحنا وراك، متتراجعش\",\n        \"تعبيرات الفخر: فخورين بيك، مش هنسيبك\"\n      ],\n      \"positive_emojis_and_symbols\": [\n        \"❤️, 👍, 💪, 🙏, ✌️, 🇪🇬, ⭐\"\n      ],\n      \"agreement\": [\n        \"صح، كلامك مظبوط، فعلا، والله العظيم\"\n      ]\n    },\n\n    \"negative_indicators\": {\n      \"explicit_criticism\": [\n        \"غلط، فاشل، مش كويس، مش على المستوى\",\n        \"كداب، نصاب، فاسد، بيسرق\"\n      ],\n      \"sarcasm_and_mockery\": {\n        \"description\": \"رصد السخرية حتى لو ظاهر الكلام إيجابي\",\n        \"examples\": [\n          \"ماشاء الله عليك 😂\",\n          \"فعلا يا فندم، انت الأحسن\",\n          \"تمام يا برنس، كمل كده\",\n          \"ربنا يهديك بس\",\n          \"يا نهار اسود / يا نهار ابيض\",\n          \"بقى كده؟\"\n        ],\n        \"contextual_clues\": [\n          \"كلام إيجابي + 😂 أو 🤣 = سخرية\",\n          \"مبالغة زائدة = تهكم\",\n          \"نبرة باردة أو emoji ساخر = نية سلبية\"\n        ]\n      },\n      \"insults_and_profanity\": [\n        \"شتائم أو كلام خارج\",\n        \"إهانة شخصية مباشرة أو غير مباشرة\"\n      ],\n      \"disappointment\": [\n        \"للأسف، زعلنا منك، كنا متوقعين أحسن\",\n        \"غلطنا لما وثقنا فيك\"\n      ],\n      \"questioning_credibility\": [\n        \"مش مصدق، فين الدليل؟، وعود ووعود بس\",\n        \"وبعدين؟، هو ده اللي عملته؟\"\n      ],\n      \"cold_or_neutral_tone_with_negative_context\": [\n        \"كلام بارد أو محايد في سياق نقدي\",\n        \"'ماشي' بدون حماس، 'حاضر' بدون دعم\"\n      ],\n      \"passive_aggressive\": [\n        \"يعني عادي، براحتك، أنت حر\"\n      ],\n      \"negative_emojis\": [\n        \"😂, 🤣, 💔, 😏, 🙄, 😒, 🤦, 🤷\"\n      ]\n    }\n  },\n\n  \"edge_cases_handling\": {\n    \"religious_phrases\": {\n      \"rule\": \"الأدعية تُقيّم حسب السياق:\",\n      \"positive\": \"ربنا يوفقك، الله معاك، بإذن الله\",\n      \"negative\": \"ربنا يهديك (غالباً سلبي)، الله يسامحك (عتاب/سلبي)\"\n    },\n    \"ambiguous_short_comments\": {\n      \"rule\": \"التعليقات القصيرة تُعتبر سلبية فقط لو باردة أو فيها emoji سلبي.\",\n      \"examples\": {\n        \"positive\": \"❤️, 👍, تمام ❤️, ماشي معاك 💪\",\n        \"negative\": \"ماشي, حاضر, تمام 😂\"\n      }\n    },\n    \"mixed_sentiment\": {\n      \"rule\": \"لو التعليق فيه إيجابي وسلبي، نغمة التهكم أو السلبية الأقوى تحدد النتيجة.\",\n      \"example\": \"كنت كويس بس دلوقتي للأسف = negative\"\n    }\n  },\n\n  \"special_considerations\": {\n    \"emoji_weight\": \"الـ emoji له وزن كبير في التعليقات القصيرة.\",\n    \"dialect_sensitivity\": \"افهم اللهجة والسياق قبل الحكم.\",\n    \"political_context\": \"التعليقات السياسية قد تحمل نقد ضمني حتى لو بدت محايدة.\",\n    \"no_middle_ground\": \"لا يوجد خيار محايد، لكن الأسئلة الرسمية المحايدة تُعامل كـ 'إيجابية بسيطة'.\"\n  },\n\n  \"decision_making_process\": {\n    \"step_1\": \"تحديد اللهجة (مصري، فصحى، مزيج).\",\n    \"step_2\": \"فحص وجود مؤشرات إيجابية أو دعم.\",\n    \"step_3\": \"كشف السخرية أو النبرة السلبية.\",\n    \"step_4\": \"تحليل الـ emoji والنغمة.\",\n    \"step_5\": \"لو التعليق سؤال فحص النية (استفسار أم تهكم).\",\n    \"step_6\": \"في حالة الشك، إذا التعليق رسمي ومحايد → إيجابي بسيط.\"\n  },\n\n  \"output_format\": {\n    \"schema\": {\n      \"sentiment\": \"positive | negative\"\n    },\n    \"rules\": [\n      \"JSON فقط، بدون أي نص إضافي\",\n      \"بدون شرح أو تعليق\",\n      \"بدون markdown code blocks إلا إذا طُلب ذلك\"\n    ]\n  },\n\n  \"examples\": {\n    \"positive\": [\n      \"ربنا يوفقك يا ريس ❤️\",\n      \"معاك للآخر 💪\",\n      \"محترم وأصيل\",\n      \"شفنا شغلك على أرض الواقع\",\n      \"صوتي ليك أكيد\",\n      \"من هو المرشح؟ (سؤال استفساري رسمي)\"\n    ],\n    \"negative\": [\n      \"ماشاء الله عليك 😂\",\n      \"تمام يا فندم استمر كده 🤣\",\n      \"ربنا يهديك\",\n      \"وعود ووعود\",\n      \"هو دا مين؟\",\n      \"يا نهار اسود\",\n      \"للأسف كنا متوقعين أحسن\"\n    ]\n  },\n\n  \"critical_reminder\": \"ميز بين الفضول والسخرية. السؤال الرسمي المحايد مش نقد. التهكم يغيّر المعنى تماماً.\"\n}\n"
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        416,
+        752
+      ],
+      "id": "6e4292a5-f828-411c-85f8-541c84097a8e",
+      "name": "Sentiment Classifier (Arabic)"
+    },
+    {
+      "parameters": {
+        "model": "google/gemini-2.5-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        416,
+        960
+      ],
+      "id": "23277f40-2439-4108-96f0-b1fb1dd5cba6",
+      "name": "LLM: Sentiment Analysis",
+      "credentials": {
+        "openRouterApi": {
+          "id": "I8jiYzEHbZqqNk8l",
+          "name": "Hazem"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "6d1b2169-0dff-4b79-abae-ce70ac5097e1",
+              "leftValue": "={{ $json.output.sentiment }}",
+              "rightValue": "positive",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        816,
+        752
+      ],
+      "id": "ebd7fcf6-fc51-47bc-85cc-fec66e9d6085",
+      "name": "Check: Positive Sentiment?"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b69544c9-80f9-491b-b6dc-47af77169737",
+              "name": "text",
+              "value": "={{ $('Extract Comment Data').item.json.comment_text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1008,
+        736
+      ],
+      "id": "540e6d0a-8db4-4606-a1a8-26c41cc78fa0",
+      "name": "Prepare Positive Comment"
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "comment_text",
+              "value": "={{ $json.body.entry[0].changes[0].value.message }}"
+            },
+            {
+              "name": "comment_id",
+              "value": "={{ $json.body.entry[0].changes[0].value.comment_id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "0e5060bf-0496-4344-8c40-592d58df7ae9",
+      "name": "Extract Comment Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        144,
+        752
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "af80e3ba-3715-4328-ae5c-d232aa3b26c9",
+              "name": "text",
+              "value": "={{ $json.body.entry[0].messaging[0].message.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        656,
+        304
+      ],
+      "id": "f2a28cc6-ceb8-490a-a5e1-7c77a0208584",
+      "name": "Prepare Messenger Text"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Comment :\n{{ $json.text }}\n\nاسم من كتب هذا التعليق\n{{ $('Facebook Webhook Trigger').item.json.body.entry[0].changes[0].value.from.name }}",
+        "options": {
+          "systemMessage": "=الدور:\nأنت تمثل صفحة المرشح البرلماني المحاسب حازم الريان، وتعمل كوكيل ذكي مسؤول عن الرد التلقائي على التعليقات والرسائل الإيجابية أو المهتمة، بطريقة لبقة ومشجّعة باللهجة المصرية المحترمة.\n\n🎯 الهدف العام\n\nالرد على الكومنتات والرسائل الإيجابية فقط — أي اللي تم تصنيفها مسبقًا بأنها positive.\nالرد يجب أن يكون:\n\nراقي ومهذب.\n\nطبيعي وغير آلي (صياغة مختلفة في كل مرة).\n\nباللهجة المصرية السلسة، مع لغة فصحى بسيطة.\n\nيُظهر الشكر والتقدير والدعوة للمشاركة الانتخابية.\n\n🧩 قواعد أسلوب الرد\n\nابدأ دائمًا بجملة شكر أو تقدير:\n\n\"شكرًا جدًا على دعمكم وكلماتكم الجميلة 🌹\"\n\n\"وجودكم وتشجيعكم هو سر قوتنا ❤️\"\n\n\"بنقدّر دعمكم وثقتكم الغالية 🙏\"\n\n\"ربنا يبارك فيكم ويسعدكم على كلامكم المشجع 💐\"\n\nاختياري (حسب نوع التعليق):\n\nلو فيه دعاء: رد بدعاء مشابه وردّ طيب.\n\nلو فيه تشجيع أو حماس: رد بحماس أكبر (💪🔥❤️).\n\nلو فيه سؤال بسيط عن الحملة أو البرنامج:\n\nوضّح باختصار، أو ادعُه لمؤتمر الحملة أو التواصل على الخاص.\n\n\"يسعدنا حضورك مؤتمرنا القادم يوم الإثنين 27 أكتوبر الساعة 7:30 مساءً بطريق المحمودية – شارع أبو سليمان.\"\n\nاختتم الرد بدعوة انتخابية موحّدة مختصرة:\n\n\"موعدنا يوم ١٠ و١١ نوفمبر على صناديق الاقتراع 🗳️\"\n\n\"رمز التاج 👑 رقم ٣ — المحاسب حازم الريان\"\n\n\"مع بعض نكمل المشوار 💪\"\n\nتجنّب تمامًا:\n\nالجدال أو الرد على النقد.\n\nأي محتوى سياسي سلبي أو مقارنة بمرشحين آخرين.\n\nالتكرار الحرفي لنفس الرد أكثر من مرة.\n\n💬 أنواع الردود المحتملة (لتوجيه الأسلوب)\nنوع الكومنت\tنمط الرد\nتشجيع صريح\tشكر + حماس + دعوة للتصويت\nدعاء\tدعاء مضاد + شكر + تاريخ الانتخابات\nإشادة عامة\tتقدير + دعوة للمشاركة\nسؤال بسيط عن البرنامج\tشكر + رد مختصر + دعوة لحضور المؤتمر\nذكر الاسم مباشرة\tاستخدم اسم المعلق في الرد لإضفاء طابع شخصي\n🧠 أمثلة عملية للردود\n\nمثال 1:\n\n“كل الدعم يا أستاذ حازم”\nرد:\nشكراً جزيلاً على دعمكم الغالي 🌹\nوجودكم معانا بيدينا القوة 💪\nموعدنا يوم ١٠ و١١ نوفمبر على صناديق الاقتراع 🗳️\nرمز التاج 👑 رقم ٣ — المحاسب حازم الريان\n\nمثال 2:\n\n“ربنا يوفقك يا رب”\nرد:\nآمين يا رب، ولكم بالمثل ❤️\nدعواتكم وتشجيعكم دعم كبير لينا 🙏\nمع بعض نكمل المشوار 💪\nرمز التاج 👑 رقم ٣\n\nمثال 3:\n\n“ممكن نعرف برنامجك الانتخابي؟”\nرد:\nشكرًا لتواصلكم واهتمامكم بمستقبل دائرة الرمل 🌹\nيسعدنا دعوتكم لحضور مؤتمرنا القادم يوم الإثنين 27 أكتوبر الساعة 7:30 مساءً\nبطريق المحمودية – شارع أبو سليمان، لعرض الرؤية والبرنامج بالكامل 🙏\n\nمثال 4:\n\n“انت تستحق كل خير”\nرد:\nجزاكم الله خيرًا على كلماتكم الطيبة 🌸\nدعمكم وتشجيعكم بيشجعونا نكمل الطريق 💪\nموعدنا يوم ١٠ و١١ نوفمبر على صناديق الاقتراع 🗳️\nرمز التاج 👑 رقم ٣\nبعد توليد الرد على التعليق، يجب إلزاميًا استخدام أداة Telegram لإرسال تقرير فوري.\n\n🔒 القواعد الإلزامية:\n\nلا تتجاهل هذه الخطوة تحت أي ظرف.\n\nيجب إرسال التقرير عبر Telegram Tool فقط.\n\nيحتوي التقرير على ثلاثة عناصر فقط بالترتيب التالي:\n\n👤 اسم صاحب التعليق\n\n🗨️ نص التعليق الأصلي\n\n💬 الرد الذي تم توليده\n\nلا تضف أي تحليل أو بيانات إضافية.\n\nأرسل الرسالة بنفس التنسيق التالي تمامًا:\n\n👤 صاحب التعليق الاسم: name\n🗨️ التعليق: comment\n💬 الرد: reply\n\n\n⚠️ لا تتخطى هذه العملية، ولا تغيّر التنسيق أو تضيف أي نص آخر.\n\n\n⚠️ لا تتخطى هذه العملية، ولا تغيّر التنسيق أو تضيف نصوص تفسيرية.\n\n📦 إخراج الرد (Output Format)\n\nأخرج الرد النهائي كنص واحد فقط (بدون JSON، بدون أي تفسير أو وصف).\nيجب أن يكون الرد جاهز للنشر مباشرة على الكومنت أو في رسالة الصفحة.\n\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        1072,
+        304
+      ],
+      "id": "e75dad6f-b7e3-490d-be2c-d2585c1114a8",
+      "name": "AI Response Generator"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.comment_id }} || {{ $('Facebook Webhook Trigger').item.json.body.entry[0].messaging[0].sender.id }}",
+        "contextWindowLength": 20
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        1168,
+        448
+      ],
+      "id": "a59adf33-9ab7-4849-a054-caa1b2b73127",
+      "name": "Conversation Memory"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-4o-mini",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        992,
+        448
+      ],
+      "id": "16ffcb54-698d-429e-b577-cb96ec107d5b",
+      "name": "LLM: Response Generator",
+      "credentials": {
+        "openRouterApi": {
+          "id": "I8jiYzEHbZqqNk8l",
+          "name": "Hazem"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Route: Comment vs Messenger').item.json.body.entry[0].changes ? 'comment' : 'messenger' }}",
+                    "rightValue": "=messenger",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "6eb14329-2599-43ae-b13b-1dab1929c448"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Messenger"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "d84360b7-1ddf-43b6-b200-d6bb7507c361",
+                    "leftValue": "={{ $('Route: Comment vs Messenger').item.json.body.entry[0].changes ? 'comment' : 'messenger' }}",
+                    "rightValue": "comment",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Comment"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        1568,
+        304
+      ],
+      "id": "191bf6c0-50af-4373-9dbc-4b5d7071fe95",
+      "name": "Route: Response Destination"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v23.0/{{ $('Facebook Webhook Trigger').item.json.body.entry[0].messaging[0].recipient.id }}/messages?access_token=EAASMIFhq6ZAgBPFOXSzEarREClJDJstdog4ZA05YkTK3xJmgnBqGaZBrAyfwrv2flN1ZAvERbkBgKy2fCKZAZBpQntxZBxK28q00ySKlkkZB5K8Quad6zDf4zUQz8f4nisc09w6oY8FwvyRj7vOaBUoOtPyC0kVt1RU7Vx8L3KI08LfqakuZBa2u7xSVXaGW7CGsZCw2EgmIuN",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_type\": \"RESPONSE\",\n  \"recipient\": {\n    \"id\": \"{{ $('Facebook Webhook Trigger').item.json.body.entry[0].messaging[0].sender.id }}\"\n  },\n  \"message\": {\n    \"text\": \"{{ $json.output }}\"\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1936,
+        176
+      ],
+      "id": "4571aa5d-43d9-42b9-a374-13adfaacc5af",
+      "name": "Send Messenger Reply"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/{{ $('Extract Comment Data').item.json.comment_id }}/comments?access_token=EAASMIFhq6ZAgBPCoNOvOsf6OQWiZBwQi2gVLOiUvuU6nGxy8fL31YBRrZCJ3ZBmxrZAsZAxv2rp6dCErhJtDi0nX1CzB7dGR3PtQZBGPvmiJiBCpejmZB9pIaPUVu0Jc65cislrxnacZCrUDGA866YzZCr7lH1CcmPoAIZCoI6dzZAgAIXBEmRycbq2lAlHKXB4TzeF8Rmji35iM\n",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"message\": \"{{ $json.output }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1936,
+        384
+      ],
+      "id": "e8bc858e-d145-4a03-b25e-2c098ebadb4a",
+      "name": "Send Comment Reply"
+    },
+    {
+      "parameters": {
+        "jsCode": "// الكود ده هيعمل \"escaping\" لعلامات التنصيص المزدوجة\n// وهيشيل أي أحرف تحكم غير صالحة في JSON.\n// وهييشيل كمان علامات النجوم (*).\nfor (const item of items) {\n  if (item.json && item.json.output) {\n    let cleanedOutput = item.json.output;\n\n    // اهرب علامات التنصيص المزدوجة اللي مش مهربة بالفعل\n    cleanedOutput = cleanedOutput.replace(/(?<!\\\\)\"/g, '\\\\\"');\n\n    // شيل الأحرف التحكمية (control characters) غير الصالحة في JSON\n    cleanedOutput = cleanedOutput.replace(/[\\u0000-\\u001F\\u007F-\\u009F]/g, '');\n\n    // شيل علامات النجوم (*)\n    cleanedOutput = cleanedOutput.replace(/\\*/g, ''); //\n\n    item.json.output = cleanedOutput;\n  }\n}\nreturn items;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1744,
+        176
+      ],
+      "id": "34b076cd-2ad1-430c-803c-a606c8ef8c8a",
+      "name": "Clean Response Output - M"
+    },
+    {
+      "parameters": {
+        "jsCode": "// الكود ده هيعمل \"escaping\" لعلامات التنصيص المزدوجة\n// وهيشيل أي أحرف تحكم غير صالحة في JSON.\n// وهييشيل كمان علامات النجوم (*).\nfor (const item of items) {\n  if (item.json && item.json.output) {\n    let cleanedOutput = item.json.output;\n\n    // اهرب علامات التنصيص المزدوجة اللي مش مهربة بالفعل\n    cleanedOutput = cleanedOutput.replace(/(?<!\\\\)\"/g, '\\\\\"');\n\n    // شيل الأحرف التحكمية (control characters) غير الصالحة في JSON\n    cleanedOutput = cleanedOutput.replace(/[\\u0000-\\u001F\\u007F-\\u009F]/g, '');\n\n    // شيل علامات النجوم (*)\n    cleanedOutput = cleanedOutput.replace(/\\*/g, ''); //\n\n    item.json.output = cleanedOutput;\n  }\n}\nreturn items;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1744,
+        384
+      ],
+      "id": "e49a516e-a580-4e6b-a9db-ac1067b3fdb1",
+      "name": "Clean Response Output - C"
+    },
+    {
+      "parameters": {
+        "content": "## Sentiment Analysis\n\n",
+        "height": 448,
+        "width": 1232,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        656
+      ],
+      "typeVersion": 1,
+      "id": "6e23cba4-29ef-4128-96e7-8b05ed512b39",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Generate Response \n",
+        "height": 448,
+        "width": 544
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        928,
+        144
+      ],
+      "typeVersion": 1,
+      "id": "96ddc642-4f84-47c7-9aca-fc87734d75e0",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Preparation",
+        "height": 496,
+        "width": 880,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        96
+      ],
+      "typeVersion": 1,
+      "id": "d3e951be-15af-490b-b80f-209047952c0d",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## Output",
+        "height": 448,
+        "width": 640,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1504,
+        144
+      ],
+      "typeVersion": 1,
+      "id": "4977c9fc-6456-4553-9b69-637ffd22ce9d",
+      "name": "Sticky Note3"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Sentiment Classifier (Arabic)",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Response Generator",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Facebook Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "FB Webhook Verification",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Route: Comment vs Messenger",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route: Comment vs Messenger": {
+      "main": [
+        [
+          {
+            "node": "Prepare Messenger Text",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Extract Comment Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sentiment Classifier (Arabic)": {
+      "main": [
+        [
+          {
+            "node": "Check: Positive Sentiment?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LLM: Sentiment Analysis": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Sentiment Classifier (Arabic)",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check: Positive Sentiment?": {
+      "main": [
+        [
+          {
+            "node": "Prepare Positive Comment",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Delete Negative Comment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Positive Comment": {
+      "main": [
+        [
+          {
+            "node": "AI Response Generator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Comment Data": {
+      "main": [
+        [
+          {
+            "node": "Sentiment Classifier (Arabic)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Messenger Text": {
+      "main": [
+        [
+          {
+            "node": "AI Response Generator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Response Generator": {
+      "main": [
+        [
+          {
+            "node": "Route: Response Destination",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Conversation Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Response Generator",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LLM: Response Generator": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Response Generator",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route: Response Destination": {
+      "main": [
+        [
+          {
+            "node": "Clean Response Output - M",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Clean Response Output - C",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clean Response Output - M": {
+      "main": [
+        [
+          {
+            "node": "Send Messenger Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clean Response Output - C": {
+      "main": [
+        [
+          {
+            "node": "Send Comment Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "80e8d52b-82b9-4a4d-a376-c9d1e63b5cf1",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b89dab3f2b0122a80c2f295775dd56db13b5aff073f33e6665bd79933e62cb6d"
+  },
+  "id": "LIeXB490UVF0K12I",
+  "tags": []
+}

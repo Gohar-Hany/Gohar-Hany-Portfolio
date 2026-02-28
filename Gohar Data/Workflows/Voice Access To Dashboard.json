@@ -1,0 +1,1197 @@
+{
+  "name": "Voice Access To Dashboard",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "ليبل",
+        "formDescription": "يبايبا",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "data",
+              "fieldType": "file"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.3,
+      "position": [
+        3584,
+        -96
+      ],
+      "id": "95da697e-4621-4b00-a914-53604a3fe4cc",
+      "name": "On form submission",
+      "webhookId": "614a837d-8a2a-46ed-b20b-6ba657e7c163"
+    },
+    {
+      "parameters": {
+        "jsCode": "// استخراج الصورة وتحويلها لبيانات جاهزة للإرسال\n// Extract Base64 and MimeType safely\n\nconst binaryKey = 'data'; // Default n8n binary key name\nconst binaryData = items[0].binary[binaryKey];\n\nif (!binaryData) {\n  throw new Error(\"No file uploaded! Please upload an image in the trigger node.\");\n}\n\nreturn [\n  {\n    json: {\n      base64: binaryData.data,\n      mimeType: binaryData.mimeType,\n      fileName: binaryData.fileName\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3792,
+        -96
+      ],
+      "id": "468aab16-e35b-41a6-a044-9f98fea110f1",
+      "name": "Prepare Image"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.groq.com/openai/v1/chat/completions",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_GROQ_API_KEY"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "meta-llama/llama-4-scout-17b-16e-instruct"
+            },
+            {
+              "name": "response_format",
+              "value": "={{ {\"type\": \"json_object\"} }}"
+            },
+            {
+              "name": "messages",
+              "value": "={{ [\n  {\n    \"role\": \"user\",\n    \"content\": [\n      {\n        \"type\": \"text\",\n        \"text\": \"Analyze this payment receipt image deeply (likely Instapay or Bank Transfer). Extract ALL details into a strict JSON format.\\n\\nRequired Fields:\\n- is_receipt: (boolean)\\n- status: (string, e.g., 'Successful' or 'Pending')\\n- total_amount: (number)\\n- currency: (string, e.g., 'EGP')\\n- date: (string, format YYYY-MM-DD)\\n- time: (string, format HH:MM)\\n- reference_number: (string, CRITICAL for tracking)\\n- sender_name: (string)\\n- receiver_name: (string)\\n- receiver_phone: (string, if available)\\n- category: (string, e.g., 'Living Expenses' or notes)\\n- bank_name: (string)\\n\\nIf a field is not found, return null.\"\n      },\n      {\n        \"type\": \"image_url\",\n        \"image_url\": {\n          \"url\": `data:${$json.mimeType};base64,${$json.base64}`\n        }\n      }\n    ]\n  }\n] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        4016,
+        -96
+      ],
+      "id": "659e26b2-48ff-4bc6-9625-33c885c98daf",
+      "name": "Groq - Vision Analysis"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 1. استخراج النص الخام من رد Groq\n// Accessing the nested path safely\nconst choice = items[0].json.choices && items[0].json.choices[0];\nconst rawContent = choice ? choice.message.content : \"{}\";\n\n// 2. تنظيف النص من أي زيادات (Markdown, Code Blocks)\n// Removes ```json, ```, and extra whitespace\nlet cleanContent = rawContent\n  .replace(/```json/g, '')\n  .replace(/```/g, '')\n  .trim();\n\n// 3. محاولة تحويل النص لـ JSON\ntry {\n  // Parse the clean string\n  const parsedData = JSON.parse(cleanContent);\n\n  // 4. تجهيز كائن البيانات النهائي (لضمان وجود كل الحقول)\n  // We explicitly map fields to ensure they exist (defaulting to null if missing)\n  const finalOutput = {\n    is_receipt: parsedData.is_receipt || false,\n    status: parsedData.status || null,\n    total_amount: parsedData.total_amount || parsedData.total || null, // Handle variations\n    currency: parsedData.currency || \"EGP\",\n    date: parsedData.date || null,\n    time: parsedData.time || null,\n    reference_number: parsedData.reference_number || parsedData.transaction_id || null,\n    sender: parsedData.sender_name || null,\n    receiver: parsedData.receiver_name || null,\n    receiver_phone: parsedData.receiver_phone || null,\n    bank: parsedData.bank_name || parsedData.merchant || null,\n    category: parsedData.category || null,\n    \n    // بنحتفظ بالرد الأصلي عشان لو حبيت تراجعه\n    _raw_response: rawContent\n  };\n\n  return [{ json: finalOutput }];\n\n} catch (error) {\n  // في حالة الفشل، رجع رسالة خطأ مع النص الأصلي عشان تعرف السبب\n  return [{ \n    json: { \n      error: \"Failed to parse JSON\", \n      message: error.message,\n      raw_input: cleanContent \n    } \n  }];\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4224,
+        -96
+      ],
+      "id": "3ec019e5-8025-48c7-aaff-4f6030c00a32",
+      "name": "Clean Output"
+    },
+    {
+      "parameters": {
+        "content": "## Analyze Receipt",
+        "height": 272,
+        "width": 896,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3520,
+        -192
+      ],
+      "typeVersion": 1,
+      "id": "2042b981-0886-419c-8ee4-1d1b9573c07b",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.groq.com/openai/v1/audio/transcriptions",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_GROQ_API_KEY"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "whisper-large-v3"
+            },
+            {
+              "parameterType": "formBinaryData",
+              "name": "file",
+              "inputDataFieldName": "data"
+            },
+            {
+              "name": "language",
+              "value": "ar"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        3824,
+        160
+      ],
+      "id": "d5c1337d-9ef5-4a64-bed4-8b9c900dbe09",
+      "name": "Groq - Whisper (STT)"
+    },
+    {
+      "parameters": {
+        "formTitle": "ليبل",
+        "formDescription": "يبايبا",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "data",
+              "fieldType": "file"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.3,
+      "position": [
+        3584,
+        160
+      ],
+      "id": "cd2ea746-4c52-4020-a673-75d70988525a",
+      "name": "On form submission1",
+      "webhookId": "61e5f276-b7de-4e17-882c-51d209fffd39"
+    },
+    {
+      "parameters": {
+        "content": "##  Analyze Voice",
+        "height": 224,
+        "width": 512,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3520,
+        96
+      ],
+      "typeVersion": 1,
+      "id": "bacba540-aa98-4c80-9129-d5429cc344cb",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        3424,
+        -768
+      ],
+      "id": "79f4e31e-4ef9-4451-975d-d850ae10a4dc",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Customer Name: {{ $('Telegram Trigger').item.json.message.from.first_name }} {{ $('Telegram Trigger').item.json.message.from.last_name }}\nMessage: {{ $json.Text }}\nCurrent Date/Time: {{ $now.setZone('Africa/Cairo').toFormat('yyyy-MM-dd HH:mm:ss') }}",
+        "options": {
+          "systemMessage": "=You are a **Restaurant Management AI Agent** with direct access to the restaurant's operational systems. Your primary role is to serve as an intelligent interface between users (owners, managers, staff) and the restaurant's backend systems through natural language interactions.\n\n## Core Identity\n- Name: RestaurantOS Agent\n- Role: Intelligent operations orchestrator for restaurant management\n- Personality: Professional, efficient, data-driven, proactive\n- Language: Arabic (Egyptian dialect) and English - switch based on user preference\n\n## Capabilities & System Access\n\nYou have direct access to the following operational functions:\n\n### 1. Sales & Revenue Operations\n- Get daily sales summary\n- Get sales for specific time period\n- Get revenue breakdown by category\n- Get best selling items\n- Get sales comparison between periods\n- Get hourly sales distribution\n\n### 2. Inventory Operations\n- Get current inventory levels for all items\n- Get items below minimum stock threshold\n- Update stock levels for specific items\n- Get inventory alerts and notifications\n- Get inventory value calculation\n- Get inventory movement history\n\n### 3. Order Operations\n- Get all active orders in real-time\n- Get order history with filters\n- Create new order\n- Update order status\n- Cancel order\n- Get order details by ID\n- Get pending orders by priority\n\n### 4. Menu Management Operations\n- Get all menu items with details\n- Add new item to menu\n- Update item information (price, description, availability)\n- Remove item from menu\n- Get menu items by category\n- Toggle item availability status\n- Get item sales performance\n\n### 5. Staff & Operations Management\n- Get staff shifts and schedules\n- Get table availability status\n- Get kitchen order queue\n- Get delivery orders status\n- Get performance dashboard metrics\n- Get customer feedback summary\n\n### 6. Analytics & Reporting\n- Generate daily summary report\n- Generate weekly performance report\n- Get customer behavior insights\n- Get peak hours analysis\n- Get profit margin by item\n- Get waste and loss reports\n\n### 7. Get All Restaurants\nCall This tool When the user asked about all restaurants\nTool (Get All Restaurants)\n\n## Behavioral Guidelines\n\n### 1. Request Interpretation\n- Parse user requests in natural language (Arabic or English)\n- Identify the appropriate operation(s) needed\n- Extract parameters from user input (dates, amounts, item names, etc.)\n- Ask clarifying questions if parameters are missing or ambiguous\n- Handle both formal and casual language styles\n\n### 2. Operation Execution\n- Always validate parameters before executing operations\n- Execute multiple operations when needed to fulfill complex requests\n- Present data in clear, digestible formats (tables, summaries, bullet points)\n- Include relevant context with numbers (comparisons, trends, insights)\n- Show progress indicators for operations that take time\n\n### 3. Response Format\n- **For numerical data**: Include currency (EGP), percentages, and comparisons\n- **For lists**: Organize by relevance, priority, or requested sorting\n- **For time-based data**: Always specify the time period clearly\n- **For alerts**: Use clear visual indicators (🔴 Critical, 🟡 Warning, 🟢 Good)\n- Add actionable insights and recommendations when relevant\n\n### 4. Proactive Behavior\n- Suggest related information that might be useful\n- Alert users to anomalies, trends, or important patterns\n- Recommend actions based on data analysis\n- Offer to set up automated reports or monitoring alerts\n- Anticipate follow-up questions and offer relevant options\n\n### 5. Error Handling\n- If an operation fails, explain the issue in simple terms\n- Suggest alternatives or workarounds immediately\n- Never expose technical details or error codes to users\n- Provide clear next steps to resolve the issue\n- Escalate to technical support if needed\n\n## Security & Access Control\n\n- **Authentication Required**: Always verify user identity before executing operations\n- **Role-Based Access**: \n  - **Owners**: Full access to all operations including financial data and system configuration\n  - **Managers**: Access to operations, inventory, menu management, and reporting (read-only on financials)\n  - **Staff**: Limited access to order management, table status, and basic inventory checks\n  - **Kitchen Staff**: Access to kitchen queue, order details, and inventory for cooking\n- **Sensitive Data Protection**: Aggregate or mask detailed financial data for non-owner users\n- **Audit Trail**: Log all operations with user identity, timestamp, and action performed\n- **Confirmation Required**: Ask for explicit confirmation before executing:\n  - Price changes\n  - Item deletions\n  - Large inventory adjustments\n  - Order cancellations\n\n## Example Interactions\n\n### User: \"احنا بعنا بكام النهاردة؟\"\n**Agent Actions:**\n- Execute: Get daily sales summary\n- Execute: Get sales comparison with yesterday\n\n**Agent Response:**\n```\n🔍 جاري جلب بيانات المبيعات اليومية...\n\n📊 **مبيعات اليوم** (15 يناير 2026)\n├─ إجمالي المبيعات: 15,750 جنيه\n├─ عدد الطلبات: 47 طلب\n├─ متوسط قيمة الطلب: 335 جنيه\n└─ المقارنة بالأمس: ⬆️ +12% (1,680 جنيه زيادة)\n\n💡 **ملاحظة**: المبيعات أعلى من المتوسط الأسبوعي بنسبة 8%\n\n📈 هل تريد:\n  • تفاصيل الأصناف الأكثر مبيعاً\n  • توزيع المبيعات حسب الساعة\n  • مقارنة بنفس اليوم الأسبوع الماضي\n```\n## Response Style Guidelines\n\n### Arabic Responses:\n- استخدم اللهجة المصرية بشكل طبيعي\n- استخدم أرقام عربية (١٢٣) أو إنجليزية (123) حسب السياق\n- كن ودوداً ومحترفاً في نفس الوقت\n\n### English Responses:\n- Professional but conversational tone\n- Clear and concise\n- Use proper business terminology\n\n### Mixed Language:\n- Handle code-switching naturally\n- Keep numbers and technical terms in English\n- Use the language the user started with\n\n## Continuous Learning & Optimization\n\n- Track frequently asked questions and suggest shortcuts\n- Learn user preferences (favorite reports, time formats, level of detail)\n- Suggest process improvements based on usage patterns\n- Proactively alert about recurring issues or opportunities\n- Build custom views for regular users\n\n## Constraints & Boundaries\n\n### What You CAN Do:\n- Execute all operations within your access level\n- Provide data analysis and insights\n- Make recommendations based on data\n- Automate routine tasks\n- Set up monitoring and alerts\n\n### What You CANNOT Do:\n- Make business decisions autonomously\n- Execute financial transactions without confirmation\n- Share sensitive data with unauthorized users\n- Modify system configurations\n- Override security protocols\n- Provide business strategy advice beyond data interpretation\n\n### Always Remember:\n- **Security First**: Never compromise authentication or authorization\n- **Data Privacy**: Respect user roles and data sensitivity\n- **Accuracy Over Speed**: Better to take time than give wrong information\n- **User Experience**: Make complex operations feel simple\n- **Transparency**: Always be clear about what you're doing and why\n\n---\n\n**Mission**: Transform restaurant management from a complex technical task into natural, efficient conversations while maintaining the highest standards of security, accuracy, and professionalism."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.1,
+      "position": [
+        1952,
+        -688
+      ],
+      "id": "591e58f5-beef-4ee4-b137-85169f38a173",
+      "name": "Orchestrator Agent1",
+      "retryOnFail": true
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "01284709314",
+        "contextWindowLength": 20
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        2016,
+        -448
+      ],
+      "id": "6e1166d4-fa01-4bf5-9d3f-b89d26a3c655",
+      "name": "Memory: Orchestrator1"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-4o-mini",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        1760,
+        -464
+      ],
+      "id": "c89f661a-25df-4f83-aeaa-870a2512f144",
+      "name": "Model: Orchestrator1",
+      "retryOnFail": true,
+      "credentials": {
+        "openRouterApi": {
+          "id": "4EX4QFWKTRgupXJH",
+          "name": "Hackathon"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "speech",
+        "voice": {
+          "__rl": true,
+          "value": "RILOU7YmBhvwJGDGjNmP",
+          "mode": "id"
+        },
+        "text": "={{ $json.output }}",
+        "additionalOptions": {
+          "model": {
+            "__rl": true,
+            "value": "eleven_v3",
+            "mode": "list",
+            "cachedResultName": "Eleven v3 (alpha)"
+          },
+          "languageCode": "AR",
+          "voiceSettings": "{\n  \"stability\": 1,\n  \"similarity_boost\": 1,\n  \"style\": 0,\n  \"use_speaker_boost\": true,\n  \"speed\": 1\n}"
+        },
+        "requestOptions": {}
+      },
+      "type": "@elevenlabs/n8n-nodes-elevenlabs.elevenLabs",
+      "typeVersion": 1,
+      "position": [
+        2720,
+        -544
+      ],
+      "id": "e0eb4279-4f7d-4182-afbb-491e0ebbce6d",
+      "name": "ElevenLabs TTS1",
+      "credentials": {
+        "elevenLabsApi": {
+          "id": "3fNRHsrbehiUmF06",
+          "name": "ElevenLabs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "operation": "analyze",
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "inputType": "binary",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        1008,
+        -480
+      ],
+      "id": "62a95baa-c2a5-4dce-a9d1-ae0ee4d2238b",
+      "name": "Analyze Image Content",
+      "retryOnFail": true,
+      "credentials": {
+        "googlePalmApi": {
+          "id": "VSRbk69EWdjWsb45",
+          "name": "Hackathon"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "# Inputs\n",
+        "height": 672,
+        "width": 1488,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        144,
+        -944
+      ],
+      "typeVersion": 1,
+      "id": "0d88f94e-eb40-4597-b573-2da12bcffe63",
+      "name": "Sticky Note",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "## Text",
+        "height": 176,
+        "width": 992,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        592,
+        -896
+      ],
+      "typeVersion": 1,
+      "id": "c3d8629a-ed66-4866-a38c-1cbed5cb9882",
+      "name": "Sticky Note48"
+    },
+    {
+      "parameters": {
+        "content": "## Voice",
+        "height": 176,
+        "width": 992,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        592,
+        -704
+      ],
+      "typeVersion": 1,
+      "id": "cc41fd25-6fd2-4c34-b019-52052d10bdbf",
+      "name": "Sticky Note49"
+    },
+    {
+      "parameters": {
+        "content": "## Image",
+        "height": 192,
+        "width": 992,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        592,
+        -512
+      ],
+      "typeVersion": 1,
+      "id": "03d423cd-22f9-48db-92e1-f077e8be082b",
+      "name": "Sticky Note50"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1.1,
+      "position": [
+        2240,
+        -464
+      ],
+      "id": "0dea7e0a-a918-4fda-bf4e-4c7856a5221d",
+      "name": "Think"
+    },
+    {
+      "parameters": {
+        "content": "# Orchestrator Agent\n\n",
+        "height": 672,
+        "width": 752,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1648,
+        -944
+      ],
+      "typeVersion": 1,
+      "id": "082f55ad-1956-4eed-93d0-ec146caadfdb",
+      "name": "Sticky Note22",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "48ce1a29-e1a9-45b2-874b-e83fbf804787",
+              "leftValue": "={{ $('Telegram Trigger').item.json.message.text }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2432,
+        -688
+      ],
+      "id": "f5c4904c-ea36-485c-bbc2-c0dc6f67bf12",
+      "name": "Check Message Type"
+    },
+    {
+      "parameters": {
+        "content": "# Text\n\n",
+        "height": 176,
+        "width": 576,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2560,
+        -784
+      ],
+      "typeVersion": 1,
+      "id": "5ad8a4f4-65b7-44ff-afa2-c82ee56b392b",
+      "name": "Sticky Note23"
+    },
+    {
+      "parameters": {
+        "content": "# Text\n\n",
+        "height": 192,
+        "width": 576,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2560,
+        -576
+      ],
+      "typeVersion": 1,
+      "id": "eb663115-fa33-459a-9531-a8fc40886542",
+      "name": "Sticky Note25"
+    },
+    {
+      "parameters": {
+        "content": "# Output\n",
+        "height": 672,
+        "width": 800
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2416,
+        -944
+      ],
+      "typeVersion": 1,
+      "id": "7de82a09-b136-4677-8c38-537034d89317",
+      "name": "Sticky Note26",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2832,
+        -752
+      ],
+      "id": "a25bc241-809a-4be3-bea0-40c17fbe35f2",
+      "name": "Send Text Response",
+      "webhookId": "f7275710-cc22-4990-a937-7f86ebcdc01d",
+      "credentials": {
+        "telegramApi": {
+          "id": "FM1C2d7PXS4vQayd",
+          "name": "Restro360"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendAudio",
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "binaryData": true,
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2944,
+        -544
+      ],
+      "id": "6ae8c532-cf37-4435-a091-afe986a33825",
+      "name": "Send Voice Response",
+      "webhookId": "665c754f-e4f4-4a57-8a65-ebb1b15f6964",
+      "credentials": {
+        "telegramApi": {
+          "id": "FM1C2d7PXS4vQayd",
+          "name": "Restro360"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "# Access Dashboard",
+        "height": 304,
+        "width": 752,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1648,
+        -256
+      ],
+      "typeVersion": 1,
+      "id": "afe0b6da-8f90-4dba-a17c-3ec46873cd40",
+      "name": "Sticky Note2",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "2f35809b-3889-4ef7-a8d5-a4d934842631",
+              "name": "Text",
+              "value": "={{ $('Telegram Trigger').item.json.message.text }}",
+              "type": "string"
+            },
+            {
+              "id": "20b39541-487e-4ce9-9596-67ec3978cc0e",
+              "name": "message.chat.id",
+              "value": "ID",
+              "type": "string"
+            },
+            {
+              "id": "0aa1c16d-bc65-4fc9-8fef-6d7508fd3cec",
+              "name": "Customer_ID",
+              "value": "={{ $json.Customer_ID }}",
+              "type": "string"
+            },
+            {
+              "id": "0b04241a-7f31-42dd-a07d-bfa2eb9ef2be",
+              "name": "Name",
+              "value": "={{ $json.Name }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1008,
+        -864
+      ],
+      "id": "c35344e3-b063-46ab-a641-7c3d88cb2e79",
+      "name": "Text"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "2f35809b-3889-4ef7-a8d5-a4d934842631",
+              "name": "Text",
+              "value": "={{ $json.text }}",
+              "type": "string"
+            },
+            {
+              "id": "256ab82b-06af-4ef9-8e4d-b53027edc6d6",
+              "name": "Customer_ID",
+              "value": "={{ $json.Customer_ID }}",
+              "type": "string"
+            },
+            {
+              "id": "9fe35875-6e8d-4a12-888b-976cbf8bd7c6",
+              "name": "Name",
+              "value": "={{ $json.Name }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1264,
+        -688
+      ],
+      "id": "819029aa-51e2-4572-bade-52b51d6eb641",
+      "name": "Voice"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "02b044cf-399d-4d80-b0b5-e7102670bdc5",
+              "name": "Text",
+              "value": "={{ $json.content }}",
+              "type": "string"
+            },
+            {
+              "id": "e5aebc46-d880-4616-8e5f-4c853be9f034",
+              "name": "Customer_ID",
+              "value": "={{ $json.Customer_ID }}",
+              "type": "string"
+            },
+            {
+              "id": "77c1e650-bb11-4026-bade-6e32a58d440f",
+              "name": "Name",
+              "value": "={{ $json.Name }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1264,
+        -480
+      ],
+      "id": "92f19110-d326-4034-b27e-75ebec1fc8f8",
+      "name": "Image"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Telegram Trigger').item.json.message.text }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    },
+                    "id": "35588a02-6475-400d-b869-da05d7ed0f3a"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Text"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "83b9e800-99d0-4e31-8032-ae81aebe86d1",
+                    "leftValue": "={{ $('Telegram Trigger').item.json.message.voice }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "object",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Audio"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "3ab7184b-65ec-4ca5-a250-667667999220",
+                    "leftValue": "={{ $('Telegram Trigger').item.json.message.photo[0] }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "object",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Image"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        464,
+        -720
+      ],
+      "id": "97f90a52-ea35-40ca-a639-e912af32432c",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        240,
+        -704
+      ],
+      "id": "e65c2228-a807-4131-bef9-eb59116c571d",
+      "name": "Telegram Trigger",
+      "webhookId": "308fb63a-d490-479e-8be6-8079b5040b0c",
+      "credentials": {
+        "telegramApi": {
+          "id": "FM1C2d7PXS4vQayd",
+          "name": "Restro360"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $('Telegram Trigger').item.json.message.voice.file_id }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        768,
+        -688
+      ],
+      "id": "320ddcbd-4603-42d0-b572-3c19f2b59814",
+      "name": "Get a Voice",
+      "webhookId": "bf23faf6-f6cd-4f03-acd9-d8f026d36648",
+      "credentials": {
+        "telegramApi": {
+          "id": "VYOEVqG3s0JGokPO",
+          "name": "R&D Team"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.message.photo[0].file_id }}",
+        "additionalFields": {
+          "mimeType": "image/jpeg"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        768,
+        -480
+      ],
+      "id": "97c104ec-4183-4e2f-b776-3b77db3c73c5",
+      "name": "Get an Image",
+      "webhookId": "a04aa0dd-95b7-40c6-933b-cb960bbf1ee2",
+      "credentials": {
+        "telegramApi": {
+          "id": "VYOEVqG3s0JGokPO",
+          "name": "R&D Team"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "speech",
+        "operation": "speechToText",
+        "additionalOptions": {},
+        "requestOptions": {}
+      },
+      "type": "@elevenlabs/n8n-nodes-elevenlabs.elevenLabs",
+      "typeVersion": 1,
+      "position": [
+        1008,
+        -688
+      ],
+      "id": "87837ac9-65e3-4b0a-af56-93ff1ce7dfae",
+      "name": "Transcribe audio or video",
+      "credentials": {
+        "elevenLabsApi": {
+          "id": "3fNRHsrbehiUmF06",
+          "name": "ElevenLabs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendChatAction",
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}"
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        288,
+        -464
+      ],
+      "id": "2d45e883-b651-4a9d-971c-e385d2828933",
+      "name": "UX: Typing...1",
+      "webhookId": "9192796c-7a6f-4efb-b0f1-d93a188139c1",
+      "credentials": {
+        "telegramApi": {
+          "id": "VYOEVqG3s0JGokPO",
+          "name": "R&D Team"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://restro360-backend.vercel.app/api/v1/restaurants",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "16de6133-ac97-4d11-ae7e-ae1063fad7f4",
+      "name": "Get All Restaurants - Node",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        3696,
+        -768
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://restro360-backend.vercel.app/api/v1/restaurants",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.3,
+      "position": [
+        1760,
+        -128
+      ],
+      "id": "0771693c-ff70-44ae-9fdc-5cd35ec4c632",
+      "name": "Get All Restaurants"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Prepare Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Image": {
+      "main": [
+        [
+          {
+            "node": "Groq - Vision Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq - Vision Analysis": {
+      "main": [
+        [
+          {
+            "node": "Clean Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "On form submission1": {
+      "main": [
+        [
+          {
+            "node": "Groq - Whisper (STT)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get All Restaurants - Node",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Orchestrator Agent1": {
+      "main": [
+        [
+          {
+            "node": "Check Message Type",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Memory: Orchestrator1": {
+      "ai_memory": [
+        [
+          {
+            "node": "Orchestrator Agent1",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Model: Orchestrator1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Orchestrator Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ElevenLabs TTS1": {
+      "main": [
+        [
+          {
+            "node": "Send Voice Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze Image Content": {
+      "main": [
+        [
+          {
+            "node": "Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Think": {
+      "ai_tool": [
+        [
+          {
+            "node": "Orchestrator Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Message Type": {
+      "main": [
+        [
+          {
+            "node": "Send Text Response",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "ElevenLabs TTS1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Text": {
+      "main": [
+        [
+          {
+            "node": "Orchestrator Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Voice": {
+      "main": [
+        [
+          {
+            "node": "Orchestrator Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Image": {
+      "main": [
+        [
+          {
+            "node": "Orchestrator Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Text",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get a Voice",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get an Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "UX: Typing...1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a Voice": {
+      "main": [
+        [
+          {
+            "node": "Transcribe audio or video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get an Image": {
+      "main": [
+        [
+          {
+            "node": "Analyze Image Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcribe audio or video": {
+      "main": [
+        [
+          {
+            "node": "Voice",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get All Restaurants": {
+      "ai_tool": [
+        [
+          {
+            "node": "Orchestrator Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "7eca4ffe-be0b-4f32-99ef-52541ddc1a9f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b89dab3f2b0122a80c2f295775dd56db13b5aff073f33e6665bd79933e62cb6d"
+  },
+  "id": "13Be4erz2crBIUvI",
+  "tags": [
+    {
+      "updatedAt": "2026-01-15T13:57:59.009Z",
+      "createdAt": "2026-01-15T13:57:59.009Z",
+      "id": "f89TnV5V9dJPAYbi",
+      "name": "Restro360"
+    }
+  ]
+}

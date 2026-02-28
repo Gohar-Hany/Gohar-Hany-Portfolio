@@ -1,0 +1,831 @@
+{
+  "name": "Finance Tracker",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -1072,
+        688
+      ],
+      "id": "29d2ee16-7e4d-43ac-b4f2-ba9b98cf7e8d",
+      "name": "Telegram Trigger",
+      "webhookId": "3fd7f20f-bacf-488b-86c3-1b3180ef03b2"
+    },
+    {
+      "parameters": {
+        "inputText": "={{ $json.message.text }}",
+        "categories": {
+          "categories": [
+            {
+              "category": "Transaction",
+              "description": "=Text describing a financial activity such as spending or receiving money—for example, purchases, transfers, or expenses like “I spent 30 EGP on new clothes.”\n"
+            },
+            {
+              "category": "Querey",
+              "description": "=Any text that is not a Transaction\n"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.textClassifier",
+      "typeVersion": 1.1,
+      "position": [
+        -848,
+        688
+      ],
+      "id": "98478869-5fcf-49d8-bf5f-89b9c08a2d30",
+      "name": "Text Classifier"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message.text }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=# Role\n\nYou are a **smart financial assistant specialized in Arabic income transactions**.\nYour task is to convert any Arabic income-related sentence into a clean JSON object with structured fields.\n\n---\n\n## Instructions (Rules)\n\n1. Input will **always be in Arabic**.\n\n2. Extract and output only:\n\n   * `description`: Arabic phrase preserving the **original context including the number**, while removing time words (e.g., إمبارح، النهارده، من يومين فاتو، من ١٠ أكتوبر) and **currency words** (e.g., جنيه).\n   * `amount`: numeric only (integer or decimal).\n   * `date`: format as `YYYY-MM-DD`.\n\n3. Date rules:\n\n   * If the text contains an **explicit date** (e.g., \"من ١٠ أكتوبر\", \"بتاريخ 5 سبتمبر\", \"على 25 مايو\") →\n     **Extract the day and month** and convert to `YYYY-MM-DD`, using the **current year** by default (`{{$now.format('yyyy')}}`).\n   * If **إمبارح** mentioned → `{{$now.minus(1, 'days').format('yyyy-MM-dd')}}`.\n   * If **من يومين فاتو** → `{{$now.minus(2, 'days').format('yyyy-MM-dd')}}`.\n   * If **no date mentioned** → use `{{$now.format('yyyy-MM-dd')}}`.\n\n4. Currency handling:\n\n   * All transactions are in **Egyptian Pounds (Egp)**.\n   * Remove any currency words (e.g., جنيه, ج, EGP).\n\n5. Transaction scope:\n\n   * This agent processes **income-related** transactions only. Ignore expenses.\n\n6. Output must be **JSON only**, formatted as:\n\n```json\n{\n  \"description\": \"\",\n  \"amount\": 0,\n  \"date\": \"YYYY-MM-DD\"\n}\n```\n\n---\n\n# Input Layer\n\n* Accepts a **single Arabic income transaction string**.\n* Example: \"استلمت 2800 عربون من شغل رضا من ١٠ اكتوبر\"\n\n---\n\n# Action Layer\n\n* Parse Arabic numerals and normalize them (e.g., ٢٨٠٠ → 2800).\n* Detect explicit or relative date expressions.\n* Apply date inference rules to produce a standardized date string.\n* Output JSON with only the three fields.\n\n---\n\n# Examples\n\n### Input:\n\n\"استلمت 2800 عربون من شغل رضا من ١٠ اكتوبر\"\n\n### Output:\n\n```json\n{\n  \"description\": \"2800 عربون من شغل رضا\",\n  \"amount\": 2800,\n  \"date\": \"2025-10-10\"\n}\n```\n\n---\n\n### Input:\n\n\"دخل 1500 من مبيعات أونلاين\"\n\n### Output:\n\n```json\n{\n  \"description\": \"1500 من مبيعات أونلاين\",\n  \"amount\": 1500,\n  \"date\": \"{{$now.format('yyyy-MM-dd')}}\"\n}\n```\n\n---\n\n### Input:\n\n\"استلمت ٨٠٠ تحويل من أحمد من يومين فاتو\"\n\n### Output:\n\n```json\n{\n  \"description\": \"٨٠٠ تحويل من أحمد\",\n  \"amount\": 800,\n  \"date\": \"{{$now.minus(2, 'days').format('yyyy-MM-dd')}}\"\n}\n```"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        128,
+        -32
+      ],
+      "id": "1872233c-e049-4ac2-9608-27eb1d92bd69",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"description\": {\n      \"type\": \"string\"\n    },\n    \"amount\": {\n      \"type\": \"number\"\n    },\n    \"date\": {\n      \"type\": \"string\",\n      \"format\": \"date\"\n    }\n  },\n  \"required\": [\"description\", \"amount\", \"date\"]\n}\n",
+        "autoFix": true
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        224,
+        192
+      ],
+      "id": "af5441cb-e423-4610-80d8-3b9017c82ddf",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "databaseId": {
+          "__rl": true,
+          "value": "20feec41-c431-802e-bbde-c1b6c6c11cc9",
+          "mode": "list",
+          "cachedResultName": "Finance Tracer",
+          "cachedResultUrl": "https://www.notion.so/20feec41c431802ebbdec1b6c6c11cc9"
+        },
+        "title": "={{ $json.output.description }}",
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Amount|number",
+              "numberValue": "={{ $json.output.amount }}"
+            },
+            {
+              "key": "Description|title",
+              "title": "={{ $json.output.description }}"
+            },
+            {
+              "key": "Transaction Date|date",
+              "includeTime": false,
+              "date": "={{ $json.output.date}}"
+            },
+            {
+              "key": "Transaction Type|select",
+              "selectValue": "Income"
+            }
+          ]
+        },
+        "options": {
+          "icon": "➕"
+        }
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        592,
+        176
+      ],
+      "id": "a233d9bb-d028-479d-ad8f-cbfffbf30a02",
+      "name": "Create a database page",
+      "credentials": {
+        "notionApi": {
+          "id": "URPoVdDDsdhBlkcf",
+          "name": "Notion account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message.text }}",
+        "options": {
+          "systemMessage": "=# **Role**\n\nYou are an **AI Financial Query Agent** designed to analyze Abdallah’s financial records stored in a **Notion database**.\nYour mission is to:\n\n1. Understand and respond to **Arabic or English** financial queries.\n2. Retrieve and summarize relevant financial entries (income, expenses, balances).\n3. Use your **tools** to calculate totals, averages, and comparisons.\n4. Respond naturally in **Arabic** unless the user explicitly requests English.\n\nYou act as Abdallah’s **personal financial analyst**, ensuring every answer is accurate, clear, and backed by verified data.\n\n---\n\n## **Tools Available**\n\n1. **Notion Tool (`notion_query`)**\n\n   * **Purpose:** Retrieve financial records.\n   * **Usage:** Filter, find, or list entries such as \"كم صرفت في أكتوبر؟\".\n   * **Fields per record:**\n\n     * `description` → Arabic phrase describing the entry\n     * `amount` → numeric\n     * `date` → `YYYY-MM-DD`\n     * `type` → `\"Income\"` or `\"Expense\"`\n     * `category` → one of:\n       **[\"Basics\", \"Luxuries\", \"Saving\", \"Donation\", \"Emergency Fund\", \"Investment\"]**\n\n2. **Calculator Tool (`calculator`)**\n\n   * **Purpose:** Perform arithmetic operations (sum, average, comparison).\n   * **Usage:** Compute totals or differences after data retrieval.\n\n---\n\n## **Instructions (Rules)**\n\n### 1. **Query Understanding**\n\n* Detect intent from natural Arabic or English phrasing.\n* Identify type:\n\n  * **Retrieve Data** → عرض أو تصفية تفاصيل\n  * **Summarize** → كم صرفت؟\n  * **Compare** → قارن بين شهرين\n  * **Compute** → مجموع، متوسط، فرق\n\n### 2. **Normalization**\n\nWhen reading or writing data:\n\n* **Dates** → Always in `YYYY-MM-DD`.\n* **Amounts** → Numeric only.\n* **Description** → Arabic phrase, no time or unit words.\n* **Category** → Must be one of the six defined categories.\n\n### 3. **Tool Use Order**\n\n1. Always query **Notion** first.\n2. Then use **Calculator** for any numerical operation.\n3. Never assume or estimate missing data.\n4. If data is incomplete →\n\n   > لا أملك كل البيانات المطلوبة للإجابة بدقة.\n\n### 4. **Response Format**\n\n* Always respond in **Arabic**, unless user requests English.\n* Use clear, friendly language.\n* Show numbers with up to two decimal places.\n* Prefer **lists or summaries** — avoid raw data or code blocks.\n* No currency symbols or duplications.\n\n### 5. **Error Handling**\n\n* If no matching data →\n\n  > لا توجد بيانات متاحة لهذا الطلب.\n* If query is ambiguous → ask one short clarifying question.\n\n---\n\n## **Examples**\n\n### **Example 1**\n\n**User:** صرفت قد إيه الشهر ده؟\n**Action:**\n\n1. Query Notion for all `Expense` entries from current month.\n2. Use Calculator to sum amounts.\n   **Response:**\n\n> مجموع مصاريف هذا الشهر هو ٣٢٥٠، أغلبها من فئة Basics.\n\n---\n\n### **Example 2**\n\n**User:** كم دخلت من شغل الفريلانس؟\n**Action:**\n\n1. Filter Notion records where `type = Income` and `description` contains \"فريلانس\".\n2. Sum all `amount` values.\n   **Response:**\n\n> إجمالي دخل الفريلانس هو ١٢٠٠.\n\n---\n\n### **Example 3**\n\n**User:** قارن بين مصاريف سبتمبر وأكتوبر.\n**Action:**\n\n1. Fetch all `Expense` entries for both months.\n2. Compute totals and calculate the percentage change.\n   **Response:**\n\n> في سبتمبر صرفت ٢٨٠٠، بينما في أكتوبر زادت المصاريف إلى ٣٥٠٠، بزيادة قدرها ٢٥٪.\n\n---\n\n## **Final Notes**\n\n* Always prioritize verified Notion data.\n* Apply **reactive prompting** — if any issue occurs, adjust **only one rule at a time**.\n* If unsure, respond:\n\n  > لست متأكدًا تمامًا، أحتاج مراجعة البيانات أولًا.\n* Today’s date: {{$now}}\n* Test **Notion** and **Calculator** tools separately before chaining them.\n\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        -384,
+        1184
+      ],
+      "id": "bd8c658a-f06c-41ee-b5e9-f1b87f129842",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Telegram Trigger').item.json.message.chat.id }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -368,
+        1408
+      ],
+      "id": "24acc3ea-01d0-4ee6-b64d-76a105ce5eef",
+      "name": "Simple Memory1"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolCalculator",
+      "typeVersion": 1,
+      "position": [
+        -240,
+        1408
+      ],
+      "id": "540f6c91-cb87-484f-883b-d4328204a596",
+      "name": "Calculator"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        240,
+        1184
+      ],
+      "id": "2d0bf153-38a2-47ce-a90c-49b44d60f5a4",
+      "name": "Send a text message",
+      "webhookId": "400f4eca-d108-46d2-8795-fc00e876353d"
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "operation": "getAll",
+        "databaseId": {
+          "__rl": true,
+          "value": "20feec41-c431-802e-bbde-c1b6c6c11cc9",
+          "mode": "list",
+          "cachedResultName": "Finance Tracer",
+          "cachedResultUrl": "https://www.notion.so/20feec41c431802ebbdec1b6c6c11cc9"
+        },
+        "returnAll": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Return_All', ``, 'boolean') }}",
+        "simple": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Simplify', ``, 'boolean') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.notionTool",
+      "typeVersion": 2.2,
+      "position": [
+        -112,
+        1408
+      ],
+      "id": "e07985d5-8c28-4a09-a063-73c965edb267",
+      "name": "Get many database pages in Notion",
+      "credentials": {
+        "notionApi": {
+          "id": "URPoVdDDsdhBlkcf",
+          "name": "Notion account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "=ضن يا زعيم ",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        816,
+        176
+      ],
+      "id": "07525a4f-74e5-4424-a1ba-b4aa0313b9a2",
+      "name": "Send a text message1",
+      "webhookId": "400f4eca-d108-46d2-8795-fc00e876353d"
+    },
+    {
+      "parameters": {
+        "inputText": "={{ $json.message.text }}",
+        "categories": {
+          "categories": [
+            {
+              "category": "Income",
+              "description": "Any message that includes words like استلمت, جالي, قبضت, حول, دخل, or mentions receiving money, salary, or transfer → means money coming in."
+            },
+            {
+              "category": "Expense ",
+              "description": "Any message that includes words like صرفت, اشتريت, دفعت, or mentions payments, bills, transport, food, etc. → means money going out."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.textClassifier",
+      "typeVersion": 1.1,
+      "position": [
+        -384,
+        480
+      ],
+      "id": "d3362c06-59b6-44e0-895e-549e79263e0d",
+      "name": "Text Classifier1",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message.text }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=# Role\n\nYou are a **smart financial assistant specialized in Arabic expense transactions**.\nYour task is to convert each Arabic transaction sentence into a **clean, structured JSON record**.\nAct like a **digital accountant** — precise, consistent, and context-aware.\n\n---\n\n## 🧩 Instructions (Rules)\n\n1. Input will **always be in Arabic**.\n2. Every transaction is an **Expense** — never include `\"type\"`.\n3. Extract and format these fields:\n\n   * `description`: Arabic phrase that keeps the **original context and numbers**, removing:\n\n     * Time words (إمبارح، النهارده، من يومين فاتو)\n     * Currency words (جنيه، دولار، ريال، درهم، دينار)\n   * `amount`: numeric only (integer or decimal)\n   * `date`: formatted as `YYYY-MM-DD`\n   * `category`: inferred logically from context\n     Must be one of: `\"Basics\"`, `\"Luxuries\"`, `\"Saving\"`, `\"Donation\"`, `\"Emergency Fund\"`, `\"Investment\"`\n\n---\n\n## 📊 Category Mapping\n\n| Keywords / Context                                   | Category       |\n| ---------------------------------------------------- | -------------- |\n| إيجار، أكل، طعام، سوبر ماركت، مواصلات، بنزين، فواتير | Basics         |\n| سينما، تسوق، كافيه، مطعم، هدية، رحلة، حفلة           | Luxuries       |\n| ادخار، توفير، جمعية، دفعت جمعية، حساب توفير          | Saving         |\n| تبرع، صدقة، مساعدة                                   | Donation       |\n| طوارئ، علاج، مستشفى، دواء، كشف                       | Emergency Fund |\n| استثمار، أسهم، مشروع، بيتكوين                        | Investment     |\n\n---\n\n## 🗓️ Date Handling\n\n| Arabic Phrase             | JSON Date                                        |\n| ------------------------- | ------------------------------------------------ |\n| إمبارح                    | `{{$now.minus(1, 'days').format('yyyy-MM-dd')}}` |\n| من يومين فاتو             | `{{$now.minus(2, 'days').format('yyyy-MM-dd')}}` |\n| النهارده or not mentioned | `{{$now.format('yyyy-MM-dd')}}`                  |\n\n---\n\n## ✅ Output Format\n\nAlways output **only JSON** using this structure:\n\n```json\n{\n  \"description\": \"\",\n  \"amount\": 0,\n  \"date\": \"YYYY-MM-DD\",\n  \"category\": \"\"\n}\n```\n\n---\n\n## 💡 Examples\n\n### Example 1\n\n**Input:**\n\"دفعت 200 جنيه إيجار إمبارح\"\n\n**Output:**\n\n```json\n{\n  \"description\": \"200 إيجار\",\n  \"amount\": 200,\n  \"date\": \"{{$now.minus(1, 'days').format('yyyy-MM-dd')}}\",\n  \"category\": \"Basics\"\n}\n```\n\n---\n\n### Example 2\n\n**Input:**\n\"دفعت 500 كافيه مع الأصدقاء\"\n\n**Output:**\n\n```json\n{\n  \"description\": \"500 كافيه مع الأصدقاء\",\n  \"amount\": 500,\n  \"date\": \"{{$now.format('yyyy-MM-dd')}}\",\n  \"category\": \"Luxuries\"\n}\n```\n\n---\n\n### Example 3\n\n**Input:**\n\"دفعت جمعية 3000 من يومين فاتو\"\n\n**Output:**\n\n```json\n{\n  \"description\": \"3000 جمعية\",\n  \"amount\": 3000,\n  \"date\": \"{{$now.minus(2, 'days').format('yyyy-MM-dd')}}\",\n  \"category\": \"Saving\"\n}\n```\n\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        128,
+        576
+      ],
+      "id": "28b5a595-7f5e-432e-bc0d-3341969fbce2",
+      "name": "AI Agent2"
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"description\": {\n      \"type\": \"string\"\n    },\n    \"amount\": {\n      \"type\": \"number\"\n    },\n    \"date\": {\n      \"type\": \"string\",\n      \"format\": \"date\"\n  \n   \n    },\n    \"category\": {\n      \"type\": \"string\",\n      \"enum\": [\"Basics\", \"Luxuries\", \"Saving\", \"Donation\", \"Emergency Fund\", \"Investment\"]\n    }\n  },\n  \"required\": [\"description\", \"amount\", \"date\", \"category\"]\n}\n",
+        "autoFix": true
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        224,
+        800
+      ],
+      "id": "b9c73f10-b77e-460d-b7d2-d8c975fb3f41",
+      "name": "Structured Output Parser1"
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "databaseId": {
+          "__rl": true,
+          "value": "20feec41-c431-802e-bbde-c1b6c6c11cc9",
+          "mode": "list",
+          "cachedResultName": "Finance Tracer",
+          "cachedResultUrl": "https://www.notion.so/20feec41c431802ebbdec1b6c6c11cc9"
+        },
+        "title": "={{ $json.output.description }}",
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Amount|number",
+              "numberValue": "={{ $json.output.amount }}"
+            },
+            {
+              "key": "Category|select",
+              "selectValue": "={{ $json.output.category }}"
+            },
+            {
+              "key": "Transaction Date|date",
+              "includeTime": false,
+              "date": "={{ $json.output.date }}"
+            },
+            {
+              "key": "Transaction Type|select",
+              "selectValue": "Expense"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        576,
+        784
+      ],
+      "id": "cff90013-1133-4920-8bfb-ebeab5b0e5cc",
+      "name": "Create a database page1",
+      "credentials": {
+        "notionApi": {
+          "id": "URPoVdDDsdhBlkcf",
+          "name": "Notion account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "=ضن يا زعيم ",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        816,
+        784
+      ],
+      "id": "a657181c-1b23-4cf1-aae5-0548c7208576",
+      "name": "Send a text message2",
+      "webhookId": "400f4eca-d108-46d2-8795-fc00e876353d"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-4o-mini",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        -784,
+        912
+      ],
+      "id": "9f386649-0a59-4c87-9a80-0b352530f890",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "AV28oCs0c67nTMOo",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-4o-mini",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        96,
+        800
+      ],
+      "id": "7e0ab42f-df07-4748-bcd2-7569c7de3257",
+      "name": "OpenRouter Chat Model1",
+      "credentials": {
+        "openRouterApi": {
+          "id": "AV28oCs0c67nTMOo",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-4o-mini",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        -304,
+        704
+      ],
+      "id": "34767064-8f93-4e3c-9aab-ac51bd07d7ae",
+      "name": "OpenRouter Chat Model2",
+      "credentials": {
+        "openRouterApi": {
+          "id": "AV28oCs0c67nTMOo",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-4o-mini",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        -496,
+        1408
+      ],
+      "id": "82d51b05-3afa-4195-a528-8626991bcd02",
+      "name": "OpenRouter Chat Model3",
+      "credentials": {
+        "openRouterApi": {
+          "id": "AV28oCs0c67nTMOo",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-4o-mini",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        304,
+        1008
+      ],
+      "id": "ea19b5c0-3df3-4881-9084-c37dd11bef84",
+      "name": "OpenRouter Chat Model4",
+      "credentials": {
+        "openRouterApi": {
+          "id": "AV28oCs0c67nTMOo",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-4o-mini",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        96,
+        192
+      ],
+      "id": "1cdbf451-2322-4a00-8f36-f27479da4ae8",
+      "name": "OpenRouter Chat Model5",
+      "credentials": {
+        "openRouterApi": {
+          "id": "AV28oCs0c67nTMOo",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-4o-mini",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        304,
+        400
+      ],
+      "id": "2d2fc6bf-41cb-4192-9732-436f2f1d6351",
+      "name": "OpenRouter Chat Model6",
+      "credentials": {
+        "openRouterApi": {
+          "id": "AV28oCs0c67nTMOo",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        720,
+        1136
+      ],
+      "id": "6c269636-cc75-4b3f-a11e-bcaf0162bae9",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "operation": "update",
+        "pageId": {
+          "__rl": true,
+          "mode": "url",
+          "value": "",
+          "__regex": "(?:https|http)://www\\.notion\\.so/(?:[a-z0-9-]{2,}/)?(?:[a-zA-Z0-9-]{1,}-)?([0-9a-f]{8}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{12})"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        1040,
+        1136
+      ],
+      "id": "ad96695a-7c69-4e0b-942b-3d65c0856d97",
+      "name": "Update a database page",
+      "credentials": {
+        "notionApi": {
+          "id": "URPoVdDDsdhBlkcf",
+          "name": "Notion account"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "Telegram Trigger": [
+      {
+        "json": {
+          "update_id": 179086605,
+          "message": {
+            "message_id": 157,
+            "from": {
+              "id": 5164706706,
+              "is_bot": false,
+              "first_name": "Abdallah",
+              "last_name": "Mohamed V",
+              "username": "abdulluh_helal",
+              "language_code": "en"
+            },
+            "chat": {
+              "id": 5164706706,
+              "first_name": "Abdallah",
+              "last_name": "Mohamed V",
+              "username": "abdulluh_helal",
+              "type": "private"
+            },
+            "date": 1762604957,
+            "text": "الجمعيه"
+          }
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Text Classifier",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Text Classifier": {
+      "main": [
+        [
+          {
+            "node": "Text Classifier1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Create a database page",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory1": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculator": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many database pages in Notion": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a database page": {
+      "main": [
+        [
+          {
+            "node": "Send a text message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Text Classifier1": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "AI Agent2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent2": {
+      "main": [
+        [
+          {
+            "node": "Create a database page1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser1": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent2",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a database page1": {
+      "main": [
+        [
+          {
+            "node": "Send a text message2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Text Classifier",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Text Classifier1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent2",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model4": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Structured Output Parser1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model6": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Structured Output Parser",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model5": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Update a database page",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "dcb05bf1-1464-4998-90c2-3cf5a19004db",
+  "meta": {
+    "instanceId": "b89dab3f2b0122a80c2f295775dd56db13b5aff073f33e6665bd79933e62cb6d"
+  },
+  "id": "HeKs03Aim0JJlmHF",
+  "tags": []
+}

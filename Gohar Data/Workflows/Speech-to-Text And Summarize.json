@@ -1,0 +1,434 @@
+{
+  "name": "Speech-to-Text And Summarize",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Kayanova - Voice Note Analyzer",
+        "formDescription": "Upload your voice notes to generate a professional technical report.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Audio Files",
+              "fieldType": "file"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.3,
+      "position": [
+        -112,
+        -432
+      ],
+      "id": "a038c41b-1813-415c-a31d-97b186c632a2",
+      "name": "Voice Note Upload Form",
+      "webhookId": "d99a815d-4499-46a0-96ba-70f432b401ff"
+    },
+    {
+      "parameters": {
+        "content": "### Step 1: Speech-to-Text Processing\nConvert multiple voice notes into text using Groq Whisper.",
+        "height": 240,
+        "width": 896,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -176,
+        -512
+      ],
+      "id": "1e10037a-f9aa-4ccf-8e86-6d87845cfe0f",
+      "name": "Sticky Note - Step 1",
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "$binary",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        112,
+        -432
+      ],
+      "id": "6bb34015-95df-4c13-b840-2d6c0ce5f7bd",
+      "name": "Split Audio Files"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Mapping binary keys to 'data' for Groq compatibility\nfor (const item of items) {\n  if (item.binary) {\n    const keys = Object.keys(item.binary);\n    if (keys.length > 0) {\n      item.binary.data = item.binary[keys[0]];\n    }\n  }\n}\nreturn items;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        336,
+        -432
+      ],
+      "id": "0963315a-ae3d-4dd3-be5b-a3584ed18c44",
+      "name": "Normalize Binary Data"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.combined_context }}",
+        "options": {
+          "systemMessage": "=# Role: Technical Project Manager & Business Analyst\n\n## Context\nYou are an expert Technical Project Manager for Kayanova. Your task is to process audio transcripts of team discussions. Extract tasks, requirements, and deadlines into a structured report.\n\n## Output Structure:\n1. Executive Summary\n2. Action Items (High/Low Priority)\n3. Technical Specs (API, JSON, Logic)\n4. UI/UX Changes\n5. Risks & Timeline",
+          "enableStreaming": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        1008,
+        -432
+      ],
+      "id": "6124ba06-fc50-4988-b052-8adbde731eb6",
+      "name": "PM Report Generator",
+      "retryOnFail": true
+    },
+    {
+      "parameters": {
+        "model": "moonshotai/kimi-k2-instruct",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        896,
+        -256
+      ],
+      "id": "57086c35-0615-439b-bcc9-29e94c3b7a1d",
+      "name": "Groq LLM",
+      "credentials": {
+        "groqApi": {
+          "id": "sUaxWBZcp4YFdgw2",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Combine all transcript items into a single context for the AI Agent\nconst allItems = $input.all();\n\nlet combinedText = \"Project: Kayanova - Voice Transcripts Summary\\n\";\ncombinedText += \"============================================\\n\\n\";\n\nallItems.forEach((item, index) => {\n  if (item.json.text) {\n    combinedText += `[Record ${index + 1}]:\\n${item.json.text}\\n\\n`;\n  }\n});\n\nreturn {\n  combined_context: combinedText,\n  total_records: allItems.length,\n  timestamp: new Date().toISOString()\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        784,
+        -432
+      ],
+      "id": "5feea513-a64c-47d8-ae9b-32d2b6e96af3",
+      "name": "Combine Transcripts"
+    },
+    {
+      "parameters": {
+        "content": "### Step 2: AI Report Generation\nMerge all text and use the AI Agent to create the final report.",
+        "height": 384,
+        "width": 640
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        736,
+        -512
+      ],
+      "id": "c1c0a4c6-19ec-4d8d-b9e2-f2114519bb03",
+      "name": "Sticky Note - Step 2",
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.groq.com/openai/v1/audio/transcriptions",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_GROQ_API_KEY"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "whisper-large-v3"
+            },
+            {
+              "parameterType": "formBinaryData",
+              "name": "file",
+              "inputDataFieldName": "data"
+            },
+            {
+              "name": "language",
+              "value": "ar"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        560,
+        -432
+      ],
+      "id": "29b2344b-9af1-467b-ac2f-e82977778693",
+      "name": "Groq - Whisper (STT)"
+    }
+  ],
+  "pinData": {
+    "Voice Note Upload Form": [
+      {
+        "json": {
+          "Audio Files": [
+            {
+              "filename": "WhatsApp Ptt 2026-01-08 at 3.48.56 AM.ogg",
+              "mimetype": "audio/ogg",
+              "size": 73441
+            },
+            {
+              "filename": "WhatsApp Ptt 2026-01-08 at 3.49.06 AM.ogg",
+              "mimetype": "audio/ogg",
+              "size": 16287
+            }
+          ],
+          "submittedAt": "2026-01-09T22:25:29.177-05:00",
+          "formMode": "test"
+        },
+        "binary": {
+          "Audio_Files_0": {
+            "mimeType": "audio/ogg",
+            "fileType": "audio",
+            "fileExtension": "oga",
+            "data": "filesystem-v2",
+            "fileName": "WhatsApp Ptt 2026-01-08 at 3.48.56 AM.ogg",
+            "id": "filesystem-v2:workflows/VFXDwbtLJiASKjev/executions/temp/binary_data/81ee5510-531e-4719-90e8-d0ae6ea9ea13",
+            "fileSize": "73.4 kB"
+          },
+          "Audio_Files_1": {
+            "mimeType": "audio/ogg",
+            "fileType": "audio",
+            "fileExtension": "oga",
+            "data": "filesystem-v2",
+            "fileName": "WhatsApp Ptt 2026-01-08 at 3.49.06 AM.ogg",
+            "id": "filesystem-v2:workflows/VFXDwbtLJiASKjev/executions/temp/binary_data/a6f55619-0062-48bd-b8df-943688253d18",
+            "fileSize": "16.3 kB"
+          }
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ],
+    "Split Audio Files": [
+      {
+        "json": {},
+        "binary": {
+          "Audio_Files_0": {
+            "mimeType": "audio/ogg",
+            "fileType": "audio",
+            "fileExtension": "oga",
+            "data": "filesystem-v2",
+            "fileName": "WhatsApp Ptt 2026-01-08 at 3.48.56 AM.ogg",
+            "id": "filesystem-v2:workflows/VFXDwbtLJiASKjev/executions/temp/binary_data/81ee5510-531e-4719-90e8-d0ae6ea9ea13",
+            "fileSize": "73.4 kB"
+          }
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      },
+      {
+        "json": {},
+        "binary": {
+          "Audio_Files_1": {
+            "mimeType": "audio/ogg",
+            "fileType": "audio",
+            "fileExtension": "oga",
+            "data": "filesystem-v2",
+            "fileName": "WhatsApp Ptt 2026-01-08 at 3.49.06 AM.ogg",
+            "id": "filesystem-v2:workflows/VFXDwbtLJiASKjev/executions/temp/binary_data/a6f55619-0062-48bd-b8df-943688253d18",
+            "fileSize": "16.3 kB"
+          }
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ],
+    "Normalize Binary Data": [
+      {
+        "json": {},
+        "binary": {
+          "Audio_Files_0": {
+            "mimeType": "audio/ogg",
+            "fileType": "audio",
+            "fileExtension": "oga",
+            "data": "filesystem-v2",
+            "fileName": "WhatsApp Ptt 2026-01-08 at 3.48.56 AM.ogg",
+            "id": "filesystem-v2:workflows/VFXDwbtLJiASKjev/executions/temp/binary_data/81ee5510-531e-4719-90e8-d0ae6ea9ea13",
+            "fileSize": "73.4 kB"
+          },
+          "data": {
+            "mimeType": "audio/ogg",
+            "fileType": "audio",
+            "fileExtension": "oga",
+            "data": "filesystem-v2",
+            "fileName": "WhatsApp Ptt 2026-01-08 at 3.48.56 AM.ogg",
+            "id": "filesystem-v2:workflows/VFXDwbtLJiASKjev/executions/temp/binary_data/81ee5510-531e-4719-90e8-d0ae6ea9ea13",
+            "fileSize": "73.4 kB"
+          }
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      },
+      {
+        "json": {},
+        "binary": {
+          "Audio_Files_1": {
+            "mimeType": "audio/ogg",
+            "fileType": "audio",
+            "fileExtension": "oga",
+            "data": "filesystem-v2",
+            "fileName": "WhatsApp Ptt 2026-01-08 at 3.49.06 AM.ogg",
+            "id": "filesystem-v2:workflows/VFXDwbtLJiASKjev/executions/temp/binary_data/a6f55619-0062-48bd-b8df-943688253d18",
+            "fileSize": "16.3 kB"
+          },
+          "data": {
+            "mimeType": "audio/ogg",
+            "fileType": "audio",
+            "fileExtension": "oga",
+            "data": "filesystem-v2",
+            "fileName": "WhatsApp Ptt 2026-01-08 at 3.49.06 AM.ogg",
+            "id": "filesystem-v2:workflows/VFXDwbtLJiASKjev/executions/temp/binary_data/a6f55619-0062-48bd-b8df-943688253d18",
+            "fileSize": "16.3 kB"
+          }
+        },
+        "pairedItem": {
+          "item": 1
+        }
+      }
+    ],
+    "Combine Transcripts": [
+      {
+        "json": {
+          "combined_context": "Project: Kayanova - Voice Transcripts Summary\n============================================\n\n[Record 1]:\n يقول لك يا حوضة في الوظائف انت في حاجة اسمها طيب انت شالتها. في الوظائف. فمعرفش رجحها. والصور كل الصور انت عاملها عاملها مش عارف ايه? يعني ايه? فاجزامبل دي يعني اجزامبل فاهم انه هو مش مش موجود. فكان كأنك فلا ترسل صورة كلمة كلمة كلمة لا يوجد صورة كل الصورة توجد في صورة الديفلت التي أضعها لو لم تكن هناك صورة\n\n[Record 2]:\n حاولت ترجع حتى لو صورة واحدة بس تكون راجعة في كل فيلدز عادي ما فيش مشكلة بس هي نفس الصورة تفهم؟\n\n",
+          "total_records": 2,
+          "timestamp": "2026-01-10T03:25:31.096Z"
+        }
+      }
+    ],
+    "Groq - Whisper (STT)": [
+      {
+        "json": {
+          "text": " يقول لك يا حوضة في الوظائف انت في حاجة اسمها طيب انت شالتها. في الوظائف. فمعرفش رجحها. والصور كل الصور انت عاملها عاملها مش عارف ايه? يعني ايه? فاجزامبل دي يعني اجزامبل فاهم انه هو مش مش موجود. فكان كأنك فلا ترسل صورة كلمة كلمة كلمة لا يوجد صورة كل الصورة توجد في صورة الديفلت التي أضعها لو لم تكن هناك صورة",
+          "x_groq": {
+            "id": "req_01kejz0198exrtwytjtm3n1bmh"
+          }
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      },
+      {
+        "json": {
+          "text": " حاولت ترجع حتى لو صورة واحدة بس تكون راجعة في كل فيلدز عادي ما فيش مشكلة بس هي نفس الصورة تفهم؟",
+          "x_groq": {
+            "id": "req_01kejz019yexrv8kb8a0bg2v54"
+          }
+        },
+        "pairedItem": {
+          "item": 1
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Voice Note Upload Form": {
+      "main": [
+        [
+          {
+            "node": "Split Audio Files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Audio Files": {
+      "main": [
+        [
+          {
+            "node": "Normalize Binary Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Binary Data": {
+      "main": [
+        [
+          {
+            "node": "Groq - Whisper (STT)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq LLM": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "PM Report Generator",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Combine Transcripts": {
+      "main": [
+        [
+          {
+            "node": "PM Report Generator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PM Report Generator": {
+      "main": [
+        []
+      ]
+    },
+    "Groq - Whisper (STT)": {
+      "main": [
+        [
+          {
+            "node": "Combine Transcripts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "56440dc9-d2db-4b72-83d8-371b71ad2cba",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b89dab3f2b0122a80c2f295775dd56db13b5aff073f33e6665bd79933e62cb6d"
+  },
+  "id": "VFXDwbtLJiASKjev",
+  "tags": []
+}
