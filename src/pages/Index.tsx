@@ -10,6 +10,7 @@ import ExperienceSection from '@/components/ExperienceSection';
 import EducationSection from '@/components/EducationSection';
 import PhotoGallerySection from '@/components/PhotoGallerySection';
 import ContactSection from '@/components/ContactSection';
+import Footer from '@/components/Footer';
 
 const Index = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -61,29 +62,24 @@ const Index = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground main-content" style={{ opacity: showContent ? 1 : 0 }}>
+    <>
       <Navigation />
+      <div className="min-h-screen bg-background text-foreground main-content" style={{ opacity: showContent ? 1 : 0 }}>
 
-      <main>
-        <HeroSection />
-        <AboutSection />
-        <SkillsSection />
-        <ProjectsSection />
-        <ExperienceSection />
-        <EducationSection />
-        <PhotoGallerySection />
-        <ContactSection />
-      </main>
+        <main>
+          <HeroSection />
+          <AboutSection />
+          <SkillsSection />
+          <ProjectsSection />
+          <ExperienceSection />
+          <EducationSection />
+          <PhotoGallerySection />
+          <ContactSection />
+        </main>
 
-      {/* Footer */}
-      <footer className="py-8 border-t border-primary/20 bg-background relative z-20">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 text-center">
-          <p className="text-muted-foreground font-dmsans">
-            © 2026 Gohar Hany. All Rights Reserved.
-          </p>
-        </div>
-      </footer>
-    </div>
+        <Footer />
+      </div>
+    </>
   );
 };
 

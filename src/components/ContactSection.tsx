@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { Send, Bot, User, MapPin, Mail, Phone, Github, Linkedin, Twitter } from 'lucide-react';
+import { Send, Bot, User, MapPin, Mail, Github, Linkedin, Twitter } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -34,6 +34,7 @@ const ContactSection = () => {
   const [formSubmitting, setFormSubmitting] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
 
   const scrollToBottom = () => {
     if (chatContainerRef.current) {
@@ -50,13 +51,13 @@ const ContactSection = () => {
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsVisible(true);
+          observer.disconnect();
         }
       },
-      { threshold: 0.3 }
+      { threshold: 0.1, rootMargin: "0px 0px -100px 0px" }
     );
 
-    const element = document.getElementById('contact');
-    if (element) observer.observe(element);
+    if (sectionRef.current) observer.observe(sectionRef.current);
 
     return () => observer.disconnect();
   }, []);
@@ -164,7 +165,7 @@ const ContactSection = () => {
     e.preventDefault();
     setFormSubmitting(true);
 
-    // Simulate form submission (integrate with EmailJS or similar service)
+    // Simulate form submission
     setTimeout(() => {
       setFormSubmitting(false);
       setContactForm({ name: '', email: '', subject: '', message: '' });
@@ -173,28 +174,38 @@ const ContactSection = () => {
   };
 
   return (
-    <section id="contact" className="py-24 lg:py-36 relative overflow-hidden section-alt">
-      {/* Decorative glow orbs */}
-      <div className="absolute top-0 left-1/3 w-96 h-96 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-1/4 right-0 w-80 h-80 bg-accent/5 rounded-full blur-3xl pointer-events-none" />
+    <section ref={sectionRef} id="contact" className="py-24 lg:py-36 relative bg-background overflow-hidden selection:bg-primary/30">
+      {/* Immersive background glow */}
+      <div className="absolute top-0 left-0 w-[800px] h-[800px] bg-primary/10 rounded-full blur-[150px] opacity-40 pointer-events-none mix-blend-screen" />
+      <div className="absolute bottom-1/4 -right-1/4 w-[600px] h-[600px] bg-accent/10 rounded-full blur-[120px] opacity-30 pointer-events-none mix-blend-screen" />
 
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
-        {/* Section header */}
-        <div className={`text-center mb-16 transition-all duration-1000 ${isVisible ? 'animate-fade-up' : 'opacity-0 translate-y-10'}`}>
-          <h2 className="text-4xl lg:text-5xl font-bold font-syne mb-6 text-white">
-            Let's <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">Connect</span>
-          </h2>
-          <p className="text-xl text-muted-foreground font-dmsans max-w-3xl mx-auto">
+      <div className="max-w-[85rem] mx-auto px-6 lg:px-8 relative z-10">
+
+        {/* Section Header */}
+        <div className={`flex flex-col md:flex-row justify-between items-end mb-16 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          <div className="max-w-2xl">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="h-[1px] w-8 bg-primary"></div>
+              <span className="text-primary font-syne font-semibold tracking-widest uppercase text-sm">Dialogue</span>
+            </div>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold font-syne text-white leading-tight">
+              Let's <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-blue-400 to-accent">Connect</span>
+            </h2>
+          </div>
+          <p className="text-white/50 font-dmsans text-lg max-w-sm mt-6 md:mt-0 text-left md:text-right hidden sm:block">
             Ready to build something amazing together? Chat with my AI assistant or send me a direct message.
           </p>
-          <div className="section-divider mt-6" />
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-12 items-start">
-          {/* Left side - Contact info and 3D Robot */}
-          <div className={`space-y-8 transition-all duration-1000 delay-200 ${isVisible ? 'animate-slide-left' : 'opacity-0 -translate-x-10'}`}>
+
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
+
+          {/* Left side - 3D Robot and Contact Info */}
+          <div className={`space-y-8 transition-all duration-1000 delay-200 ease-out ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-12'}`}>
+
             {/* 3D Robot Model */}
-            <div className="relative w-full h-[400px] rounded-2xl overflow-hidden shadow-[0_0_30px_rgba(0,200,255,0.15)] bg-[#040d1a] border border-white/5">
+            <div className="relative w-full h-[400px] lg:h-[450px] rounded-[2rem] overflow-hidden shadow-[0_0_40px_rgba(0,183,255,0.15)] bg-black/40 border border-white/10 group">
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10 pointer-events-none"></div>
               <iframe
                 src="https://my.spline.design/genkubgreetingrobot-mtRM3XSqB79SaWySckBPgOcq/"
                 frameBorder="0"
@@ -202,144 +213,144 @@ const ContactSection = () => {
                 height="100%"
                 scrolling="no"
                 loading="lazy"
-                className="rounded-xl"
+                className="scale-105 group-hover:scale-110 transition-transform duration-1000 ease-out"
                 style={{ border: 'none' }}
                 title="3D Greeting Robot"
                 allow="autoplay"
               />
 
-              {/* Professional overlay to hide Spline watermark - matches background exactly */}
-              <div
-                className="absolute bottom-0 right-0 w-52 h-14 pointer-events-none"
-                style={{
-                  background: 'linear-gradient(135deg, transparent 0%, #040d1a 30%, #040d1a 100%)',
-                  borderRadius: '0 0 1rem 0'
-                }}
-              />
-
               {/* Floating indicators */}
-              <div className="absolute top-4 right-4 w-3 h-3 bg-accent rounded-full animate-pulse shadow-[0_0_10px_rgba(0,255,150,0.8)]" />
-              <div className="absolute bottom-6 left-6 w-2 h-2 bg-primary rounded-full animate-pulse shadow-[0_0_10px_rgba(0,200,255,0.8)]" style={{ animationDelay: '1s' }} />
+              <div className="absolute top-6 right-6 w-3 h-3 bg-accent rounded-full animate-pulse shadow-[0_0_15px_rgba(0,255,150,0.8)] z-20" />
+              <div className="absolute bottom-10 left-8 w-2 h-2 bg-primary rounded-full animate-pulse shadow-[0_0_15px_rgba(0,183,255,0.8)] z-20" style={{ animationDelay: '1s' }} />
+
+              {/* Watermark cover */}
+              <div className="absolute bottom-0 right-0 w-48 h-12 bg-black/90 blur-md z-20 pointer-events-none" />
             </div>
 
-            {/* Contact Information */}
-            <div className="stat-card p-8 space-y-6">
-              <h3 className="text-2xl font-semibold font-syne text-white mb-6">Get in Touch</h3>
+            {/* Contact Information Bento Box */}
+            <div className="p-8 md:p-10 rounded-[2rem] bg-white/[0.02] border border-white/[0.05] backdrop-blur-xl relative overflow-hidden group">
+              <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-gradient-to-br from-primary/10 to-transparent rounded-full blur-[100px] opacity-40 pointer-events-none transform -translate-x-1/2 -translate-y-1/2" />
 
-              <div className="space-y-4 font-dmsans">
-                <div className="flex items-center space-x-4 group cursor-pointer">
-                  <div className="w-12 h-12 rounded-full bg-[#040d1a] border border-white/5 flex items-center justify-center group-hover:scale-110 group-hover:border-primary/50 group-hover:shadow-[0_0_15px_rgba(0,200,255,0.3)] transition-all">
-                    <Mail size={20} className="text-primary" />
-                  </div>
-                  <div>
-                    <p className="font-medium text-white/80">Email</p>
-                    <a href="mailto:goharhany9@gmail.com" className="text-white/60 hover:text-primary transition-colors">
-                      goharhany9@gmail.com
+              <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-8 h-full">
+                <div className="space-y-6 flex-1">
+                  <h3 className="text-2xl font-bold font-syne text-white">Direct Access</h3>
+
+                  <div className="space-y-5 font-dmsans">
+                    <a href="mailto:goharhany9@gmail.com" className="flex items-center space-x-4 group/item cursor-pointer w-fit">
+                      <div className="w-12 h-12 rounded-2xl bg-white/[0.03] border border-white/10 flex items-center justify-center group-hover/item:bg-primary/20 group-hover/item:border-primary/50 group-hover/item:shadow-[0_0_15px_rgba(0,183,255,0.3)] transition-all duration-300">
+                        <Mail size={18} className="text-white/60 group-hover/item:text-primary transition-colors" />
+                      </div>
+                      <div>
+                        <p className="text-[11px] font-bold uppercase tracking-widest text-white/30 mb-0.5">Email</p>
+                        <p className="text-[15px] font-medium text-white/80 group-hover/item:text-primary transition-colors">
+                          goharhany9@gmail.com
+                        </p>
+                      </div>
                     </a>
+
+                    <div className="flex items-center space-x-4">
+                      <div className="w-12 h-12 rounded-2xl bg-white/[0.03] border border-white/10 flex items-center justify-center">
+                        <MapPin size={18} className="text-accent" />
+                      </div>
+                      <div>
+                        <p className="text-[11px] font-bold uppercase tracking-widest text-white/30 mb-0.5">Location</p>
+                        <p className="text-[15px] font-medium text-white/80">Alexandria, Egypt</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
-                <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 rounded-full bg-[#040d1a] border border-white/5 flex items-center justify-center">
-                    <MapPin size={20} className="text-accent" />
-                  </div>
-                  <div>
-                    <p className="font-medium text-white/80">Location</p>
-                    <p className="text-white/60">Alexandria, Egypt</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Social Links */}
-              <div className="pt-6 border-t border-primary/10">
-                <h4 className="font-semibold font-syne text-white mb-4">Connect on Social</h4>
-                <div className="flex space-x-4">
+                <div className="flex sm:flex-col gap-4 pl-0 sm:pl-8 sm:border-l border-t sm:border-t-0 border-white/10 pt-6 sm:pt-0 shrink-0">
+                  <h4 className="sr-only">Social Profiles</h4>
                   <a
                     href="https://github.com/Gohar-Hany"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-10 h-10 rounded-full bg-[#040d1a] border border-white/5 hover:border-primary/50 flex items-center justify-center transition-all duration-300 hover:scale-110 hover:shadow-[0_0_15px_rgba(0,200,255,0.4)] group"
+                    className="w-12 h-12 rounded-full bg-white/[0.03] border border-white/10 hover:border-primary/50 hover:bg-primary/10 flex items-center justify-center transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(0,183,255,0.4)] group/social"
                   >
-                    <Github size={18} className="text-white/60 group-hover:text-primary" />
+                    <Github size={18} className="text-white/60 group-hover/social:text-white transition-colors" />
                   </a>
                   <a
                     href="https://linkedin.com/in/goharhany"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-10 h-10 rounded-full bg-[#040d1a] border border-white/5 hover:border-primary/50 flex items-center justify-center transition-all duration-300 hover:scale-110 hover:shadow-[0_0_15px_rgba(0,200,255,0.4)] group"
+                    className="w-12 h-12 rounded-full bg-white/[0.03] border border-white/10 hover:border-blue-500/50 hover:bg-blue-500/10 flex items-center justify-center transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(59,130,246,0.4)] group/social"
                   >
-                    <Linkedin size={18} className="text-white/60 group-hover:text-primary" />
+                    <Linkedin size={18} className="text-white/60 group-hover/social:text-blue-400 transition-colors" />
                   </a>
                   <a
                     href="https://twitter.com/goharhany"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-10 h-10 rounded-full bg-[#040d1a] border border-white/5 hover:border-primary/50 flex items-center justify-center transition-all duration-300 hover:scale-110 hover:shadow-[0_0_15px_rgba(0,200,255,0.4)] group"
+                    className="w-12 h-12 rounded-full bg-white/[0.03] border border-white/10 hover:border-white/50 hover:bg-white/10 flex items-center justify-center transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(255,255,255,0.2)] group/social"
                   >
-                    <Twitter size={18} className="text-white/60 group-hover:text-primary" />
+                    <Twitter size={18} className="text-white/60 group-hover/social:text-white transition-colors" />
                   </a>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Right side - Chat interface and Contact form */}
-          <div className={`space-y-8 transition-all duration-1000 delay-400 ${isVisible ? 'animate-fade-up' : 'opacity-0 translate-y-10'}`}>
-            {/* AI Chat Interface */}
-            <div className="stat-card p-6 h-[500px] flex flex-col">
-              <div className="flex items-center space-x-3 mb-4 pb-4 border-b border-primary/10">
-                <div className="w-10 h-10 rounded-full bg-[#040d1a] border border-white/5 flex items-center justify-center">
-                  <Bot size={20} className="text-accent" />
+          {/* Right side - AI Chat & Contact Form */}
+          <div className={`space-y-8 flex flex-col h-full transition-all duration-1000 delay-400 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
+
+            {/* Chat Interface Bento */}
+            <div className="p-6 md:p-8 rounded-[2.5rem] bg-white/[0.02] border border-white/[0.05] backdrop-blur-xl h-[450px] lg:h-[480px] flex flex-col relative overflow-hidden group/chat">
+              <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-gradient-to-bl from-accent/5 to-transparent rounded-full blur-[80px] opacity-0 group-hover/chat:opacity-100 transition-opacity duration-1000 pointer-events-none" />
+
+              <div className="relative z-10 flex items-center space-x-4 mb-6 pb-6 border-b border-white/[0.05]">
+                <div className="relative">
+                  <div className="w-12 h-12 rounded-2xl bg-white/[0.05] border border-white/10 flex items-center justify-center shadow-lg">
+                    <Bot size={22} className="text-accent" />
+                  </div>
+                  <div className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-black flex items-center justify-center">
+                    <div className="w-2.5 h-2.5 bg-accent rounded-full animate-pulse shadow-[0_0_10px_rgba(0,255,150,0.8)]" />
+                  </div>
                 </div>
                 <div>
-                  <h3 className="font-semibold font-syne text-white">AI Assistant</h3>
-                  <p className="text-sm font-dmsans text-white/60">Ask me anything about Gohar</p>
-                </div>
-                <div className="ml-auto flex items-center space-x-2">
-                  <div className="w-2 h-2 bg-accent rounded-full animate-pulse shadow-glow-green" />
-                  <span className="text-xs font-dmsans text-white/60">Online</span>
+                  <h3 className="font-bold font-syne text-white text-lg">AI Assistant</h3>
+                  <p className="text-[13px] font-dmsans text-white/50">Ask me anything about Gohar</p>
                 </div>
               </div>
 
-              {/* Messages */}
+              {/* Messages Container */}
               <div
                 ref={chatContainerRef}
-                className="flex-1 overflow-y-auto space-y-4 mb-4 pr-2 custom-scroll"
+                className="flex-1 overflow-y-auto space-y-6 mb-6 pr-4 custom-scroll relative z-10 scroll-smooth"
               >
                 {messages.map((message) => (
                   <div
                     key={message.id}
-                    className={`flex items-start space-x-3 ${message.isUser ? 'flex-row-reverse space-x-reverse' : ''}`}
+                    className={`flex items-end gap-3 ${message.isUser ? 'flex-row-reverse' : ''}`}
                   >
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${message.isUser
-                      ? 'bg-[#040d1a] border border-primary/30'
-                      : 'bg-[#040d1a] border border-accent/30'
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mb-1 ${message.isUser
+                        ? 'bg-primary/20 border border-primary/30'
+                        : 'bg-white/[0.05] border border-white/10'
                       }`}>
                       {message.isUser ? (
-                        <User size={16} className="text-primary" />
+                        <User size={14} className="text-primary" />
                       ) : (
-                        <Bot size={16} className="text-accent" />
+                        <Bot size={14} className="text-accent" />
                       )}
                     </div>
 
-                    <div className={`max-w-[80%] p-3 rounded-2xl font-dmsans ${message.isUser
-                      ? 'bg-primary/20 border border-primary/30 text-white ml-auto'
-                      : 'bg-[#0b1e35] border border-white/5 text-white/80'
+                    <div className={`max-w-[75%] p-4 rounded-2xl font-dmsans relative ${message.isUser
+                        ? 'bg-gradient-to-br from-primary/20 to-primary/5 border border-primary/30 text-white rounded-br-sm shadow-[0_5px_15px_rgba(0,183,255,0.05)]'
+                        : 'bg-white/[0.03] border border-white/[0.08] text-white/80 rounded-bl-sm shadow-md'
                       }`}>
-                      <div className="text-sm leading-relaxed prose prose-invert max-w-none prose-p:leading-relaxed prose-pre:my-0 pb-1">
+                      <div className="text-[14px] leading-relaxed prose prose-invert max-w-none prose-p:leading-relaxed prose-pre:my-0">
                         <ReactMarkdown
                           remarkPlugins={[remarkGfm]}
                           components={{
                             p: ({ node, ...props }: any) => <p className="mb-2 last:mb-0 whitespace-pre-wrap" {...props} />,
-                            a: ({ node, ...props }: any) => <a className="text-primary hover:underline" target="_blank" rel="noopener noreferrer" {...props} />,
+                            a: ({ node, ...props }: any) => <a className="text-accent hover:underline decoration-accent/50 underline-offset-4" target="_blank" rel="noopener noreferrer" {...props} />,
                             strong: ({ node, ...props }: any) => <strong className="text-white font-bold" {...props} />
                           }}
                         >
                           {message.content}
                         </ReactMarkdown>
                       </div>
-                      <p className={`text-xs mt-1 opacity-70 ${message.isUser ? 'text-primary' : 'text-muted-foreground'
-                        }`}>
+                      <p className={`text-[10px] font-bold mt-2 uppercase tracking-widest ${message.isUser ? 'text-primary/70' : 'text-white/30'}`}>
                         {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       </p>
                     </div>
@@ -347,29 +358,29 @@ const ContactSection = () => {
                 ))}
 
                 {isTyping && (
-                  <div className="flex items-start space-x-3">
-                    <div className="w-8 h-8 rounded-full bg-[#040d1a] border border-accent/30 flex items-center justify-center">
-                      <Bot size={16} className="text-accent" />
+                  <div className="flex items-end gap-3">
+                    <div className="w-8 h-8 rounded-full bg-white/[0.05] border border-white/10 flex items-center justify-center flex-shrink-0 mb-1">
+                      <Bot size={14} className="text-accent" />
                     </div>
-                    <div className="bg-[#0b1e35] border border-white/5 p-3 rounded-2xl">
-                      <div className="flex space-x-1">
-                        <div className="w-2 h-2 bg-white/50 rounded-full animate-bounce" />
-                        <div className="w-2 h-2 bg-white/50 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }} />
-                        <div className="w-2 h-2 bg-white/50 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }} />
+                    <div className="bg-white/[0.03] border border-white/[0.08] p-4 rounded-2xl rounded-bl-sm flex items-center h-12">
+                      <div className="flex space-x-1.5">
+                        <div className="w-2 h-2 bg-white/40 rounded-full animate-bounce" />
+                        <div className="w-2 h-2 bg-white/40 rounded-full animate-bounce" style={{ animationDelay: '0.15s' }} />
+                        <div className="w-2 h-2 bg-white/40 rounded-full animate-bounce" style={{ animationDelay: '0.3s' }} />
                       </div>
                     </div>
                   </div>
                 )}
-                <div ref={messagesEndRef} />
+                <div ref={messagesEndRef} className="h-4" />
               </div>
 
               {/* Message input */}
-              <div className="flex items-center space-x-3 pt-4 border-t border-primary/10">
+              <div className="relative z-10 flex items-center space-x-3 mt-auto">
                 <Input
                   value={inputMessage}
                   onChange={(e) => setInputMessage(e.target.value)}
-                  placeholder="Ask me about Gohar's experience..."
-                  className="flex-1 bg-[#040d1a] border-white/10 focus:border-primary text-white font-dmsans placeholder:text-white/40"
+                  placeholder="Ask me something..."
+                  className="flex-1 h-12 bg-black/40 border border-white/10 rounded-xl px-4 focus:ring-1 focus:ring-primary/50 focus:border-primary/50 hover:bg-black/60 transition-all text-white font-dmsans placeholder:text-white/30"
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' && !e.shiftKey) {
                       e.preventDefault();
@@ -381,25 +392,30 @@ const ContactSection = () => {
                 <Button
                   onClick={sendMessage}
                   disabled={!inputMessage.trim() || isTyping}
-                  className="bg-primary hover:bg-primary/80 text-white font-syne border-none shadow-glow-blue"
+                  className="h-12 w-12 rounded-xl bg-primary hover:bg-primary/80 text-white flex items-center justify-center border-none shadow-[0_0_20px_rgba(0,183,255,0.4)] hover:shadow-[0_0_30px_rgba(0,183,255,0.6)] hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:hover:scale-100 disabled:shadow-none"
                 >
-                  <Send size={16} />
+                  <Send size={18} className={isTyping || !inputMessage.trim() ? "translate-x-0" : "translate-x-0.5 -translate-y-0.5"} />
                 </Button>
               </div>
             </div>
 
-            {/* Contact Form */}
-            <div className="stat-card p-6">
-              <h3 className="text-xl font-semibold font-syne text-white mb-6">Send Direct Message</h3>
+            {/* Direct Message Form Bento */}
+            <div className="p-8 md:p-10 rounded-[2.5rem] bg-white/[0.02] border border-white/[0.05] backdrop-blur-xl relative overflow-hidden group/form">
+              <div className="absolute top-0 right-0 w-[300px] h-[300px] bg-gradient-to-bl from-primary/5 to-transparent rounded-full blur-[80px] opacity-0 group-hover/form:opacity-100 transition-opacity duration-1000 pointer-events-none" />
 
-              <form onSubmit={handleContactFormSubmit} className="space-y-4 font-dmsans">
+              <h3 className="text-xl font-bold font-syne text-white mb-6 relative z-10 flex items-center gap-3">
+                <Mail size={20} className="text-primary" />
+                Drop a Line
+              </h3>
+
+              <form onSubmit={handleContactFormSubmit} className="space-y-4 font-dmsans relative z-10">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <Input
                     placeholder="Your Name"
                     value={contactForm.name}
                     onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
                     required
-                    className="bg-[#040d1a] border-white/10 focus:border-accent text-white placeholder:text-white/40"
+                    className="h-12 bg-black/40 border border-white/10 rounded-xl px-4 focus:ring-1 focus:ring-primary/50 focus:border-primary/50 hover:bg-black/60 transition-all text-white placeholder:text-white/30"
                   />
                   <Input
                     type="email"
@@ -407,7 +423,7 @@ const ContactSection = () => {
                     value={contactForm.email}
                     onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
                     required
-                    className="bg-[#040d1a] border-white/10 focus:border-accent text-white placeholder:text-white/40"
+                    className="h-12 bg-black/40 border border-white/10 rounded-xl px-4 focus:ring-1 focus:ring-primary/50 focus:border-primary/50 hover:bg-black/60 transition-all text-white placeholder:text-white/30"
                   />
                 </div>
 
@@ -416,24 +432,25 @@ const ContactSection = () => {
                   value={contactForm.subject}
                   onChange={(e) => setContactForm({ ...contactForm, subject: e.target.value })}
                   required
-                  className="bg-[#040d1a] border-white/10 focus:border-accent text-white placeholder:text-white/40"
+                  className="h-12 bg-black/40 border border-white/10 rounded-xl px-4 focus:ring-1 focus:ring-primary/50 focus:border-primary/50 hover:bg-black/60 transition-all text-white placeholder:text-white/30"
                 />
 
                 <Textarea
-                  placeholder="Your message..."
+                  placeholder="Tell me about your project..."
                   value={contactForm.message}
                   onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
                   required
                   rows={4}
-                  className="bg-[#040d1a] border-white/10 focus:border-accent text-white placeholder:text-white/40 resize-none"
+                  className="bg-black/40 border border-white/10 rounded-2xl p-4 focus:ring-1 focus:ring-primary/50 focus:border-primary/50 hover:bg-black/60 transition-all text-white placeholder:text-white/30 resize-none custom-scroll"
                 />
 
                 <Button
                   type="submit"
                   disabled={formSubmitting}
-                  className="w-full bg-accent hover:bg-accent/80 text-[#040d1a] font-bold font-syne shadow-glow-green border-none transition-all duration-300 hover:scale-105"
+                  className="w-full h-12 bg-gradient-to-r from-accent to-emerald-400 hover:from-emerald-400 hover:to-accent text-black font-bold font-syne uppercase tracking-wider text-sm rounded-xl shadow-[0_0_20px_rgba(0,255,170,0.3)] hover:shadow-[0_0_30px_rgba(0,255,170,0.5)] border-none transition-all duration-500 hover:scale-[1.02]"
                 >
-                  {formSubmitting ? 'Sending...' : 'Send Message'}
+                  {formSubmitting ? 'Sending Transmission...' : 'Launch Message'}
+                  {!formSubmitting && <Send size={16} className="ml-2" />}
                 </Button>
               </form>
             </div>
