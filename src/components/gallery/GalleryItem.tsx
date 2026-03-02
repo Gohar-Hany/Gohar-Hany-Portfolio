@@ -35,8 +35,11 @@ export const GalleryItem = ({ item, index }: GalleryItemProps) => {
             <img
               src={item.image}
               alt={item.title}
-              className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+              width="800"
+              height="600"
+              decoding="async"
               loading="lazy"
+              className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
             />
 
             {/* Overlay gradient */}
@@ -87,8 +90,11 @@ export const GalleryItem = ({ item, index }: GalleryItemProps) => {
           <img
             src={item.image}
             alt={item.title}
-            className="w-full h-[50vh] md:h-[70vh] object-cover"
+            width="1200"
+            height="800"
+            decoding="async"
             loading="lazy"
+            className="w-full h-[50vh] md:h-[70vh] object-cover"
           />
 
           <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[#040d1a] via-[#040d1a]/90 to-transparent p-6 md:p-10 z-20">

@@ -161,8 +161,12 @@ const HeroSection = () => {
               <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent z-10 pointer-events-none" />
 
               <img
-                src="/Hero.jpg"
-                alt="Gohar Hany"
+                src="/Hero.webp"
+                alt="Gohar Hany - Creative AI Developer and UI/UX Builder"
+                width="1920"
+                height="1080"
+                decoding="async"
+                fetchPriority="high"
                 className="absolute inset-0 w-full h-full object-cover object-[center_15%] group-hover:scale-105 transition-transform duration-[2s] ease-out brightness-[0.85] contrast-[1.15] saturate-0 sepia-[0.3] hue-rotate-[190deg]"
               />
 

@@ -19,4 +19,10 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    minify: "esbuild",
+    cssCodeSplit: true,
+    target: "es2020",
+    sourcemap: false,
+  },
 }));
