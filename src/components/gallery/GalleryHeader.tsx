@@ -7,7 +7,7 @@ export const GalleryHeader = () => {
           <span className="text-primary font-syne font-semibold tracking-widest uppercase text-sm">Community & Impact</span>
         </div>
         <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold font-syne text-white leading-tight">
-          Event <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-blue-400 to-accent">Highlights</span>
+          Event <span className="text-primary">Highlights</span>
         </h2>
       </div>
       <p className="text-white/50 font-dmsans text-lg max-w-sm mt-6 md:mt-0 text-left md:text-right hidden sm:block">

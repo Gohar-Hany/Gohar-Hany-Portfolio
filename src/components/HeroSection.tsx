@@ -88,13 +88,46 @@ const HeroSection = () => {
       <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary/20 rounded-full blur-[120px] mix-blend-screen pointer-events-none" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-accent/10 rounded-full blur-[150px] mix-blend-screen pointer-events-none" />
 
+      {/* Background Image — full bleed on mobile, right-contained on desktop */}
+      <div className={`absolute top-0 right-0 bottom-0 left-0 lg:left-[40%] z-[2] pointer-events-none transition-opacity duration-1000 delay-300 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
+        <img
+          src="/Hero.webp"
+          alt="Gohar Hany - Creative AI Developer and UI/UX Builder"
+          width="1920"
+          height="1080"
+          decoding="async"
+          fetchPriority="high"
+          className="absolute inset-0 w-full h-full object-cover object-center lg:object-[90%_15%] brightness-[0.85] contrast-[1.15] saturate-0 sepia-[0.3] hue-rotate-[190deg]"
+        />
+        {/* Blue steel tint */}
+        <div className="absolute inset-0 bg-blue-950/40 mix-blend-screen pointer-events-none" />
+        {/* Mobile/Tablet: gradient scrim — dark at top for text, lighter below to reveal image */}
+        <div className="absolute inset-0 lg:hidden" style={{ background: 'linear-gradient(to bottom, rgba(9,13,17,0.75) 0%, rgba(9,13,17,0.55) 50%, rgba(9,13,17,0.3) 100%)' }} />
+        {/* Desktop: left-edge fade to blend into dark bg */}
+        <div className="absolute inset-0 hidden lg:block" style={{ background: 'linear-gradient(to right, #090d11 0%, rgba(9,13,17,0.6) 20%, rgba(9,13,17,0.0) 55%)' }} />
+        {/* Bottom fade — all sizes */}
+        <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
+        {/* Label — desktop only */}
+        <div className="absolute bottom-6 right-8 z-10 hidden lg:flex items-end gap-3">
+          <div>
+            <h3 className="text-white font-syne font-bold text-lg drop-shadow-md text-right">Creative AI Dev</h3>
+            <p className="text-white/60 font-dmsans text-sm flex items-center justify-end gap-1.5 drop-shadow-md mt-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" /> Alexandria, EG
+            </p>
+          </div>
+          <div className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center shrink-0">
+            <span className="w-2.5 h-2.5 rounded-full bg-primary shadow-[0_0_10px_rgba(0,183,255,0.8)]" />
+          </div>
+        </div>
+      </div>
+
       {/* Main Container */}
       <div className="max-w-[85rem] w-full mx-auto px-6 lg:px-8 relative z-10 h-full flex flex-col justify-center">
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 h-full min-h-[600px] items-stretch">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 h-full min-h-[600px] items-center">
 
-          {/* Left Column: Hero Typography & Intro Container (Spans 7 cols) */}
-          <div className={`col-span-1 lg:col-span-7 flex flex-col justify-center transition-all duration-1000 ease-out delay-100 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
+          {/* Left Column: Hero Typography & Intro (Spans 8 cols) */}
+          <div className={`col-span-1 lg:col-span-8 flex flex-col justify-center transition-all duration-1000 ease-out delay-100 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
 
             {/* Status Badge */}
             <div className="flex items-center gap-3 w-fit mb-8 px-4 py-2 rounded-full bg-white/[0.03] border border-white/10 backdrop-blur-md">
@@ -130,7 +163,7 @@ const HeroSection = () => {
             </p>
 
             {/* Action Buttons */}
-            <div className="flex flex-wrap items-center gap-4 sm:gap-6">
+            <div className="flex flex-wrap items-center gap-4 sm:gap-6 mb-10">
               <button
                 onClick={() => scrollToSection('projects')}
                 className="group relative h-14 w-48 rounded-xl bg-primary text-white font-syne font-bold uppercase tracking-wider text-sm flex items-center justify-center overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[0_0_30px_rgba(0,183,255,0.4)]"
@@ -151,44 +184,10 @@ const HeroSection = () => {
               </button>
             </div>
 
-          </div>
-
-          {/* Right Column: Imagery & Bento Stats (Spans 5 cols) */}
-          <div className="col-span-1 lg:col-span-5 flex flex-col gap-4 sm:gap-6 lg:h-full">
-
-            {/* Main Picture Bento Box */}
-            <div className={`relative flex-1 rounded-[2.5rem] bg-white/[0.02] border border-white/[0.05] overflow-hidden group transition-all duration-1000 ease-out min-h-[350px] lg:min-h-0 delay-300 ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
-              <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent z-10 pointer-events-none" />
-
-              <img
-                src="/Hero.webp"
-                alt="Gohar Hany - Creative AI Developer and UI/UX Builder"
-                width="1920"
-                height="1080"
-                decoding="async"
-                fetchPriority="high"
-                className="absolute inset-0 w-full h-full object-cover object-[center_15%] group-hover:scale-105 transition-transform duration-[2s] ease-out brightness-[0.85] contrast-[1.15] saturate-0 sepia-[0.3] hue-rotate-[190deg]"
-              />
-
-              {/* Bottom Label inside Picture */}
-              <div className="absolute bottom-6 left-6 right-6 z-20 flex justify-between items-end">
-                <div>
-                  <h3 className="text-white font-syne font-bold text-xl drop-shadow-md">Creative AI Dev</h3>
-                  <p className="text-white/60 font-dmsans text-sm flex items-center gap-1.5 drop-shadow-md mt-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" /> Alexandria, EG
-                  </p>
-                </div>
-                <div className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center shrink-0">
-                  <span className="w-2.5 h-2.5 rounded-full bg-primary shadow-[0_0_10px_rgba(0,183,255,0.8)]" />
-                </div>
-              </div>
-            </div>
-
-            {/* Mini Stats Bento Row */}
-            <div className="grid grid-cols-2 gap-4 sm:gap-6 shrink-0 h-[120px] sm:h-[140px]">
-
+            {/* Inline Stat Cards */}
+            <div className={`grid grid-cols-2 gap-4 max-w-sm transition-all duration-1000 ease-out delay-500 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
               {/* Stat 1 */}
-              <div className={`rounded-3xl bg-white/[0.02] border border-white/[0.05] backdrop-blur-xl p-5 sm:p-6 flex flex-col justify-center relative overflow-hidden group transition-all duration-1000 ease-out delay-500 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+              <div className="rounded-3xl bg-white/[0.04] border border-white/[0.08] backdrop-blur-xl p-5 flex flex-col justify-center relative overflow-hidden group">
                 <div className="absolute -right-4 -top-4 w-24 h-24 bg-primary/10 rounded-full blur-[20px] group-hover:bg-primary/20 transition-colors duration-500 pointer-events-none" />
                 <Code2 size={20} className="text-primary mb-3" />
                 <h4 className="text-2xl sm:text-3xl font-bold font-syne text-white flex items-end gap-1">

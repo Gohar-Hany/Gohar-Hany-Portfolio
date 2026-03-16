@@ -13,7 +13,6 @@ const PhotoGallerySection = () => {
   return (
     <section id="gallery" className="py-24 lg:py-36 relative bg-background overflow-hidden selection:bg-primary/30">
       {/* Immersive Background Effects */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#040d1a] via-[#040d1a] to-[#040d1a]" />
       <div className="absolute top-1/4 -right-1/4 w-[800px] h-[800px] bg-primary/5 rounded-full blur-[150px] opacity-60 pointer-events-none mix-blend-screen" />
       <div className="absolute bottom-1/4 -left-1/4 w-[600px] h-[600px] bg-accent/5 rounded-full blur-[120px] opacity-40 pointer-events-none mix-blend-screen" />
 
@@ -26,7 +25,7 @@ const PhotoGallerySection = () => {
         <DomeGallery
           images={galleryItems.map(item => ({ src: item.image, alt: item.title, ...item }))}
           onImageClick={(item: any) => setSelectedItem(item as GalleryItemType)}
-          overlayBlurColor="#040d1a"
+          overlayBlurColor="#090d11"
         />
       </div>
 
@@ -52,12 +51,12 @@ const PhotoGallerySection = () => {
                   />
 
                   {/* Seamless merge masks */}
-                  <div className="absolute inset-y-0 right-0 w-32 md:w-64 bg-gradient-to-r from-transparent via-[#020813]/60 to-[#020813] z-20 hidden md:block pointer-events-none" />
-                  <div className="absolute inset-x-0 bottom-0 h-32 md:hidden bg-gradient-to-b from-transparent via-[#020813]/60 to-[#020813] z-20 pointer-events-none" />
+                  <div className="absolute inset-y-0 right-0 w-32 md:w-64 bg-gradient-to-r from-transparent via-[#090d11]/60 to-[#090d11] z-20 hidden md:block pointer-events-none" />
+                  <div className="absolute inset-x-0 bottom-0 h-32 md:hidden bg-gradient-to-b from-transparent via-[#090d11]/60 to-[#090d11] z-20 pointer-events-none" />
                 </div>
 
                 {/* Content Section - Right (or Bottom on mobile) */}
-                <div className="relative w-full md:w-[35%] flex flex-col justify-end md:justify-center p-8 md:p-12 z-20 bg-gradient-to-t md:bg-gradient-to-r from-[#020813] to-[#020813]/95">
+                <div className="relative w-full md:w-[35%] flex flex-col justify-end md:justify-center p-8 md:p-12 z-20 bg-gradient-to-t md:bg-gradient-to-r from-[#090d11] to-[#090d11]/95">
                   <div className="animate-in slide-in-from-right-8 fade-in-0 duration-700 delay-200 fill-mode-both">
                     {/* Tags */}
                     <div className="flex flex-wrap items-center gap-3 mb-6">
@@ -67,7 +66,7 @@ const PhotoGallerySection = () => {
                       {selectedItem.featured && (
                         <div className="relative group">
                           <div className="absolute -inset-0.5 bg-gradient-to-r from-primary to-accent rounded-full blur opacity-50 group-hover:opacity-100 transition duration-500" />
-                          <Badge className="relative bg-[#020813] text-primary border border-primary/30 font-bold px-4 py-1.5 rounded-full uppercase tracking-widest text-[10px] sm:text-xs">
+                          <Badge className="relative bg-[#090d11] text-primary border border-primary/30 font-bold px-4 py-1.5 rounded-full uppercase tracking-widest text-[10px] sm:text-xs">
                             Featured
                           </Badge>
                         </div>
