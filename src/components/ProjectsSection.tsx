@@ -280,7 +280,7 @@ const ProjectsSection = () => {
                         return (
                             <div
                                 key={project.id}
-                                className={`group cursor-pointer relative rounded-[2rem] p-8 bg-white/[0.02] border border-white/[0.05] backdrop-blur-xl overflow-hidden transition-all duration-700 ease-out
+                                className={`group cursor-pointer relative rounded-[2.5rem] p-10 pb-16 bg-white/[0.02] border border-white/[0.05] backdrop-blur-xl overflow-hidden transition-all duration-700 ease-out
                                 hover:-translate-y-2 hover:bg-white/[0.03] ${project.borderGlow} hover:shadow-2xl hover:shadow-black/50
                                 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}
                                 `}
@@ -302,49 +302,53 @@ const ProjectsSection = () => {
                                 </div>
 
                                 {/* Content */}
-                                <div className="flex flex-col h-full justify-between">
-                                    <div className="mb-8">
-                                        <div className="flex items-start gap-4 mb-4">
-                                            <div className={`p-3.5 rounded-2xl bg-white/[0.03] border border-white/[0.05] group-hover:scale-110 transition-transform duration-500`}>
-                                                <IconComponent className={`w-7 h-7 ${project.iconColor}`} />
+                                <div className="flex flex-col flex-1 justify-between relative z-10">
+                                    <div className="mb-12">
+                                        <div className="flex items-start gap-5 mb-5">
+                                            <div className={`p-4 rounded-2xl bg-white/[0.03] border border-white/[0.05] group-hover:scale-110 transition-transform duration-500 flex-shrink-0 shadow-lg`}>
+                                                <IconComponent className={`w-8 h-8 ${project.iconColor}`} />
                                             </div>
-                                            <h3 className="text-2xl font-bold font-syne text-white leading-tight mt-1 group-hover:text-primary transition-colors">
+                                            <h3 className="text-2xl md:text-3xl font-bold font-syne text-white leading-tight mt-1 group-hover:text-primary transition-colors">
                                                 {project.title}
                                             </h3>
                                         </div>
-                                        <p className="text-[15px] text-white/50 font-dmsans leading-relaxed">
+                                        <p className="text-[16px] text-white/50 font-dmsans leading-relaxed max-w-lg">
                                             {project.subtitle}
                                         </p>
                                     </div>
 
-                                    <div>
+                                    <div className="flex flex-col mt-auto">
                                         {/* Tech Tags */}
-                                        <div className="flex flex-wrap gap-2 mb-8">
+                                        <div className="flex flex-wrap gap-2.5 mb-10">
                                             {project.technologies.slice(0, 3).map((tech) => (
-                                                <span key={tech} className="px-3 py-1 rounded-lg text-[13px] font-medium text-white/70 bg-white/[0.04] border border-white/[0.05]">
+                                                <span key={tech} className="px-4 py-1.5 rounded-xl text-[12px] font-semibold text-white/70 bg-white/[0.04] border border-white/[0.06] backdrop-blur-md">
                                                     {tech}
                                                 </span>
                                             ))}
                                             {project.technologies.length > 3 && (
-                                                <span className="px-3 py-1 rounded-lg text-[13px] font-medium text-white/40 bg-white/[0.02] border border-white/[0.02]">
+                                                <span className="px-3 py-1.5 rounded-xl text-[12px] font-semibold text-white/40 bg-white/[0.02] border border-white/[0.03]">
                                                     +{project.technologies.length - 3}
                                                 </span>
                                             )}
                                         </div>
 
-                                        {/* View Details Action */}
-                                        <div className="flex items-center gap-4 border-t border-white/[0.05] pt-6">
-                                            <div className="flex items-center gap-4 flex-1">
-                                                {project.metrics.slice(0, 2).map((m, i) => (
+                                        {/* View Details Action / Metrics Footer */}
+                                        <div className="flex items-center justify-between gap-4 border-t border-white/10 pt-10 mt-2">
+                                            <div className="flex items-center gap-8 sm:gap-12">
+                                                {project.metrics.map((m, i) => (
                                                     <div key={i} className="flex flex-col group/metric">
-                                                        <span className={`text-[17px] font-bold font-syne ${project.iconColor} group-hover/metric:text-white transition-colors`}>{m.value}</span>
-                                                        <span className="text-[10px] text-white/40 font-dmsans font-medium uppercase tracking-wider">{m.label}</span>
+                                                        <span className={`text-[18px] xl:text-[22px] font-bold font-syne ${project.iconColor} group-hover/metric:text-white transition-colors leading-none mb-2.5`}>
+                                                            {m.value}
+                                                        </span>
+                                                        <span className="text-[10px] text-white/30 font-dmsans font-bold uppercase tracking-[0.2em] whitespace-nowrap">
+                                                            {m.label}
+                                                        </span>
                                                     </div>
                                                 ))}
                                             </div>
 
-                                            <div className={`w-12 h-12 rounded-full flex items-center justify-center bg-white/[0.03] border border-white/[0.05] group-hover:bg-primary group-hover:border-primary transition-all duration-300`}>
-                                                <ArrowRight className="w-5 h-5 text-white/60 group-hover:text-white group-hover:-rotate-45 transition-all duration-300" />
+                                            <div className={`w-14 h-14 rounded-full flex items-center justify-center bg-white/[0.03] border border-white/[0.05] group-hover:bg-primary group-hover:border-primary transition-all duration-500 flex-shrink-0 shadow-2xl group-hover:shadow-primary/20`}>
+                                                <ArrowRight className="w-6 h-6 text-white/60 group-hover:text-white group-hover:-rotate-45 transition-all duration-500" />
                                             </div>
                                         </div>
                                     </div>
