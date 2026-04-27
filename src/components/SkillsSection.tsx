@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { Brain, Code, Database, Zap, Wrench, Users, Layers, Cpu } from 'lucide-react';
+import { Brain, Code, Database, Zap, Wrench, Layers, Cpu } from 'lucide-react';
 
 const SkillsSection = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -9,59 +9,59 @@ const SkillsSection = () => {
   const skillCategories = [
     {
       icon: Brain,
-      title: 'AI & Automation',
+      title: 'Agentic AI Architecture',
       gradient: 'from-blue-500/20 to-cyan-500/20',
       iconColor: 'text-blue-400',
       borderGlow: 'group-hover:border-blue-500/30',
-      skills: ['Agentic AI Systems', 'n8n Workflows', 'LangChain', 'MCP Protocol', 'RAG Pipelines', 'Multi-Agent', 'Prompting', 'FAISS']
+      skills: ['Agentic AI Systems', 'Multi-Agent Orchestration', 'MCP Protocol', 'Tool Calling', 'Memory Systems', 'Planning & Reasoning', 'AI Guardrails', 'Prompt Engineering']
     },
     {
-      icon: Zap,
-      title: 'LLM & GenAI',
+      icon: Cpu,
+      title: 'LLM Engineering',
       gradient: 'from-purple-500/20 to-pink-500/20',
       iconColor: 'text-purple-400',
       borderGlow: 'group-hover:border-purple-500/30',
-      skills: ['Gemini API', 'GPT-4o-mini', 'Claude 3.5', 'Groq (Llama 4)', 'OpenRouter', 'Pusher', 'Telegram API', 'WhatsApp API']
+      skills: ['Gemini API', 'GPT-4o-mini', 'Claude 3.5', 'Groq (Llama 4)', 'OpenRouter', 'Model Routing', 'Structured Outputs', 'Function Calling']
+    },
+    {
+      icon: Zap,
+      title: 'Automation & Integrations',
+      gradient: 'from-emerald-500/20 to-teal-500/20',
+      iconColor: 'text-emerald-400',
+      borderGlow: 'group-hover:border-emerald-500/30',
+      skills: ['n8n Workflows', 'Webhook Orchestration', 'Telegram API', 'WhatsApp API', 'Pusher Realtime', 'Google Sheets API', 'REST API Integration', 'Event-Driven Pipelines']
+    },
+    {
+      icon: Database,
+      title: 'RAG & Data Systems',
+      gradient: 'from-amber-500/20 to-orange-500/20',
+      iconColor: 'text-amber-400',
+      borderGlow: 'group-hover:border-amber-500/30',
+      skills: ['LangChain', 'RAG Pipelines', 'FAISS', 'Supabase Vector Store', 'Embeddings', 'Chunking Strategies', 'Retrieval Tuning', 'Knowledge Bases']
     },
     {
       icon: Code,
       title: 'Languages',
-      gradient: 'from-emerald-500/20 to-teal-500/20',
-      iconColor: 'text-emerald-400',
-      borderGlow: 'group-hover:border-emerald-500/30',
-      skills: ['Python', 'JavaScript', 'TypeScript', 'Java', 'Go', 'SQL', 'C++', 'HTML/CSS']
-    },
-    {
-      icon: Database,
-      title: 'ML & Data',
-      gradient: 'from-amber-500/20 to-orange-500/20',
-      iconColor: 'text-amber-400',
-      borderGlow: 'group-hover:border-amber-500/30',
-      skills: ['Scikit-Learn', 'NumPy & Pandas', 'Regression', 'SVM & KNN', 'Decision Trees', 'K-Means', 'PCA', 'Matplotlib']
-    },
-    {
-      icon: Wrench,
-      title: 'Tools & Platforms',
       gradient: 'from-rose-500/20 to-red-500/20',
       iconColor: 'text-rose-400',
       borderGlow: 'group-hover:border-rose-500/30',
-      skills: ['Supabase', 'Firebase', 'Google Cloud', 'Jupyter', 'Git & GitHub', 'Figma', 'Apify', 'Vercel']
+      skills: ['Python', 'JavaScript', 'TypeScript', 'SQL', 'Java', 'Go', 'C++', 'Bash']
     },
     {
-      icon: Users,
-      title: 'Soft Skills',
+      icon: Wrench,
       gradient: 'from-indigo-500/20 to-blue-500/20',
       iconColor: 'text-indigo-400',
       borderGlow: 'group-hover:border-indigo-500/30',
-      skills: ['Leadership', 'Project Mgmt', 'Public Speaking', 'Team Mgmt', 'Negotiation', 'Mentorship', 'Agile', 'Strategy']
+      title: 'Platforms & MLOps',
+      skills: ['Supabase', 'Google Cloud', 'Firebase', 'Docker', 'Git & GitHub', 'Jupyter', 'MLflow', 'Vercel']
     }
   ];
 
   const stats = [
-    { label: 'Programming Languages', value: '8+', icon: Code },
-    { label: 'LLM Integrations', value: '6+', icon: Cpu },
-    { label: 'AI Frameworks', value: '10+', icon: Layers },
-    { label: 'Tools & Platforms', value: '15+', icon: Wrench }
+    { label: 'AI Systems Delivered', value: '15+', icon: Layers },
+    { label: 'Automation Workflows', value: '50+', icon: Zap },
+    { label: 'LLM Integrations', value: '8+', icon: Cpu },
+    { label: 'Tools & Platforms', value: '20+', icon: Wrench }
   ];
 
   useEffect(() => {
@@ -107,7 +107,7 @@ const SkillsSection = () => {
             </h2>
           </div>
           <p className="text-white/50 font-dmsans text-lg max-w-sm mt-6 md:mt-0 text-left md:text-right hidden sm:block">
-            From Agentic AI systems to production ML models — a full-stack technical toolkit.
+            From agent orchestration to production deployment, my stack is built for scalable AI systems and workflow automation.
           </p>
         </div>
 

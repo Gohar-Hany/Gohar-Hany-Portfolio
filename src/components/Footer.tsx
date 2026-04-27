@@ -41,7 +41,7 @@ const Footer = () => {
                                 Gohar<span className="text-primary">.</span>
                             </h3>
                             <p className="text-sm font-dmsans text-white/50 mt-2 max-w-xs group-hover:text-white/70 transition-colors duration-300">
-                                Crafting digital experiences focused on performance, aesthetics, and agentic AI integrations.
+                                Engineering production AI systems with agentic architecture, LLM workflows, and automation that scale.
                             </p>
                         </button>
                         <div className="flex items-center gap-2 px-3 py-1.5 bg-white/[0.03] border border-white/10 rounded-full w-fit">

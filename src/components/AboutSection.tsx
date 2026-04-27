@@ -100,16 +100,16 @@ const AboutSection = () => {
 
             <div className="space-y-6 text-base md:text-lg text-white/70 font-dmsans font-light leading-relaxed">
               <p>
-                I'm a Computer Science graduate focused on <strong className="text-white font-medium">Agentic AI</strong>,
-                automation, and GenAI-driven solutions. I engineer systems that <strong className="text-primary font-medium">reason, remember, and act with autonomy</strong>.
+                I am an <strong className="text-white font-medium">AI Systems Engineer</strong> focused on building production-ready
+                agentic workflows that <strong className="text-primary font-medium">reason, retrieve context, and execute reliably</strong>.
               </p>
               <p>
-                My toolkit revolves around the <strong className="text-accent font-medium">Gemini API, LangChain, FAISS, Supabase, and n8n</strong>.
-                I've leveraged these to build AI agents, learning assistants, inventory bots, and automated support solutions for <strong className="text-white font-medium">500+ users</strong>.
+                My stack centers on <strong className="text-accent font-medium">LLM orchestration, RAG pipelines, MCP-enabled tooling, and n8n automation</strong>
+                for real business operations. I have built AI agents, support systems, and operational assistants used by <strong className="text-white font-medium">500+ users</strong>.
               </p>
               <p>
-                Beyond code, I bridge the gap between <strong className="text-white font-medium">technical complexites and human needs</strong>.
-                With a background in PR leadership, I've directed <strong className="text-primary font-medium">80+ partnerships</strong> and actively mentored individuals in tech, communication, and strategy.
+                I translate business goals into deployable AI systems with measurable outcomes across support, operations, recruitment, and growth.
+                With a PR and student leadership background, I contributed to <strong className="text-primary font-medium">80+ partnership and outreach initiatives</strong> across university activities, and mentored teams in communication, delivery, and strategy.
               </p>
             </div>
           </div>

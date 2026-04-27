@@ -50,10 +50,9 @@ const HeroSection = () => {
   const [isLoaded, setIsLoaded] = useState(false);
 
   const roles = [
-    "AI Systems Architect",
-    "Frontend Engineer",
-    "Automation Expert",
-    "UI/UX Enthusiast"
+    "AI Systems Engineer",
+    "Agentic AI & Automation Architect",
+    "Production LLM & n8n Workflow Engineer"
   ];
 
   useEffect(() => {
@@ -92,7 +91,7 @@ const HeroSection = () => {
       <div className={`absolute top-0 right-0 bottom-0 left-0 lg:left-[40%] z-[2] pointer-events-none transition-opacity duration-1000 delay-300 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
         <img
           src="/Hero.webp"
-          alt="Gohar Hany - Creative AI Developer and UI/UX Builder"
+          alt="Gohar Hany - AI Systems Engineer and Agentic AI Architect"
           width="1920"
           height="1080"
           decoding="async"
@@ -110,7 +109,7 @@ const HeroSection = () => {
         {/* Label — desktop only */}
         <div className="absolute bottom-6 right-8 z-10 hidden lg:flex items-end gap-3">
           <div>
-            <h3 className="text-white font-syne font-bold text-lg drop-shadow-md text-right">Creative AI Dev</h3>
+            <h3 className="text-white font-syne font-bold text-lg drop-shadow-md text-right">AI Systems Engineer</h3>
             <p className="text-white/60 font-dmsans text-sm flex items-center justify-end gap-1.5 drop-shadow-md mt-1">
               <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" /> Alexandria, EG
             </p>
@@ -159,7 +158,7 @@ const HeroSection = () => {
             </div>
 
             <p className="text-lg md:text-xl text-white/50 max-w-xl mb-12 font-dmsans font-light leading-relaxed">
-              Bridging the gap between beautiful fluid interfaces and highly complex intelligent agentic systems. Engineering modern 2026 digital experiences.
+              I design and deploy production AI systems combining agentic architecture, LLM intelligence, and n8n-driven automation.
             </p>
 
             {/* Action Buttons */}

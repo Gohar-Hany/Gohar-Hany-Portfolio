@@ -193,7 +193,7 @@ const ContactSection = () => {
             </h2>
           </div>
           <p className="text-white/50 font-dmsans text-lg max-w-sm mt-6 md:mt-0 text-left md:text-right hidden sm:block">
-            Ready to build something amazing together? Chat with my AI assistant or send me a direct message.
+            Need to ship an AI workflow, agent architecture, or production automation pipeline? Let's discuss scope and execution.
           </p>
         </div>
 
@@ -309,7 +309,7 @@ const ContactSection = () => {
                 </div>
                 <div>
                   <h3 className="font-bold font-syne text-white text-lg">AI Assistant</h3>
-                  <p className="text-[13px] font-dmsans text-white/50">Ask me anything about Gohar</p>
+                  <p className="text-[13px] font-dmsans text-white/50">Ask about projects, architecture, and collaboration scope</p>
                 </div>
               </div>
 

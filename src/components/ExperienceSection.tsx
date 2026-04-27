@@ -184,7 +184,7 @@ const ExperienceSection = () => {
             </h2>
           </div>
           <p className="text-white/50 font-dmsans text-lg max-w-sm mt-6 md:mt-0 text-left md:text-right hidden sm:block">
-            Building expertise across AI, leadership, and community development.
+            Building production AI expertise while leading high-accountability teams and cross-functional delivery.
           </p>
         </div>
 

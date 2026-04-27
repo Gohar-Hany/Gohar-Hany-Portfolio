@@ -21,8 +21,8 @@ const ProjectsSection = () => {
             borderGlow: 'group-hover:border-blue-500/30',
             technologies: ['n8n', 'GPT-4o-mini', 'Pusher', 'Google Sheets', 'Supabase Vector Store'],
             status: 'Production',
-            overview: 'A comprehensive 3-workflow restaurant management system that combines AI-powered conversational ordering, real-time WebSocket updates, stock management intelligence, and business analytics into a unified backend platform.',
-            goal: 'Build a full-stack restaurant backend with conversational AI ordering, real-time WebSocket updates, stock management, and business analytics.',
+            overview: 'Restaurant operations were fragmented across order intake, stock control, and reporting. I built a unified AI backend with conversational ordering, real-time event broadcasting, and operational analytics to streamline execution.',
+            goal: 'Centralize restaurant workflows in one AI automation system that improves order speed, stock visibility, and management decision-making.',
             architecture: [
                 'AI Order Agent (Bahri Plaza) with GPT-4o-mini for conversational ordering',
                 'Real-time event broadcasting via Pusher WebSocket (3 dedicated nodes)',
@@ -68,8 +68,8 @@ const ProjectsSection = () => {
             borderGlow: 'group-hover:border-purple-500/30',
             technologies: ['n8n', 'Claude 3.5 Haiku', 'Gemini 2.0 Flash', 'MCP Protocol', 'Telegram API'],
             status: 'Production',
-            overview: 'An enterprise-grade customer service system featuring a Master-Agent orchestrating specialized Sub-Agents, with comprehensive security guardrails, multimodal input processing, and MCP protocol integration.',
-            goal: 'Build enterprise agentic customer service with prompt injection defense, MCP protocol integration, multimodal input processing, and sub-agent orchestration.',
+            overview: 'Support automation required enterprise-grade safety and reliability. I designed a master-agent architecture with layered prompt-injection defense, multimodal processing, and MCP-enabled execution for real support operations.',
+            goal: 'Deliver secure, scalable customer support automation that routes requests intelligently and executes tasks through controlled AI tooling.',
             architecture: [
                 '3-Tier Security Gateway: Keyword blocklist → Regex patterns → AI jailbreak detection',
                 'Master Orchestrator Agent with Claude 3.5 Haiku for intent routing',
@@ -115,8 +115,8 @@ const ProjectsSection = () => {
             borderGlow: 'group-hover:border-emerald-500/30',
             technologies: ['n8n', 'Claude 3 Haiku', 'Google Drive', 'Telegram', 'WhatsApp'],
             status: 'Production',
-            overview: 'An intelligent recruitment pipeline that performs dual-track AI analysis on both CV documents and LinkedIn profiles, with duplicate detection, automated archiving, and multi-channel notifications.',
-            goal: 'Build intelligent recruitment pipeline with CV optimization, LinkedIn profile auditing, duplicate detection, and automated notifications.',
+            overview: 'Manual screening was slow and inconsistent. I built a dual-track AI recruitment pipeline that evaluates CVs and LinkedIn profiles, prevents duplicates, and automates reporting and notifications.',
+            goal: 'Reduce time-to-screen while improving candidate evaluation consistency and recruitment workflow reliability.',
             architecture: [
                 'Form trigger receiving candidate submissions with CV and LinkedIn URL',
                 'Dual-track AI Analysis: CV Optimization + LinkedIn Profile Audit',
@@ -162,8 +162,8 @@ const ProjectsSection = () => {
             borderGlow: 'group-hover:border-amber-500/30',
             technologies: ['n8n', 'Google Gemini', 'Google Sheets'],
             status: 'Production',
-            overview: 'An AI-powered content strategy engine that generates complete 30-day content calendars with ultra-precise art direction prompts, AIDA copywriting, and multi-platform optimization.',
-            goal: 'Build intelligent marketing with content calendar generation, art direction prompts, multi-platform targeting, and AIDA copywriting.',
+            overview: 'Content planning and creative direction were difficult to scale across platforms. I built an AI strategy engine that generates structured 30-day calendars, platform-aware copy, and production-ready creative direction.',
+            goal: 'Enable faster campaign planning and consistent multi-platform content execution with AI-assisted strategy and copy generation.',
             architecture: [
                 'AI Agent Role: Universal Senior Content Strategist & Master Art Director',
                 'AIDA Framework: Attention → Interest → Desire → Action copywriting',
@@ -365,7 +365,7 @@ const ProjectsSection = () => {
                         <Activity className="w-12 h-12 text-primary/50 mb-6 group-hover:scale-110 group-hover:text-primary transition-all duration-500" />
                         <h3 className="text-3xl md:text-4xl lg:text-5xl font-bold font-syne text-white mb-6">Ready to Automate?</h3>
                         <p className="text-white/60 font-dmsans mb-10 max-w-2xl text-lg lg:text-xl leading-relaxed">
-                            I specialize in architecting intelligent systems that scale — from conversational agents to massive data pipelines. Let's build something extraordinary.
+                            I architect and deploy production AI systems from agent workflows to LLM-powered automation pipelines. Let's build a solution with clear technical and business impact.
                         </p>
                         <Button
                             size="lg"
