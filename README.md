@@ -1,6 +1,6 @@
 # Gohar Hany - AI Business Automation Portfolio
 
-![Portfolio Preview](./public/Hero.jpg)
+![Portfolio Preview](./public/Hero.webp)
 
 ## 🚀 Overview
 
