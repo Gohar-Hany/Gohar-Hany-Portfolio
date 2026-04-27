@@ -158,7 +158,7 @@ const HeroSection = () => {
             </div>
 
             <p className="text-lg md:text-xl text-white/50 max-w-xl mb-12 font-dmsans font-light leading-relaxed">
-              I design and deploy production AI systems combining agentic architecture, LLM intelligence, and n8n-driven automation.
+              I turn complex business workflows into production AI systems that automate operations, reduce manual work, and scale reliably with clear ROI.
             </p>
 
             {/* Action Buttons */}

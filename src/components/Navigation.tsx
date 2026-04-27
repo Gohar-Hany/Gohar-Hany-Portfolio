@@ -209,9 +209,15 @@ const Navigation = () => {
             aria-label={isOpen ? 'Close menu' : 'Open menu'}
           >
             <div className="relative w-5 h-4 flex flex-col justify-between items-center overflow-hidden">
-              <span className={`absolute h-[2px] w-5 bg-white rounded-full transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${isOpen ? 'translate-y-2 rotate-45' : 'top-0'}`} />
+              <span
+                className={`absolute h-[2px] w-5 bg-white rounded-full transition-all duration-300 ${isOpen ? 'translate-y-2 rotate-45' : 'top-0'}`}
+                style={{ transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)' }}
+              />
               <span className={`absolute h-[2px] w-5 bg-primary rounded-full transition-all duration-150 ease-out top-1/2 -translate-y-1/2 ${isOpen ? '-translate-x-full opacity-0' : 'translate-x-0 opacity-100'}`} />
-              <span className={`absolute h-[2px] w-5 bg-white rounded-full transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${isOpen ? 'bottom-2 -translate-y-[1px] -rotate-45' : 'bottom-0'}`} />
+              <span
+                className={`absolute h-[2px] w-5 bg-white rounded-full transition-all duration-300 ${isOpen ? 'bottom-2 -translate-y-[1px] -rotate-45' : 'bottom-0'}`}
+                style={{ transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)' }}
+              />
             </div>
           </button>
         </div>
@@ -219,8 +225,9 @@ const Navigation = () => {
 
       {/* Mobile Navigation Dropdown Menu */}
       <div
-        className={`absolute top-full left-4 right-4 mt-3 pointer-events-auto md:hidden overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] origin-top ${isOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'
+        className={`absolute top-full left-4 right-4 mt-3 pointer-events-auto md:hidden overflow-hidden transition-all duration-500 origin-top ${isOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'
           }`}
+        style={{ transitionTimingFunction: 'cubic-bezier(0.22, 1, 0.36, 1)' }}
       >
         <div className="bg-[#040d1a]/95 backdrop-blur-3xl border border-white/10 shadow-[0_20px_40px_rgba(0,0,0,0.6)] rounded-[2rem] p-5 flex flex-col gap-2 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-[200px] h-[200px] bg-primary/20 blur-[60px] pointer-events-none rounded-full" />
