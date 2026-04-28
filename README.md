@@ -1,56 +1,99 @@
-# Gohar Hany - AI Business Automation Portfolio
+# Gohar Hany Portfolio
 
 ![Portfolio Preview](./public/Hero.webp)
 
-## 🚀 Overview
+## Overview
 
-A modern, high-performance web portfolio showcasing enterprise-grade AI automation systems. Built with React and tailored with a bespoke "V2 Deep Space Neon" dark theme, this portfolio highlights technical skills, professional experience, and in-depth case studies of agentic workflows and AI operations.
+This is a modern portfolio focused on AI Systems Engineering, Agentic AI architecture, and production automation workflows. It showcases real projects, technical capabilities, and professional experience with an emphasis on business impact, execution quality, and production readiness.
 
-## ✨ Key Features
+## Positioning
 
-- **V2 Deep Space Neon Theme:** A striking dark UI aesthetic featuring neon blue (`#00c8ff`) and green (`#00ff96`) accents, glassmorphic backgrounds, and dynamic gradient text.
-- **Interactive Projects Gallery:** A responsive CSS grid showcasing AI projects. Clicking a project opens a detailed, two-column split-layout modal featuring:
-  - Sticky project info card with icons and technologies.
-  - Tabbed interface (Overview, Features, Technical, Workflow) with scrolling content.
-- **Dynamic Skills & Experience:** Structured layout with animated progress bars, detailed stat numbers, and hover-triggered glows.
-- **Modern Tech Stack:** Leveraging the latest ecosystem tools for optimal performance and developer experience.
+- AI Systems Engineer
+- Agentic AI and Automation Architect
+- Production LLM Workflow Engineer
 
-## 🛠️ Built With
+## Core Sections
 
-- **Framework:** React + Vite
-- **Language:** TypeScript
-- **Styling:** Tailwind CSS + Custom CSS Variables
-- **UI Components:** [shadcn/ui](https://ui.shadcn.com/)
-- **Icons:** [lucide-react](https://lucide.dev/)
+- Hero: Clear positioning and value proposition.
+- About: Technical narrative plus leadership and delivery context.
+- Expertise: Agentic architecture, LLM engineering, automation integrations, RAG/data systems, languages, and platforms.
+- Projects: Detailed project cards with deep-dive modal (overview, architecture, features, workflow).
+- Experience and Education: Career timeline, certifications, and achievements.
+- Contact: Direct channels plus AI assistant interface.
 
-## 💻 Getting Started (Local Development)
+## Tech Stack
 
-To run this project locally, ensure you have Node.js and npm installed.
+- Framework: React + Vite
+- Language: TypeScript
+- Styling: Tailwind CSS + custom design tokens
+- UI primitives: shadcn/ui + Radix UI
+- Animation: GSAP + CSS animations
+- Icons: lucide-react
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/Gohar-Hany/Gohar-Hany-Portfolio.git
-   ```
+## Local Development
 
-2. **Navigate to the directory:**
-   ```bash
-   cd Gohar-Hany-Portfolio
-   ```
+Prerequisites:
 
-3. **Install dependencies:**
-   ```bash
-   npm install
-   ```
+- Node.js 18+
+- npm 9+
 
-4. **Start the development server:**
-   ```bash
-   npm run dev
-   ```
-   The application will become available at `http://localhost:8080` (or another port output in your terminal).
+Steps:
 
-## 🎨 Design System
+1. Clone the repository.
 
-The layout architecture relies heavily on custom CSS classes specifically formulated for the "V2" design iteration, housed within `src/index.css`:
-- `.section-tag` & `.section-title`: Cohesive typography with Syne and DM Sans fonts.
-- `.project-card` & `.skill-card`: Border hover states, glow shadows, and translateY transitions.
-- `.stat-num` & `.stat-label`: Custom gradient text styles for metrics.
+```bash
+git clone https://github.com/Gohar-Hany/Gohar-Hany-Portfolio.git
+cd Gohar-Hany-Portfolio
+```
+
+2. Install dependencies.
+
+```bash
+npm install
+```
+
+3. Run the dev server.
+
+```bash
+npm run dev
+```
+
+4. Build for production.
+
+```bash
+npm run build
+```
+
+5. Preview production build.
+
+```bash
+npm run preview
+```
+
+6. Lint source files.
+
+```bash
+npm run lint
+```
+
+## Project Structure
+
+```text
+src/
+  components/      Reusable UI sections (Hero, About, Skills, Projects, ...)
+  pages/           Route-level pages
+  hooks/           Custom React hooks
+  lib/             Shared utilities
+public/            Static assets, robots.txt, sitemap.xml
+```
+
+## SEO and Discoverability
+
+- Metadata and social tags are configured in `index.html`.
+- Crawl files are provided in `public/robots.txt` and `public/sitemap.xml`.
+- Content strategy is optimized for AI systems, agentic AI, LLM workflows, and automation-focused search intent.
+
+## Notes
+
+- The portfolio is content-first and built for recruiter and client conversion.
+- Project descriptions follow a problem-solution-impact narrative.
