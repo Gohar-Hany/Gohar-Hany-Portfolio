@@ -12,53 +12,104 @@ const ProjectsSection = () => {
     const projects = [
         {
             id: 1,
-            title: 'Restaurant Order & Stock Management System',
-            subtitle: 'Full-Stack AI Backend with Conversational Ordering & Real-Time Operations',
-            category: 'AI Automation',
-            icon: Utensils,
-            gradient: 'from-blue-500/20 to-cyan-500/20',
-            iconColor: 'text-blue-400',
-            borderGlow: 'group-hover:border-blue-500/30',
-            technologies: ['n8n', 'GPT-4o-mini', 'Pusher', 'Google Sheets', 'Supabase Vector Store'],
+            title: 'Lead Generation & AI Research Pipeline',
+            subtitle: 'Automated Lead Enrichment, Name Normalization, and Cold Email Drafting',
+            category: 'Sales Automation',
+            icon: Search,
+            gradient: 'from-sky-500/20 to-blue-500/20',
+            iconColor: 'text-sky-400',
+            borderGlow: 'group-hover:border-sky-500/30',
+            technologies: ['n8n', 'GPT-4o-mini', 'Groq 120B', 'Serper API', 'OpenRouter', 'Google Drive', 'Google Sheets'],
             status: 'Production',
-            overview: 'Restaurant operations were fragmented across order intake, stock control, and reporting. I built a unified AI backend with conversational ordering, real-time event broadcasting, and operational analytics to streamline execution.',
-            goal: 'Centralize restaurant workflows in one AI automation system that improves order speed, stock visibility, and management decision-making.',
+            overview: 'Raw lead spreadsheets required heavy manual enrichment and inconsistent follow-up. I built an AI pipeline that watches Drive, validates rows, researches each company, normalizes contact names, drafts cold emails, and writes results back to a structured sheet.',
+            goal: 'Turn raw lead lists into ready-to-contact rows with consistent research, clean contact data, and personalized outreach drafts.',
             architecture: [
-                'AI Order Agent (Bahri Plaza) with GPT-4o-mini for conversational ordering',
-                'Real-time event broadcasting via Pusher WebSocket (3 dedicated nodes)',
-                'Bilingual menu CRUD with duplicate prevention and validation',
-                'Business Analytics Engine calculating COGS, profit margins, and trends',
-                'Document RAG pipeline with PDF extraction and Supabase Vector Store'
+                'Google Drive trigger pulls new Excel files and extracts rows',
+                'Validation filter removes records missing email or website',
+                'Batch processor runs a research agent with 5-8 web searches per lead',
+                'Name normalization LLM enforces strict JSON and filters generic inboxes',
+                'Cold email generator with structured output parser and safe formatting',
+                'Google Sheets append with mapped columns and error logging'
             ],
             features: [
-                { title: 'AI Order Agent', description: 'Conversational ordering in English/Arabic with delivery vs dine-in routing, upselling prompts, and natural language understanding', iconName: 'Headphones' },
-                { title: 'Real-Time Events', description: 'Pusher WebSocket integration broadcasting order updates to kitchen, delivery, and management dashboards with <100ms latency', iconName: 'Zap' },
-                { title: 'Business Analytics', description: 'Automated COGS calculation, profit margin analysis, top-selling item detection, and inventory optimization recommendations', iconName: 'BarChart3' },
-                { title: 'Document RAG', description: 'PDF menu extraction, chunking, embedding generation, and Supabase Vector Store integration for knowledge retrieval', iconName: 'Database' }
+                { title: 'AI Lead Research', description: 'Multi-search enrichment for ads, tools, marketing ownership, and the top opportunity', iconName: 'Search' },
+                { title: 'Contact Cleanup', description: 'Name normalization with invalid and generic inbox filtering to avoid poor personalization', iconName: 'Users' },
+                { title: 'Email Drafting', description: 'Company-centric openers built from research with strict JSON output parsing', iconName: 'Code' },
+                { title: 'Sheet-Ready Output', description: 'Structured fields and drafts appended to Google Sheets for handoff and tracking', iconName: 'Database' }
             ],
             metrics: [
-                { label: 'Latency', value: '<100ms' },
-                { label: 'Response', value: '2-5s' },
-                { label: 'Uptime', value: '99.9%' }
+                { label: 'Searches', value: '5-8x' },
+                { label: 'Retries', value: '2x' },
+                { label: 'Output', value: '1 row' }
             ],
             technicalDetails: [
-                'System Prompt: Bahri Plaza AI agent with Arabic/English support, menu knowledge, order routing logic',
-                'Memory: Window buffer (last 20 messages) for conversation context',
-                'Validation: Item availability check, price calculation, delivery zone verification',
-                'Integration: Google Sheets for menu data, Supabase for vector embeddings, Pusher for real-time'
+                'Serper API web search tool with dynamic query injection',
+                'Research output schema: ads_running, manual_work, who_handles_marketing, main_opportunity, notes, report',
+                'Name normalization prompt removes generic inboxes and invalid strings',
+                'Cold email generator outputs strict JSON and plain text body',
+                'Google Sheets mapping consolidates contact data, research fields, and draft email'
             ],
             workflow: [
-                'Customer initiates order via webhook',
-                'AI Agent processes natural language request',
-                'Menu RAG retrieves relevant items from vector store',
-                'Agent confirms order details and upsells',
-                'Order validated and stored in Google Sheets',
-                'Pusher broadcasts to kitchen/delivery dashboards',
-                'Analytics engine updates business metrics'
+                'New Excel file detected in Google Drive',
+                'Rows parsed and filtered for valid email and website',
+                'Lead fields mapped and batched for processing',
+                'Research agent performs web searches and creates a detailed report',
+                'Contact name normalized and validated',
+                'Cold email draft generated from research summary',
+                'Enriched lead data appended to Google Sheets'
             ]
         },
         {
             id: 2,
+            title: 'ProSkills WhatsApp Sales Agent',
+            subtitle: 'Multimodal support, CRM sync, and payment verification for digital services',
+            category: 'Commerce Automation',
+            icon: Users,
+            gradient: 'from-rose-500/20 to-orange-500/20',
+            iconColor: 'text-rose-400',
+            borderGlow: 'group-hover:border-rose-500/30',
+            technologies: ['n8n', 'Evolution API', 'GPT-4o-mini', 'GPT-OSS-120B', 'Gemini 2.5 Flash', 'ElevenLabs', 'Groq Whisper', 'Google Sheets', 'Telegram'],
+            status: 'Production',
+            overview: 'Pro Skills needed WhatsApp automation that could handle text, voice, and images while protecting sales flows. I built a guarded agent pipeline that syncs CRM records, routes product questions through a live products KB, and verifies payments with human approval.',
+            goal: 'Provide fast WhatsApp support and sales automation with safe, auditable payment verification.',
+            architecture: [
+                'Webhook intake for WhatsApp messages via Evolution API',
+                'Input router for text, voice, and image with STT and vision analysis',
+                'Security gateway with keyword, regex, and jailbreak scoring',
+                'CRM lookup and updates in Google Sheets',
+                'Orchestrator agent with memory, think tool, and Products KB',
+                'Payment flow with receipt request, Telegram approval, and link unlock'
+            ],
+            features: [
+                { title: 'Multimodal Inputs', description: 'Text, voice, and image handling with transcription and image understanding', iconName: 'Headphones' },
+                { title: 'Security Guardrails', description: 'Keyword and regex screening plus AI jailbreak scoring with alerting', iconName: 'Shield' },
+                { title: 'CRM Sync', description: 'Create, update, and enrich customer records with every interaction', iconName: 'Database' },
+                { title: 'Payment Verification', description: 'Human-in-the-loop approval with receipt analysis and secure activation links', iconName: 'Code' }
+            ],
+            metrics: [
+                { label: 'Inputs', value: '3 modes' },
+                { label: 'Guardrails', value: '3-layer' },
+                { label: 'Approval', value: 'Human-in-loop' }
+            ],
+            technicalDetails: [
+                'Guardrails: keyword blocklist, regex patterns, and GPT-OSS jailbreak scoring',
+                'Structured output schema with status and product_id fields',
+                'Products KB tool backed by Google Sheets',
+                'Receipt verification via Telegram approval and Apps Script link unlock',
+                'Gemini vision for images and ElevenLabs/Groq Whisper for voice'
+            ],
+            workflow: [
+                'WhatsApp message received through webhook',
+                'Input type detected and normalized (text, voice, image)',
+                'Guardrails validate content and alert security if needed',
+                'Customer record retrieved or created in CRM sheet',
+                'Orchestrator responds and routes product requests',
+                'If payment: request receipt and send for approval',
+                'Approved payments unlock link, record sale, and confirm'
+            ]
+        },
+        {
+            id: 3,
             title: 'AI Customer Service System',
             subtitle: 'Enterprise Agentic Support with 3-Tier Security & MCP Protocol',
             category: 'Enterprise AI',
@@ -105,7 +156,54 @@ const ProjectsSection = () => {
             ]
         },
         {
-            id: 3,
+            id: 4,
+            title: 'Restaurant Order & Stock Management System',
+            subtitle: 'Full-Stack AI Backend with Conversational Ordering & Real-Time Operations',
+            category: 'AI Automation',
+            icon: Utensils,
+            gradient: 'from-blue-500/20 to-cyan-500/20',
+            iconColor: 'text-blue-400',
+            borderGlow: 'group-hover:border-blue-500/30',
+            technologies: ['n8n', 'GPT-4o-mini', 'Pusher', 'Google Sheets', 'Supabase Vector Store'],
+            status: 'Production',
+            overview: 'Restaurant operations were fragmented across order intake, stock control, and reporting. I built a unified AI backend with conversational ordering, real-time event broadcasting, and operational analytics to streamline execution.',
+            goal: 'Centralize restaurant workflows in one AI automation system that improves order speed, stock visibility, and management decision-making.',
+            architecture: [
+                'AI Order Agent (Bahri Plaza) with GPT-4o-mini for conversational ordering',
+                'Real-time event broadcasting via Pusher WebSocket (3 dedicated nodes)',
+                'Bilingual menu CRUD with duplicate prevention and validation',
+                'Business Analytics Engine calculating COGS, profit margins, and trends',
+                'Document RAG pipeline with PDF extraction and Supabase Vector Store'
+            ],
+            features: [
+                { title: 'AI Order Agent', description: 'Conversational ordering in English/Arabic with delivery vs dine-in routing, upselling prompts, and natural language understanding', iconName: 'Headphones' },
+                { title: 'Real-Time Events', description: 'Pusher WebSocket integration broadcasting order updates to kitchen, delivery, and management dashboards with <100ms latency', iconName: 'Zap' },
+                { title: 'Business Analytics', description: 'Automated COGS calculation, profit margin analysis, top-selling item detection, and inventory optimization recommendations', iconName: 'BarChart3' },
+                { title: 'Document RAG', description: 'PDF menu extraction, chunking, embedding generation, and Supabase Vector Store integration for knowledge retrieval', iconName: 'Database' }
+            ],
+            metrics: [
+                { label: 'Latency', value: '<100ms' },
+                { label: 'Response', value: '2-5s' },
+                { label: 'Uptime', value: '99.9%' }
+            ],
+            technicalDetails: [
+                'System Prompt: Bahri Plaza AI agent with Arabic/English support, menu knowledge, order routing logic',
+                'Memory: Window buffer (last 20 messages) for conversation context',
+                'Validation: Item availability check, price calculation, delivery zone verification',
+                'Integration: Google Sheets for menu data, Supabase for vector embeddings, Pusher for real-time'
+            ],
+            workflow: [
+                'Customer initiates order via webhook',
+                'AI Agent processes natural language request',
+                'Menu RAG retrieves relevant items from vector store',
+                'Agent confirms order details and upsells',
+                'Order validated and stored in Google Sheets',
+                'Pusher broadcasts to kitchen/delivery dashboards',
+                'Analytics engine updates business metrics'
+            ]
+        },
+        {
+            id: 5,
             title: 'HR Recruitment Pipeline',
             subtitle: 'AI-Powered Candidate Scoring with Dual-Track Analysis',
             category: 'HR Automation',
@@ -152,7 +250,7 @@ const ProjectsSection = () => {
             ]
         },
         {
-            id: 4,
+            id: 6,
             title: 'Content Strategy Engine',
             subtitle: '30-Day Content Calendar Generator with AI Art Direction',
             category: 'Marketing AI',
