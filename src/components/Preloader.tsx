@@ -36,6 +36,20 @@ const Preloader = ({ onComplete }: PreloaderProps) => {
       opacity: 1,
     });
 
+    // Timeout fallback — preloader MUST complete within 2.5s
+    const timeoutFallback = setTimeout(() => {
+      tl.kill();
+      if (preloaderRef.current) {
+        gsap.to(preloaderRef.current, {
+          opacity: 0,
+          scale: 0.95,
+          duration: 0.4,
+          ease: 'power2.inOut',
+          onComplete: () => onComplete(),
+        });
+      }
+    }, 2500);
+
     // Logo entrance
     tl.from(logoRef.current, {
       scale: 0.8,
@@ -52,6 +66,7 @@ const Preloader = ({ onComplete }: PreloaderProps) => {
           setProgress(Math.round(this.progress() * 100));
         },
         onComplete: () => {
+          clearTimeout(timeoutFallback);
           gsap.to(progressBarRef.current?.parentElement, {
             opacity: 0,
             duration: 0.3,
@@ -78,6 +93,11 @@ const Preloader = ({ onComplete }: PreloaderProps) => {
       yoyo: true,
       ease: 'power2.inOut',
     });
+
+    return () => {
+      clearTimeout(timeoutFallback);
+      tl.kill();
+    };
   }, [onComplete]);
 
   return (

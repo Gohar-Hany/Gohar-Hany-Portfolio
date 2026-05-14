@@ -1,3 +1,7 @@
+/* OPTIMIZED: Fluid spacing scale, z-index architecture, touch targets, reduced-motion, custom cursor hiding */
+/* BREAKPOINTS: 320px, 480px, 640px, 768px, 1024px, 1440px, 4K */
+/* PERFORMANCE: will-change management, GPU-accelerated animations only (transform/opacity/filter) */
+
 @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:opsz,wght@9..40,200;9..40,300;9..40,400;9..40,500&display=swap');
 
 @tailwind base;
@@ -45,7 +49,7 @@
     --shadow-accent-glow: 0 0 45px rgba(0, 255, 136, 0.45);
     --shadow-elegant: 0 22px 55px rgba(0, 0, 0, 0.8), 0 0 35px rgba(0, 212, 255, 0.15);
 
-    --radius: 1rem;
+    --radius: 12px;
 
     --sidebar-background: #071428;
     --sidebar-foreground: var(--text-main);
@@ -63,6 +67,38 @@
     --card-foreground: var(--text-main);
     --popover: #0b1e35;
     --popover-foreground: var(--text-main);
+
+    /* ─── FLUID SPACING SCALE ─── */
+    --space-xs: clamp(0.5rem, 1vw, 0.75rem);
+    --space-sm: clamp(0.75rem, 2vw, 1.25rem);
+    --space-md: clamp(1rem, 4vw, 2rem);
+    --space-lg: clamp(2rem, 6vw, 4rem);
+    --space-xl: clamp(3rem, 10vw, 7rem);
+
+    /* ─── RESPONSIVE LAYOUT TOKENS ─── */
+    --viewer-pad: 2rem;
+    --card-gap: 1.5rem;
+    --modal-pad: 2.5rem;
+
+    /* ─── Z-INDEX ARCHITECTURE ─── */
+    --z-base: 1;
+    --z-cards: 10;
+    --z-sticky-nav: 100;
+    --z-modal-backdrop: 200;
+    --z-modal: 300;
+    --z-cursor: 400;
+    --z-preloader: 500;
+    --z-toast: 600;
+  }
+
+  /* Responsive overrides for layout tokens */
+  @media (max-width: 768px) {
+    :root {
+      --radius: 8px;
+      --viewer-pad: 1rem;
+      --card-gap: 0.75rem;
+      --modal-pad: 1.25rem;
+    }
   }
 
   .dark {
@@ -114,6 +150,14 @@
     color: var(--text-main);
     background: var(--bg-dark);
     cursor: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Restore default cursor on touch devices */
+  @media (hover: none) {
+    body {
+      cursor: auto;
+    }
   }
 
   h1,
@@ -133,8 +177,7 @@
   }
 
   .hero-section {
-    height: 100vh;
-    min-height: 600px;
+    min-height: 100dvh;
     overflow: hidden;
   }
 
@@ -148,6 +191,19 @@
     animation: floatUp var(--dur) linear infinite;
     animation-delay: var(--delay);
     filter: blur(2px);
+  }
+
+  /* ─── TOUCH TARGET COMPLIANCE ─── 
+     Applied via component-level styles, not globally.
+     Interactive elements in nav/modals enforce 44px+ tap targets individually. */
+
+  /* ─── CUSTOM CURSOR — HIDE ON TOUCH DEVICES ─── */
+  @media (hover: none) {
+    .custom-cursor,
+    #cursor,
+    #cursorRing {
+      display: none !important;
+    }
   }
 }
 
@@ -178,8 +234,8 @@
   .stat-card {
     background: rgba(7, 20, 40, 0.7);
     border: 1px solid rgba(0, 200, 255, 0.12);
-    border-radius: 1rem;
-    padding: 1.5rem;
+    border-radius: var(--radius);
+    padding: var(--space-sm);
     backdrop-filter: blur(12px);
     transition: all 0.3s ease;
     position: relative;
@@ -205,7 +261,7 @@
   .project-card {
     background: rgba(7, 20, 40, 0.8);
     border: 1px solid rgba(0, 200, 255, 0.1);
-    border-radius: 1rem;
+    border-radius: var(--radius);
     transition: all 0.4s ease;
     overflow: hidden;
     position: relative;
@@ -323,12 +379,12 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    font-size: 11px;
+    font-size: clamp(10px, 1.5vw, 11px);
     font-weight: 600;
     letter-spacing: 3px;
     text-transform: uppercase;
     color: var(--neon-blue);
-    margin-bottom: 20px;
+    margin-bottom: var(--space-sm);
   }
 
   .section-tag::before {
@@ -340,12 +396,12 @@
 
   .section-title {
     font-family: var(--syne);
-    font-size: clamp(32px, 5vw, 52px);
+    font-size: clamp(28px, 5vw, 52px);
     font-weight: 800;
     color: #fff;
     letter-spacing: -2px;
     line-height: 1;
-    margin-bottom: 48px;
+    margin-bottom: var(--space-lg);
   }
 
   .section-title span {
@@ -354,7 +410,7 @@
 
   .stat-num {
     font-family: var(--syne);
-    font-size: 40px;
+    font-size: clamp(28px, 5vw, 40px);
     font-weight: 800;
     background: linear-gradient(135deg, var(--neon-blue), var(--neon-green));
     -webkit-background-clip: text;
@@ -365,7 +421,7 @@
   }
 
   .stat-label {
-    font-size: 12px;
+    font-size: clamp(10px, 1.5vw, 12px);
     color: var(--muted-foreground);
     letter-spacing: 1px;
     text-transform: uppercase;
@@ -376,21 +432,21 @@
     max-width: 1100px;
     margin: 0 auto;
     position: relative;
-    z-index: 1;
+    z-index: var(--z-base);
     width: 100%;
   }
 
   .skills-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+    gap: var(--card-gap);
   }
 
   .skill-card {
     background: var(--card);
     border: 1px solid var(--border);
     border-radius: 16px;
-    padding: 28px;
+    padding: var(--space-sm);
     transition: all .3s;
   }
 
@@ -442,8 +498,8 @@
   /* ─── PROJECTS ─────────────────────────── */
   .projects-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 24px;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+    gap: var(--card-gap);
   }
 
   .project-emoji {
@@ -454,17 +510,17 @@
 
   .project-name {
     font-family: var(--syne);
-    font-size: 20px;
+    font-size: clamp(16px, 2.5vw, 20px);
     font-weight: 700;
     color: #fff;
     margin-bottom: 10px;
   }
 
   .project-desc {
-    font-size: 14px;
+    font-size: clamp(13px, 1.5vw, 14px);
     color: var(--muted-foreground);
     line-height: 1.7;
-    margin-bottom: 20px;
+    margin-bottom: var(--space-sm);
   }
 
   .project-tech {
@@ -666,6 +722,7 @@
   }
 }
 
+/* ─── PREFERS-REDUCED-MOTION ─── */
 @media (prefers-reduced-motion: reduce) {
 
   *,
@@ -690,6 +747,7 @@
   }
 }
 
+/* ─── HIGH CONTRAST SUPPORT ─── */
 @media (prefers-contrast: high) {
   .glass {
     border-width: 2px;
@@ -699,5 +757,18 @@
     background: none;
     color: var(--primary);
     -webkit-text-fill-color: currentColor;
+  }
+}
+
+/* ─── LANDSCAPE MOBILE COMPACT ─── */
+@media (orientation: landscape) and (max-height: 500px) {
+  .hero-section {
+    min-height: 100dvh;
+    padding-top: 3rem;
+    padding-bottom: 1rem;
+  }
+
+  .hero-section h1 {
+    font-size: clamp(1.8rem, 5vw, 3rem) !important;
   }
 }

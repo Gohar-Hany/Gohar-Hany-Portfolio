@@ -52,6 +52,15 @@ const Index = () => {
           y: 0,
           duration: 1,
           ease: "power2.out",
+          onComplete: () => {
+            // Recalculate all ScrollTrigger positions after preloader exits
+            try {
+              const { ScrollTrigger } = require('gsap/ScrollTrigger');
+              ScrollTrigger.refresh();
+            } catch (_) {
+              // ScrollTrigger may not be registered — safe to ignore
+            }
+          }
         }
       );
     }, 100);

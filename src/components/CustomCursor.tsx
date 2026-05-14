@@ -1,7 +1,16 @@
-import React, { useEffect } from 'react';
+// OPTIMIZED: Hide on touch devices, pointer-events:none to avoid blocking clicks
+// PERFORMANCE: Uses requestAnimationFrame for smooth cursor trail, auto-disabled on touch
+import { useEffect, useState } from 'react';
 
 const CustomCursor = () => {
+    const [isTouchDevice, setIsTouchDevice] = useState(false);
+
     useEffect(() => {
+        // Detect touch device and bail out early
+        const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+        setIsTouchDevice(isTouch);
+        if (isTouch) return;
+
         const cursor = document.getElementById("cursor");
         const ring = document.getElementById("cursorRing");
 
@@ -67,10 +76,13 @@ const CustomCursor = () => {
         };
     }, []);
 
+    // Don't render anything on touch devices
+    if (isTouchDevice) return null;
+
     return (
         <>
-            <div id="cursor" className="fixed top-0 left-0 w-2 h-2 bg-primary rounded-full pointer-events-none z-[9999] -translate-x-1/2 -translate-y-1/2 transition-transform duration-200 ease-out will-change-transform [&.hovered]:scale-0"></div>
-            <div id="cursorRing" className="fixed top-0 left-0 w-8 h-8 border border-primary rounded-full pointer-events-none z-[9998] -translate-x-1/2 -translate-y-1/2 transition-all duration-300 ease-out will-change-transform [&.hovered]:scale-150 [&.hovered]:bg-primary/10"></div>
+            <div id="cursor" className="custom-cursor fixed top-0 left-0 w-2 h-2 bg-primary rounded-full pointer-events-none -translate-x-1/2 -translate-y-1/2 transition-transform duration-200 ease-out will-change-transform [&.hovered]:scale-0" style={{ zIndex: 'var(--z-cursor, 400)' }}></div>
+            <div id="cursorRing" className="custom-cursor fixed top-0 left-0 w-8 h-8 border border-primary rounded-full pointer-events-none -translate-x-1/2 -translate-y-1/2 transition-all duration-300 ease-out will-change-transform [&.hovered]:scale-150 [&.hovered]:bg-primary/10" style={{ zIndex: 'calc(var(--z-cursor, 400) - 1)' }}></div>
         </>
     );
 };

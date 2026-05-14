@@ -1,3 +1,6 @@
+// OPTIMIZED: 100dvh hero height, reduced particles on mobile (60% less), full-width CTA buttons on mobile
+// BREAKPOINTS: 640px (sm), 768px (md), 1024px (lg), 1280px (xl)
+// PERFORMANCE: matchMedia for particle count, GPU-accelerated particle animation
 import { useState, useEffect } from 'react';
 import { ArrowDown, ArrowUpRight, Sparkles, Code2, Bot } from 'lucide-react';
 
@@ -5,7 +8,11 @@ const ParticleSystem = () => {
   const [particles, setParticles] = useState<Array<{ id: number, size: number, left: number, top: number, dur: number, delay: number }>>([]);
 
   useEffect(() => {
-    const newParticles = Array.from({ length: 30 }).map((_, i) => ({
+    // Reduce particle count by 60% on mobile
+    const isMobile = window.matchMedia('(max-width: 768px)').matches;
+    const particleCount = isMobile ? 12 : 30;
+
+    const newParticles = Array.from({ length: particleCount }).map((_, i) => ({
       id: i,
       size: Math.random() * 2 + 1,
       left: Math.random() * 100,
@@ -79,7 +86,7 @@ const HeroSection = () => {
   };
 
   return (
-    <section id="home" className="relative min-h-[100svh] w-full flex items-center pt-24 pb-12 overflow-hidden bg-background selection:bg-primary/30 z-0">
+    <section id="home" className="relative w-full flex items-center pt-24 pb-12 overflow-hidden bg-background selection:bg-primary/30 z-0" style={{ minHeight: '100dvh' }}>
 
       <ParticleSystem />
 
@@ -101,17 +108,17 @@ const HeroSection = () => {
         {/* Blue steel tint */}
         <div className="absolute inset-0 bg-blue-950/40 mix-blend-screen pointer-events-none" />
         {/* Mobile/Tablet: gradient scrim — dark at top for text, lighter below to reveal image */}
-        <div className="absolute inset-0 lg:hidden" style={{ background: 'linear-gradient(to bottom, rgba(9,13,17,0.75) 0%, rgba(9,13,17,0.55) 50%, rgba(9,13,17,0.3) 100%)' }} />
+        <div className="absolute inset-0 lg:hidden pointer-events-none" style={{ background: 'linear-gradient(to bottom, rgba(9,13,17,0.75) 0%, rgba(9,13,17,0.55) 50%, rgba(9,13,17,0.3) 100%)' }} />
         {/* Desktop: left-edge fade to blend into dark bg */}
-        <div className="absolute inset-0 hidden lg:block" style={{ background: 'linear-gradient(to right, #090d11 0%, rgba(9,13,17,0.6) 20%, rgba(9,13,17,0.0) 55%)' }} />
+        <div className="absolute inset-0 hidden lg:block pointer-events-none" style={{ background: 'linear-gradient(to right, #090d11 0%, rgba(9,13,17,0.6) 20%, rgba(9,13,17,0.0) 55%)' }} />
         {/* Bottom fade — all sizes */}
-        <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent pointer-events-none" />
         {/* Label — desktop only */}
         <div className="absolute bottom-6 right-8 z-10 hidden lg:flex items-end gap-3">
           <div>
             <h3 className="text-white font-syne font-bold text-lg drop-shadow-md text-right">AI Systems Engineer</h3>
             <p className="text-white/60 font-dmsans text-sm flex items-center justify-end gap-1.5 drop-shadow-md mt-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" /> Alexandria, EG
+              <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />Alexandria, EG
             </p>
           </div>
           <div className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center shrink-0">
@@ -123,7 +130,7 @@ const HeroSection = () => {
       {/* Main Container */}
       <div className="max-w-[85rem] w-full mx-auto px-6 lg:px-8 relative z-10 h-full flex flex-col justify-center">
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 h-full min-h-[600px] items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 h-full items-center" style={{ minHeight: 'min(600px, 80dvh)' }}>
 
           {/* Left Column: Hero Typography & Intro (Spans 8 cols) */}
           <div className={`col-span-1 lg:col-span-8 flex flex-col justify-center transition-all duration-1000 ease-out delay-100 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
@@ -138,34 +145,34 @@ const HeroSection = () => {
             </div>
 
             <div className="space-y-4 mb-8">
-              <h1 className="text-5xl sm:text-7xl lg:text-[5.5rem] xl:text-[6.5rem] font-bold font-syne text-white leading-[1.05] tracking-tight">
+              <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-[5.5rem] xl:text-[6.5rem] font-bold font-syne text-white leading-[1.05] tracking-tight">
                 Gohar <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-blue-400 to-white/90">Hany</span>
               </h1>
 
               {/* Animated Roles */}
-              <div className="h-[40px] sm:h-[50px] overflow-hidden relative">
+              <div className="h-[36px] sm:h-[40px] md:h-[50px] overflow-hidden relative">
                 {roles.map((role, idx) => (
                   <div
                     key={idx}
-                    className={`absolute inset-0 flex items-center transition-all duration-700 ease-in-out font-syne text-xl sm:text-2xl lg:text-3xl text-accent font-medium tracking-wide
+                    className={`absolute inset-0 flex items-center transition-all duration-700 ease-in-out font-syne text-lg sm:text-xl md:text-2xl lg:text-3xl text-accent font-medium tracking-wide
                       ${currentRole === idx ? 'opacity-100 translate-y-0' : currentRole > idx ? 'opacity-0 -translate-y-full blur-sm' : 'opacity-0 translate-y-full blur-sm'}`}
                   >
-                    <Sparkles size={24} className="mr-3 text-accent/80" />
-                    {role}
+                    <Sparkles size={20} className="mr-2 sm:mr-3 text-accent/80 flex-shrink-0" />
+                    <span className="truncate">{role}</span>
                   </div>
                 ))}
               </div>
             </div>
 
-            <p className="text-lg md:text-xl text-white/50 max-w-xl mb-12 font-dmsans font-light leading-relaxed">
+            <p className="text-base sm:text-lg md:text-xl text-white/50 max-w-xl mb-8 sm:mb-12 font-dmsans font-light leading-relaxed">
               I turn complex business workflows into production AI systems that automate operations, reduce manual work, and scale reliably with clear ROI.
             </p>
 
-            {/* Action Buttons */}
-            <div className="flex flex-wrap items-center gap-4 sm:gap-6 mb-10">
+            {/* Action Buttons — full-width on mobile */}
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 sm:gap-6 mb-10">
               <button
                 onClick={() => scrollToSection('projects')}
-                className="group relative h-14 w-48 rounded-xl bg-primary text-white font-syne font-bold uppercase tracking-wider text-sm flex items-center justify-center overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[0_0_30px_rgba(0,183,255,0.4)]"
+                className="group relative h-14 w-full sm:w-48 rounded-xl bg-primary text-white font-syne font-bold uppercase tracking-wider text-sm flex items-center justify-center overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[0_0_30px_rgba(0,183,255,0.4)]"
               >
                 <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-primary via-blue-400 to-primary opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 <span className="relative z-10 flex items-center gap-2">
@@ -176,7 +183,7 @@ const HeroSection = () => {
 
               <button
                 onClick={() => scrollToSection('contact')}
-                className="group h-14 px-8 rounded-xl bg-white/[0.03] border border-white/10 text-white/90 font-syne font-semibold hover:bg-white/10 hover:border-white/20 transition-all duration-300 backdrop-blur-md flex items-center gap-2"
+                className="group h-14 w-full sm:w-auto px-8 rounded-xl bg-white/[0.03] border border-white/10 text-white/90 font-syne font-semibold hover:bg-white/10 hover:border-white/20 transition-all duration-300 backdrop-blur-md flex items-center justify-center gap-2"
               >
                 Start a Dialogue
                 <ArrowUpRight size={16} className="text-primary group-hover:-translate-y-1 group-hover:translate-x-1 transition-transform duration-300" />

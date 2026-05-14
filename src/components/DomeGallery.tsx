@@ -72,6 +72,20 @@ const DEFAULTS = {
   segments: 35
 };
 
+/** Device-aware segment count for performance */
+function getDeviceSegments(): number {
+  if (typeof window === 'undefined') return DEFAULTS.segments;
+  if (window.innerWidth < 640) return 12;  // Mobile: minimal tiles
+  if (window.innerWidth < 1024) return 20; // Tablet: moderate
+  return DEFAULTS.segments;                // Desktop: full quality
+}
+
+/** Detect touch device */
+function isTouchDevice(): boolean {
+  if (typeof window === 'undefined') return false;
+  return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+}
+
 const clamp = (v: number, min: number, max: number) => Math.min(Math.max(v, min), max);
 const normalizeAngle = (d: number) => ((d % 360) + 360) % 360;
 const wrapAngleSigned = (deg: number) => {
@@ -161,6 +175,11 @@ export default function DomeGallery({
   grayscale = true,
   onImageClick
 }: DomeGalleryProps) {
+  // Device-aware defaults
+  const effectiveSegments = segments === DEFAULTS.segments ? getDeviceSegments() : segments;
+  const isTouch = isTouchDevice();
+  const effectiveDragSensitivity = isTouch ? dragSensitivity * 2 : dragSensitivity; // Reduce sensitivity 50% on touch
+
   const rootRef = useRef<HTMLDivElement>(null);
   const mainRef = useRef<HTMLDivElement>(null);
   const sphereRef = useRef<HTMLDivElement>(null);
@@ -201,7 +220,7 @@ export default function DomeGallery({
     document.body.classList.remove('dg-scroll-lock');
   }, []);
 
-  const items = useMemo(() => buildItems(images, segments), [images, segments]);
+  const items = useMemo(() => buildItems(images, effectiveSegments), [images, effectiveSegments]);
 
   const applyTransform = (xDeg: number, yDeg: number) => {
     const el = sphereRef.current;
@@ -373,11 +392,11 @@ export default function DomeGallery({
         }
 
         const nextX = clamp(
-          startRotRef.current.x - dyTotal / dragSensitivity,
+          startRotRef.current.x - dyTotal / effectiveDragSensitivity,
           -maxVerticalRotationDeg,
           maxVerticalRotationDeg
         );
-        const nextY = startRotRef.current.y + dxTotal / dragSensitivity;
+        const nextY = startRotRef.current.y + dxTotal / effectiveDragSensitivity;
 
         const cur = rotationRef.current;
         if (cur.x !== nextX || cur.y !== nextY) {
@@ -406,8 +425,8 @@ export default function DomeGallery({
 
           if (!isTap && Math.abs(vx) < 0.001 && Math.abs(vy) < 0.001 && Array.isArray(movement)) {
             const [mx, my] = movement;
-            vx = (mx / dragSensitivity) * 0.02;
-            vy = (my / dragSensitivity) * 0.02;
+            vx = (mx / effectiveDragSensitivity) * 0.02;
+            vy = (my / effectiveDragSensitivity) * 0.02;
           }
 
           if (!isTap && (Math.abs(vx) > 0.005 || Math.abs(vy) > 0.005)) {
@@ -592,7 +611,7 @@ export default function DomeGallery({
     const offsetY = getDataNumber(parent, 'offsetY', 0);
     const sizeX = getDataNumber(parent, 'sizeX', 2);
     const sizeY = getDataNumber(parent, 'sizeY', 2);
-    const parentRot = computeItemBaseRotation(offsetX, offsetY, sizeX, sizeY, segments);
+    const parentRot = computeItemBaseRotation(offsetX, offsetY, sizeX, sizeY, effectiveSegments);
     const parentY = normalizeAngle(parentRot.rotateY);
     const globalY = normalizeAngle(rotationRef.current.y);
     let rotY = -(parentY + globalY) % 360;
@@ -794,8 +813,8 @@ export default function DomeGallery({
         className="sphere-root relative w-full h-full"
         style={
           {
-            ['--segments-x' as any]: segments,
-            ['--segments-y' as any]: segments,
+            ['--segments-x' as any]: effectiveSegments,
+            ['--segments-y' as any]: effectiveSegments,
             ['--overlay-blur-color' as any]: overlayBlurColor,
             ['--tile-radius' as any]: imageBorderRadius,
             ['--enlarge-radius' as any]: openedImageBorderRadius,
@@ -807,7 +826,7 @@ export default function DomeGallery({
           ref={mainRef}
           className="absolute inset-0 grid place-items-center overflow-hidden select-none bg-transparent"
           style={{
-            touchAction: 'none',
+            touchAction: isTouch ? 'pan-y' : 'none',
             WebkitUserSelect: 'none'
           }}
         >
@@ -878,6 +897,8 @@ export default function DomeGallery({
                       draggable={false}
                       alt={it.alt}
                       className="w-full h-full object-cover pointer-events-none"
+                      loading="lazy"
+                      decoding="async"
                       style={{
                         backfaceVisibility: 'hidden',
                         filter: `var(--image-filter, ${grayscale ? 'grayscale(1)' : 'none'})`

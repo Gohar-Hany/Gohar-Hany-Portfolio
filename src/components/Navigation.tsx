@@ -1,3 +1,6 @@
+// OPTIMIZED: Focus trap in mobile menu, auto-close on route change, sticky nav with backdrop blur, 48px tap targets
+// BREAKPOINTS: md (768px) for mobile/desktop toggle
+// PERFORMANCE: CSS transitions only (no GSAP overhead), passive scroll listener
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Github, Linkedin, Mail, ArrowUpRight } from 'lucide-react';
 
@@ -17,12 +20,63 @@ const Navigation = () => {
   const [isNavVisible, setIsNavVisible] = useState(true);
 
   const lastScrollY = useRef(0);
-  const scrollTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isOpenRef = useRef(isOpen);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const hamburgerRef = useRef<HTMLButtonElement>(null);
 
   // Keep ref in sync so scroll handler always has latest value
   useEffect(() => {
     isOpenRef.current = isOpen;
+  }, [isOpen]);
+
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
+
+  // Focus trap for mobile menu
+  useEffect(() => {
+    if (!isOpen || !menuRef.current) return;
+
+    const menu = menuRef.current;
+    const focusableEls = menu.querySelectorAll<HTMLElement>(
+      'button, a, [tabindex]:not([tabindex="-1"])'
+    );
+    const firstEl = focusableEls[0];
+    const lastEl = focusableEls[focusableEls.length - 1];
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsOpen(false);
+        hamburgerRef.current?.focus();
+        return;
+      }
+      if (e.key !== 'Tab') return;
+
+      if (e.shiftKey) {
+        if (document.activeElement === firstEl) {
+          e.preventDefault();
+          lastEl?.focus();
+        }
+      } else {
+        if (document.activeElement === lastEl) {
+          e.preventDefault();
+          firstEl?.focus();
+        }
+      }
+    };
+
+    // Focus first item
+    firstEl?.focus();
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
   }, [isOpen]);
 
   const scrollToSection = useCallback((sectionId: string) => {
@@ -32,6 +86,7 @@ const Navigation = () => {
       const top = element.getBoundingClientRect().top + window.scrollY - navHeight;
       window.scrollTo({ top, behavior: 'smooth' });
     }
+    // Auto-close mobile menu on section navigate
     setIsOpen(false);
   }, []);
 
@@ -102,8 +157,9 @@ const Navigation = () => {
 
   return (
     <nav
-      className="fixed top-0 left-0 right-0 z-[100] py-4 px-4 sm:px-6 lg:px-8 pointer-events-none"
+      className="fixed top-0 left-0 right-0 py-4 px-4 sm:px-6 lg:px-8 pointer-events-none"
       style={{
+        zIndex: 'var(--z-sticky-nav, 100)',
         transform: isNavVisible ? 'translateY(0)' : 'translateY(-110%)',
         opacity: isNavVisible ? 1 : 0,
         transition: 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease',
@@ -154,7 +210,7 @@ const Navigation = () => {
               >
                 <span className="relative z-10">{item.label}</span>
                 {activeSection === item.id && (
-                  <div className="absolute inset-0 bg-white/10 rounded-xl z-0" />
+                  <div className="absolute inset-0 bg-white/10 rounded-xl z-0 pointer-events-none" />
                 )}
                 <div
                   className={`absolute bottom-0 left-1/2 -translate-x-1/2 h-[2px] bg-primary rounded-t-full transition-all duration-300 ease-out z-10 ${activeSection === item.id
@@ -204,9 +260,12 @@ const Navigation = () => {
         {/* Mobile menu hamburger */}
         <div className="md:hidden flex items-center">
           <button
+            ref={hamburgerRef}
             onClick={() => setIsOpen(!isOpen)}
             className="w-12 h-12 flex items-center justify-center rounded-[1rem] text-white hover:bg-white/10 border border-transparent hover:border-white/10 transition-all duration-300 focus:outline-none"
             aria-label={isOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={isOpen}
+            aria-controls="mobile-menu"
           >
             <div className="relative w-5 h-4 flex flex-col justify-between items-center overflow-hidden">
               <span
@@ -225,9 +284,17 @@ const Navigation = () => {
 
       {/* Mobile Navigation Dropdown Menu */}
       <div
-        className={`absolute top-full left-4 right-4 mt-3 pointer-events-auto md:hidden overflow-hidden transition-all duration-500 origin-top ${isOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'
+        ref={menuRef}
+        id="mobile-menu"
+        className={`absolute top-full left-4 right-4 mt-3 md:hidden overflow-hidden transition-all duration-500 origin-top ${isOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
           }`}
-        style={{ transitionTimingFunction: 'cubic-bezier(0.22, 1, 0.36, 1)' }}
+        style={{
+          transitionTimingFunction: 'cubic-bezier(0.22, 1, 0.36, 1)',
+          pointerEvents: isOpen ? 'auto' : 'none',
+          visibility: isOpen ? 'visible' : 'hidden',
+        }}
+        role="menu"
+        aria-hidden={!isOpen}
       >
         <div className="bg-[#040d1a]/95 backdrop-blur-3xl border border-white/10 shadow-[0_20px_40px_rgba(0,0,0,0.6)] rounded-[2rem] p-5 flex flex-col gap-2 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-[200px] h-[200px] bg-primary/20 blur-[60px] pointer-events-none rounded-full" />
@@ -236,6 +303,8 @@ const Navigation = () => {
             <button
               key={item.id}
               onClick={() => scrollToSection(item.id)}
+              role="menuitem"
+              tabIndex={isOpen ? 0 : -1}
               className={`w-full text-left px-5 py-4 rounded-2xl text-[15px] font-syne font-medium transition-all duration-300 flex items-center justify-between group relative z-10 ${activeSection === item.id
                 ? 'text-white bg-white/[0.08] shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)] border border-white/[0.05]'
                 : 'text-white/60 hover:text-white hover:bg-white/[0.04]'
@@ -244,6 +313,7 @@ const Navigation = () => {
                 transitionDelay: isOpen ? `${index * 40}ms` : '0ms',
                 transform: isOpen ? 'translateY(0)' : 'translateY(-15px)',
                 opacity: isOpen ? 1 : 0,
+                minHeight: '48px',
               }}
             >
               {item.label}
@@ -263,6 +333,8 @@ const Navigation = () => {
           >
             <button
               onClick={() => scrollToSection('contact')}
+              role="menuitem"
+              tabIndex={isOpen ? 0 : -1}
               className="flex-1 h-[3.25rem] bg-gradient-to-r from-primary to-blue-500 text-white text-[15px] font-syne font-bold rounded-2xl flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(0,183,255,0.2)] focus:outline-none"
             >
               Let's Talk
@@ -272,6 +344,7 @@ const Navigation = () => {
               href="https://github.com/Gohar-Hany"
               target="_blank"
               rel="noopener noreferrer"
+              tabIndex={isOpen ? 0 : -1}
               className="w-[3.25rem] h-[3.25rem] flex items-center justify-center rounded-2xl bg-white/[0.03] border border-white/10 text-white/80 hover:text-white hover:bg-white/[0.08] transition-all duration-300"
             >
               <Github size={18} />
@@ -280,6 +353,7 @@ const Navigation = () => {
               href="https://linkedin.com/in/goharhany"
               target="_blank"
               rel="noopener noreferrer"
+              tabIndex={isOpen ? 0 : -1}
               className="w-[3.25rem] h-[3.25rem] flex items-center justify-center rounded-2xl bg-white/[0.03] border border-white/10 text-white/80 hover:text-[#0A66C2] hover:bg-[#0A66C2]/10 transition-all duration-300"
             >
               <Linkedin size={18} />

@@ -1,13 +1,15 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { X, Utensils, Headphones, Users, BarChart3, Search, MapPin, Palette, Clock, Zap, Shield, Database, Code, ArrowRight, ExternalLink, Activity } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useScrollLock } from '@/hooks/useScrollLock';
 
 const ProjectsSection = () => {
     const [isVisible, setIsVisible] = useState(false);
     const sectionRef = useRef<HTMLElement>(null);
     const [selectedProject, setSelectedProject] = useState<number | null>(null);
     const [activeTab, setActiveTab] = useState('overview');
+    const { lock: lockScroll, unlock: unlockScroll } = useScrollLock();
 
     const projects = [
         {
@@ -331,16 +333,16 @@ const ProjectsSection = () => {
         };
     }, []);
 
-    const openProject = (id: number) => {
+    const openProject = useCallback((id: number) => {
         setSelectedProject(id);
         setActiveTab('overview');
-        document.body.style.overflow = 'hidden';
-    };
+        lockScroll();
+    }, [lockScroll]);
 
-    const closeProject = () => {
+    const closeProject = useCallback(() => {
         setSelectedProject(null);
-        document.body.style.overflow = 'auto';
-    };
+        unlockScroll();
+    }, [unlockScroll]);
 
     const currentProject = projects.find(p => p.id === selectedProject);
 
@@ -370,7 +372,7 @@ const ProjectsSection = () => {
                 </div>
 
                 {/* Bento Grid Layout for Projects */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 lg:gap-8">
                     {projects.map((project, index) => {
                         const IconComponent = project.icon;
                         const delay = index * 150;
@@ -378,15 +380,21 @@ const ProjectsSection = () => {
                         return (
                             <div
                                 key={project.id}
-                                className={`group cursor-pointer relative rounded-[2.5rem] p-10 pb-16 bg-white/[0.02] border border-white/[0.05] backdrop-blur-xl overflow-hidden transition-all duration-700 ease-out
+                                role="button"
+                                tabIndex={0}
+                                className={`group cursor-pointer relative rounded-[1.5rem] sm:rounded-[2.5rem] p-6 sm:p-10 pb-12 sm:pb-16 bg-white/[0.02] border border-white/[0.05] backdrop-blur-xl overflow-hidden transition-all duration-700 ease-out
                                 hover:-translate-y-2 hover:bg-white/[0.03] ${project.borderGlow} hover:shadow-2xl hover:shadow-black/50
                                 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}
                                 `}
-                                style={{ transitionDelay: `${200 + delay}ms` }}
-                                onClick={() => openProject(project.id)}
+                                style={{ transitionDelay: `${200 + delay}ms`, touchAction: 'manipulation' }}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    openProject(project.id);
+                                }}
+                                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openProject(project.id); } }}
                             >
                                 {/* Active / Hover Gradient Background */}
-                                <div className={`absolute inset-0 bg-gradient-to-br ${project.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-[2rem] -z-10`} />
+                                <div className={`absolute inset-0 bg-gradient-to-br ${project.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-[2rem] -z-10 pointer-events-none`} />
 
                                 {/* Category & Status Tags */}
                                 <div className="flex flex-wrap items-center gap-3 mb-6">
@@ -459,7 +467,7 @@ const ProjectsSection = () => {
                 {/* CTA Section */}
                 <div className={`mt-16 sm:mt-20 transition-all duration-1000 delay-500 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
                     <div className="relative rounded-[2rem] overflow-hidden bg-white/[0.02] border border-white/[0.05] p-10 md:p-16 text-center group flex flex-col items-center justify-center backdrop-blur-xl hover:bg-white/[0.03] transition-colors duration-500">
-                        <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-transparent to-accent/10 opacity-50 group-hover:opacity-100 transition-opacity duration-700" />
+                        <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-transparent to-accent/10 opacity-50 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
                         <Activity className="w-12 h-12 text-primary/50 mb-6 group-hover:scale-110 group-hover:text-primary transition-all duration-500" />
                         <h3 className="text-3xl md:text-4xl lg:text-5xl font-bold font-syne text-white mb-6">Ready to Automate?</h3>
                         <p className="text-white/60 font-dmsans mb-10 max-w-2xl text-lg lg:text-xl leading-relaxed">
@@ -481,27 +489,30 @@ const ProjectsSection = () => {
             {currentProject && createPortal(
                 (
                     <div
-                        className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-6 lg:p-10 bg-black/60 backdrop-blur-md animate-in fade-in duration-300"
+                        className="fixed inset-0 flex items-center justify-center p-0 sm:p-4 md:p-6 lg:p-10 bg-black/60 backdrop-blur-md animate-in fade-in duration-300"
+                        style={{ zIndex: 'var(--z-modal-backdrop, 200)' }}
                         onClick={closeProject}
                         role="dialog"
                         aria-modal="true"
                         aria-labelledby="project-modal-title"
                     >
                         <div
-                            className="relative w-full max-w-6xl max-h-[90vh] lg:max-h-[85vh] flex flex-col lg:flex-row bg-[#0A0A0B] border border-white/10 rounded-[2rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300"
+                            className="relative w-full sm:max-w-6xl h-full sm:h-auto sm:max-h-[90vh] lg:max-h-[85vh] flex flex-col lg:flex-row bg-[#0A0A0B] border-0 sm:border border-white/10 rounded-none sm:rounded-[2rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300"
+                            style={{ zIndex: 'var(--z-modal, 300)', overscrollBehavior: 'contain' }}
                             onClick={(e) => e.stopPropagation()}
                         >
 
                             <button
                                 onClick={closeProject}
-                                className="absolute top-6 right-6 z-50 w-10 h-10 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 flex items-center justify-center transition-colors text-white/70 hover:text-white"
+                                className="fixed sm:absolute top-4 right-4 sm:top-6 sm:right-6 w-12 h-12 sm:w-10 sm:h-10 rounded-full bg-black/50 sm:bg-white/5 border border-white/20 sm:border-white/10 hover:bg-white/10 flex items-center justify-center transition-colors text-white hover:text-white backdrop-blur-xl"
+                                style={{ zIndex: 9999 }}
                                 aria-label="Close modal"
                             >
                                 <X size={20} />
                             </button>
 
                             {/* Sidebar / Header Details */}
-                            <div className="w-full lg:w-[400px] flex-shrink-0 bg-white/[0.02] border-r border-white/5 p-8 flex flex-col relative overflow-y-auto custom-scroll">
+                            <div className="w-full lg:w-[400px] flex-shrink-0 bg-white/[0.02] border-b lg:border-b-0 lg:border-r border-white/5 p-6 sm:p-8 flex flex-col relative overflow-y-auto custom-scroll">
                                 <div className={`absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b ${currentProject.gradient} opacity-20 pointer-events-none`} />
 
                                 <div className="relative z-10 flex-1 flex flex-col">
@@ -554,7 +565,7 @@ const ProjectsSection = () => {
                             <div className="flex-1 flex flex-col min-h-0 bg-transparent">
 
                                 {/* Tabs Navigation */}
-                                <div className="flex overflow-x-auto gap-1 px-8 pt-8 pb-4 border-b border-white/5 no-scrollbar">
+                                <div className="flex overflow-x-auto gap-1 px-4 sm:px-8 pt-6 sm:pt-8 pb-4 border-b border-white/5 no-scrollbar">
                                     {[
                                         { id: 'overview', label: 'Overview' },
                                         { id: 'architecture', label: 'Architecture' },
@@ -575,7 +586,7 @@ const ProjectsSection = () => {
                                 </div>
 
                                 {/* Tab Content */}
-                                <div className="flex-1 overflow-y-auto px-8 py-8 custom-scroll">
+                                <div className="flex-1 overflow-y-auto px-4 sm:px-8 py-6 sm:py-8 custom-scroll" style={{ overscrollBehavior: 'contain', WebkitOverflowScrolling: 'touch' }}>
                                     <div className="max-w-3xl animate-in slide-in-from-right-4 duration-300">
 
                                         {/* OVERVIEW TAB */}
