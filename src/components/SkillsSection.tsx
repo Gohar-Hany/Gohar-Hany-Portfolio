@@ -314,8 +314,8 @@ const CATEGORIES = [
     vizLabel: 'AGENT GRAPH · 7 NODES',
     vizVal: 'EXEC',
     Viz: AgentGraphViz,
-    gridClass: 'lg:col-span-7 lg:row-span-2',
-    vizHeight: 'h-[180px] lg:h-[200px]',
+    gridClass: 'lg:col-span-7',
+    vizHeight: 'h-[120px] lg:h-[150px]',
     skills: ['Agentic AI Systems', 'Multi-Agent Orchestration', 'MCP Protocol', 'Tool Calling', 'Memory Systems', 'Planning & Reasoning', 'AI Guardrails', 'Prompt Engineering'],
   },
   {
@@ -400,7 +400,7 @@ const STATS = [
 /* ─────────────────────────────────────
  * SKILL CARD COMPONENT
  * ───────────────────────────────────── */
-const SkillCard = ({ cat, visible }: { cat: typeof CATEGORIES[0]; visible: boolean }) => {
+const SkillCard = ({ cat, visible, index }: { cat: typeof CATEGORIES[0]; visible: boolean; index: number }) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const Icon = cat.icon;
 
@@ -414,17 +414,23 @@ const SkillCard = ({ cat, visible }: { cat: typeof CATEGORIES[0]; visible: boole
     <div
       ref={cardRef}
       onMouseMove={handleMouse}
-      className={`${cat.gridClass} relative overflow-hidden flex flex-col
+      className={`${cat.gridClass} md:col-span-1 relative overflow-hidden flex flex-col
         border border-white/[0.06] p-6 lg:p-8
-        transition-all duration-500 ease-[cubic-bezier(.16,1,.3,1)]
-        hover:border-primary/40 hover:-translate-y-1
+        transition-all duration-700 ease-[cubic-bezier(.16,1,.3,1)]
+        hover:border-white/[0.12] hover:-translate-y-1
         ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-7'}
         group`}
       style={{
         background: 'rgba(12, 15, 20, 0.85)',
-        transitionDelay: visible ? '0.15s' : '0s',
+        transitionDelay: visible ? `${0.1 + index * 0.08}s` : '0s',
       }}
     >
+      {/* Left accent bar */}
+      <div
+        className="absolute left-0 top-0 bottom-0 w-[2px] opacity-40 group-hover:opacity-100 transition-opacity duration-500"
+        style={{ background: cat.color, boxShadow: `0 0 8px ${cat.color}50` }}
+      />
+
       {/* Cursor spotlight */}
       <div
         className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-0"
@@ -433,9 +439,20 @@ const SkillCard = ({ cat, visible }: { cat: typeof CATEGORIES[0]; visible: boole
         }}
       />
 
-      {/* Top bar: label + status */}
+      {/* Top bar: icon + label + status */}
       <div className="relative z-10 flex justify-between items-center text-[10.5px] tracking-[0.14em] uppercase font-dmsans mb-5">
-        <span className="text-white/30">{cat.label}</span>
+        <div className="flex items-center gap-2.5">
+          <div
+            className="p-1.5 rounded-md transition-all duration-500 group-hover:scale-110"
+            style={{ background: `${cat.color}12`, border: `1px solid ${cat.color}20` }}
+          >
+            <Icon
+              className="w-4 h-4"
+              style={{ color: cat.color, filter: `drop-shadow(0 0 6px ${cat.color}60)` }}
+            />
+          </div>
+          <span className="text-white/35">{cat.label}</span>
+        </div>
         <span className="flex items-center gap-1.5" style={{ color: cat.color }}>
           <span
             className="w-[6px] h-[6px] rounded-full"
@@ -450,22 +467,34 @@ const SkillCard = ({ cat, visible }: { cat: typeof CATEGORIES[0]; visible: boole
       </div>
 
       {/* Title */}
-      <h3 className="relative z-10 text-xl lg:text-2xl font-syne font-bold text-white tracking-tight leading-tight mb-3">
+      <h3 className="relative z-10 text-xl lg:text-2xl font-syne font-bold text-white tracking-tight leading-tight mb-2">
         {cat.title}
       </h3>
 
       {/* Description */}
-      <p className="relative z-10 text-sm font-dmsans text-white/40 mb-5 max-w-[520px] leading-relaxed">
+      <p className="relative z-10 text-[13px] font-dmsans text-white/40 mb-5 max-w-[520px] leading-relaxed">
         {cat.desc}
       </p>
 
       {/* Skill tags */}
-      <div className="relative z-10 flex flex-wrap gap-[5px] mb-6">
+      <div className="relative z-10 flex flex-wrap gap-[5px] mb-5">
         {cat.skills.map((skill) => (
           <span
             key={skill}
-            className="text-[10.5px] px-2.5 py-[5px] border border-white/[0.06] text-white/45 tracking-wide font-dmsans
-              hover:text-white hover:border-white/20 transition-all duration-300"
+            className="text-[11px] px-2.5 py-[5px] border text-white/55 tracking-wide font-dmsans
+              hover:text-white transition-all duration-300"
+            style={{
+              borderColor: `${cat.color}15`,
+              background: `${cat.color}06`,
+            }}
+            onMouseEnter={(e) => {
+              (e.target as HTMLElement).style.borderColor = `${cat.color}40`;
+              (e.target as HTMLElement).style.background = `${cat.color}12`;
+            }}
+            onMouseLeave={(e) => {
+              (e.target as HTMLElement).style.borderColor = `${cat.color}15`;
+              (e.target as HTMLElement).style.background = `${cat.color}06`;
+            }}
           >
             {skill}
           </span>
@@ -531,24 +560,32 @@ const SkillsSection = () => {
     <section
       ref={sectionRef}
       id="skills"
-      className="py-20 lg:py-28 relative bg-background overflow-hidden selection:bg-primary/30"
+      className="py-16 lg:py-24 relative bg-background overflow-hidden selection:bg-primary/30"
     >
       {/* ═══ HEADER ═══ */}
       <div className="max-w-[85rem] mx-auto px-6 lg:px-8 relative z-10">
-        <div className={`flex items-baseline gap-4 mb-14 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          <span className="text-primary font-dmsans text-sm tracking-[0.1em]">/ 03</span>
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold font-syne text-white tracking-tight leading-none">
-            Stack
-          </h2>
-          <div className="flex-1 h-[1px] bg-white/[0.06] ml-2.5 relative">
-            <div className="absolute left-0 -top-[1px] h-[3px] w-8 bg-primary" style={{ boxShadow: '0 0 10px var(--neon-blue)' }} />
+        <div className={`mb-10 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          {/* Section number + rule */}
+          <div className="flex items-baseline gap-4 mb-5">
+            <span className="text-primary font-dmsans text-sm tracking-[0.1em]">/ 03</span>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold font-syne text-white tracking-tight leading-none">
+              Skills <span className="text-white/20">&</span> <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">Expertise</span>
+            </h2>
+            <div className="flex-1 h-[1px] bg-white/[0.06] ml-2.5 relative hidden md:block">
+              <div className="absolute left-0 -top-[1px] h-[3px] w-8 bg-primary" style={{ boxShadow: '0 0 10px var(--neon-blue)' }} />
+            </div>
           </div>
+          {/* Subtitle */}
+          <p className="text-sm md:text-base font-dmsans text-white/35 max-w-2xl leading-relaxed">
+            The tools, platforms, and technologies I use daily to build production AI systems — 
+            from agentic architectures to deployment infrastructure.
+          </p>
         </div>
       </div>
 
       {/* ═══ MARQUEE STRIP ═══ */}
       <div
-        className={`relative border-t border-b border-white/[0.06] overflow-hidden py-4 mb-14 transition-all duration-1000 delay-200 ease-out ${isVisible ? 'opacity-100' : 'opacity-0'}`}
+        className={`relative border-t border-b border-white/[0.06] overflow-hidden py-4 mb-10 transition-all duration-1000 delay-200 ease-out ${isVisible ? 'opacity-100' : 'opacity-0'}`}
         style={{ background: 'rgba(12, 15, 20, 0.6)' }}
       >
         {/* Fade edges */}
@@ -573,18 +610,22 @@ const SkillsSection = () => {
 
       {/* ═══ BENTO GRID ═══ */}
       <div className="max-w-[85rem] mx-auto px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-4 lg:gap-5">
           {CATEGORIES.map((cat, i) => (
-            <SkillCard key={cat.title} cat={cat} visible={isVisible} />
+            <SkillCard key={cat.title} cat={cat} visible={isVisible} index={i} />
           ))}
         </div>
 
         {/* ═══ STATS ═══ */}
-        <div className={`grid grid-cols-2 lg:grid-cols-4 gap-0 mt-14 border-t border-b border-white/[0.05] transition-all duration-1000 delay-500 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+        <div className={`grid grid-cols-2 lg:grid-cols-4 gap-0 mt-10 border-t border-b border-white/[0.05] transition-all duration-1000 delay-500 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           {STATS.map((stat, i) => (
             <div
               key={stat.label}
-              className="relative py-8 px-5 lg:px-8 border-r border-white/[0.05] last:border-r-0 overflow-hidden"
+              className={`relative py-7 px-5 lg:px-8 overflow-hidden
+                lg:border-r lg:border-white/[0.05] lg:last:border-r-0
+                ${i % 2 === 0 ? 'border-r border-white/[0.05]' : ''}
+                ${i < 2 ? 'border-b border-white/[0.05] lg:border-b-0' : ''}
+              `}
             >
               <div
                 className={`absolute left-0 right-0 bottom-0 h-[1px] transition-transform duration-[800ms] ease-[cubic-bezier(.16,1,.3,1)] origin-left ${isVisible ? 'scale-x-100' : 'scale-x-0'}`}
