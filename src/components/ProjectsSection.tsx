@@ -345,6 +345,7 @@ const ProjectsSection = () => {
     }, [unlockScroll]);
 
     const currentProject = projects.find(p => p.id === selectedProject);
+    const ModalIconComponent = currentProject?.icon;
 
     return (
         <section ref={sectionRef} id="projects" className="py-24 lg:py-32 relative bg-background overflow-hidden selection:bg-primary/30">
@@ -382,7 +383,7 @@ const ProjectsSection = () => {
                                 key={project.id}
                                 role="button"
                                 tabIndex={0}
-                                className={`group cursor-pointer relative rounded-[1.5rem] sm:rounded-[2.5rem] p-6 sm:p-10 pb-12 sm:pb-16 bg-white/[0.02] border border-white/[0.05] backdrop-blur-xl overflow-hidden transition-all duration-700 ease-out
+                                className={`group cursor-pointer project-card relative rounded-[1.5rem] sm:rounded-[2.5rem] p-6 sm:p-10 pb-12 sm:pb-16 bg-white/[0.02] border border-white/[0.05] backdrop-blur-xl overflow-hidden transition-all duration-700 ease-out
                                 hover:-translate-y-2 hover:bg-white/[0.03] ${project.borderGlow} hover:shadow-2xl hover:shadow-black/50
                                 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}
                                 `}
@@ -497,7 +498,7 @@ const ProjectsSection = () => {
                         aria-labelledby="project-modal-title"
                     >
                         <div
-                            className="relative w-full sm:max-w-6xl h-full sm:h-auto sm:max-h-[90vh] lg:max-h-[85vh] flex flex-col lg:flex-row bg-[#0A0A0B] border-0 sm:border border-white/10 rounded-none sm:rounded-[2rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300"
+                            className="relative w-full sm:max-w-6xl h-full sm:h-auto sm:max-h-[90vh] lg:max-h-[85vh] flex flex-col lg:flex-row bg-[#0A0A0B] border-0 sm:border border-white/10 rounded-none sm:rounded-[2rem] shadow-2xl lg:overflow-hidden overflow-y-auto animate-in zoom-in-95 duration-300"
                             style={{ zIndex: 'var(--z-modal, 300)', overscrollBehavior: 'contain' }}
                             onClick={(e) => e.stopPropagation()}
                         >
@@ -512,14 +513,14 @@ const ProjectsSection = () => {
                             </button>
 
                             {/* Sidebar / Header Details */}
-                            <div className="w-full lg:w-[400px] flex-shrink-0 bg-white/[0.02] border-b lg:border-b-0 lg:border-r border-white/5 p-6 sm:p-8 flex flex-col relative overflow-y-auto custom-scroll">
+                            <div className="w-full lg:w-[400px] flex-shrink-0 bg-white/[0.02] border-b lg:border-b-0 lg:border-r border-white/5 p-6 sm:p-8 pt-20 lg:pt-8 flex flex-col relative lg:overflow-y-auto overflow-y-visible custom-scroll">
                                 <div className={`absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b ${currentProject.gradient} opacity-20 pointer-events-none`} />
 
                                 <div className="relative z-10 flex-1 flex flex-col">
                                     {/* Icon & Badges */}
                                     <div className="flex flex-col gap-6 mb-8">
                                         <div className={`w-16 h-16 rounded-2xl bg-white/[0.03] border border-white/10 flex items-center justify-center shadow-lg`}>
-                                            <currentProject.icon size={32} className={currentProject.iconColor} />
+                                            {ModalIconComponent && <ModalIconComponent size={32} className={currentProject.iconColor} />}
                                         </div>
                                         <div className="flex flex-wrap gap-2">
                                             <span className="text-[10px] font-bold text-white uppercase tracking-widest px-3 py-1.5 rounded-full bg-white/10 border border-white/20">
@@ -586,7 +587,7 @@ const ProjectsSection = () => {
                                 </div>
 
                                 {/* Tab Content */}
-                                <div className="flex-1 overflow-y-auto px-4 sm:px-8 py-6 sm:py-8 custom-scroll" style={{ overscrollBehavior: 'contain', WebkitOverflowScrolling: 'touch' }}>
+                                <div className="flex-1 lg:overflow-y-auto overflow-y-visible px-4 sm:px-8 py-6 sm:py-8 custom-scroll" style={{ overscrollBehavior: 'contain', WebkitOverflowScrolling: 'touch' }}>
                                     <div className="max-w-3xl animate-in slide-in-from-right-4 duration-300">
 
                                         {/* OVERVIEW TAB */}

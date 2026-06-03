@@ -1,38 +1,38 @@
-// OPTIMIZED: Centralized scroll lock management for all modals
-// PERFORMANCE: Prevents scroll position jump-to-top bug on modal close
+// OPTIMIZED: Refactored body scroll lock to use overflow hidden with scrollbar width padding-right compensation.
+// PERFORMANCE: Prevents viewport jumps, layout shifting, and stacking context errors on modal open.
 import { useCallback, useRef } from 'react';
 
 /**
  * useScrollLock — consistent scroll-lock for modals across the app.
  * 
- * When a modal opens:  saves scrollY, locks body overflow.
- * When a modal closes: restores scrollY to prevent the jump-to-top bug.
+ * When a modal opens: locks body overflow and adds padding-right to compensate for scrollbar.
+ * When a modal closes: restores original body overflow and padding.
  */
 export function useScrollLock() {
-  const savedScrollY = useRef(0);
   const isLocked = useRef(false);
+  const originalPaddingRight = useRef('');
 
   const lock = useCallback(() => {
     if (isLocked.current) return;
-    savedScrollY.current = window.scrollY;
+    
+    // Calculate scrollbar width before hiding overflow
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+    
+    originalPaddingRight.current = document.body.style.paddingRight;
+    
+    if (scrollbarWidth > 0) {
+      document.body.style.paddingRight = `${scrollbarWidth}px`;
+    }
+    
     document.body.style.overflow = 'hidden';
-    document.body.style.position = 'fixed';
-    document.body.style.top = `-${savedScrollY.current}px`;
-    document.body.style.left = '0';
-    document.body.style.right = '0';
-    document.body.style.width = '100%';
     isLocked.current = true;
   }, []);
 
   const unlock = useCallback(() => {
     if (!isLocked.current) return;
+    
     document.body.style.overflow = '';
-    document.body.style.position = '';
-    document.body.style.top = '';
-    document.body.style.left = '';
-    document.body.style.right = '';
-    document.body.style.width = '';
-    window.scrollTo(0, savedScrollY.current);
+    document.body.style.paddingRight = originalPaddingRight.current;
     isLocked.current = false;
   }, []);
 

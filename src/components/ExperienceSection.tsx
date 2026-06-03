@@ -192,7 +192,7 @@ const ExperienceSection = () => {
 
           {/* Timeline navigation (Left Column) */}
           <div className={`lg:col-span-5 xl:col-span-4 transition-all duration-1000 delay-200 ease-out ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-12'}`}>
-            <div className="sticky top-32 flex flex-col gap-3">
+            <div className="lg:sticky lg:top-32 flex flex-row lg:flex-col gap-3 overflow-x-auto pb-4 lg:pb-0 no-scrollbar">
               {experiences.map((exp, index) => {
                 const IconComponent = exp.icon;
                 const isActive = index === activeExperience;
@@ -202,7 +202,7 @@ const ExperienceSection = () => {
                   <button
                     key={exp.id}
                     onClick={() => setActiveExperience(index)}
-                    className={`group relative w-full text-left p-4 rounded-[1.25rem] transition-all duration-500 overflow-hidden outline-none
+                    className={`group relative w-auto flex-shrink-0 lg:w-full text-left p-4 rounded-[1.25rem] transition-all duration-500 overflow-hidden outline-none
                       ${isActive
                         ? 'bg-white/[0.04] border-white/20 shadow-lg shadow-black/20'
                         : 'bg-white/[0.015] border-white/[0.03] hover:bg-white/[0.03] hover:border-white/10'
@@ -231,7 +231,7 @@ const ExperienceSection = () => {
                         </p>
                       </div>
 
-                      <div className={`transition-all duration-500 ${isActive ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}>
+                      <div className={`hidden lg:block transition-all duration-500 ${isActive ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}>
                         <ChevronRight size={18} className={isPrimary ? 'text-primary' : 'text-accent'} />
                       </div>
                     </div>
@@ -243,7 +243,7 @@ const ExperienceSection = () => {
 
           {/* Experience details (Right Column) */}
           <div className={`lg:col-span-7 xl:col-span-8 transition-all duration-1000 delay-400 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
-            <div className="relative h-full min-h-[600px] lg:min-h-0">
+            <div className="relative w-full h-auto lg:h-full min-h-0 lg:min-h-[600px]">
               {experiences.map((exp, index) => {
                 const IconComponent = exp.icon;
                 const isActive = index === activeExperience;
@@ -254,9 +254,9 @@ const ExperienceSection = () => {
                 return (
                   <div
                     key={exp.id}
-                    className="absolute inset-0 animate-in fade-in slide-in-from-bottom-8 duration-700"
+                    className="relative lg:absolute lg:inset-0 w-full h-auto lg:h-full animate-in fade-in slide-in-from-bottom-8 duration-700"
                   >
-                    <div className="h-full rounded-[2rem] p-8 md:p-10 bg-white/[0.02] border border-white/[0.05] backdrop-blur-xl flex flex-col overflow-hidden group">
+                    <div className="h-auto lg:h-full rounded-[2rem] p-6 sm:p-8 md:p-10 bg-white/[0.02] border border-white/[0.05] backdrop-blur-xl flex flex-col overflow-hidden group">
                       {/* Active Background Glow */}
                       <div className={`absolute top-0 right-0 w-[400px] h-[400px] bg-gradient-to-br ${exp.bgColor} rounded-full blur-[100px] opacity-30 pointer-events-none transition-opacity duration-1000`} />
 
