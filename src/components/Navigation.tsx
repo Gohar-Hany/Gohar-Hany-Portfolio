@@ -250,10 +250,10 @@ const Navigation = () => {
 
           <button
             onClick={() => scrollToSection('contact')}
-            className="h-10 px-5 lg:px-6 bg-primary text-white text-[14px] lg:text-[15px] font-syne font-bold rounded-xl flex items-center gap-2 shadow-[0_0_20px_rgba(0,183,255,0.2)] hover:shadow-[0_0_30px_rgba(0,183,255,0.4)] hover:-translate-y-0.5 hover:scale-[1.03] transition-all duration-300 group focus:outline-none"
+            className="h-10 px-5 lg:px-6 bg-primary text-white text-[14px] lg:text-[15px] font-syne font-bold rounded-xl flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(0,183,255,0.2)] hover:shadow-[0_0_30px_rgba(0,183,255,0.4)] hover:-translate-y-0.5 hover:scale-[1.03] transition-all duration-300 group focus:outline-none whitespace-nowrap flex-shrink-0"
           >
-            Let's Talk
-            <ArrowUpRight size={16} className="text-white/80 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-white transition-all duration-300" />
+            <span>Let's Talk</span>
+            <ArrowUpRight size={16} className="text-white/80 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-white transition-all duration-300 flex-shrink-0" />
           </button>
         </div>
 
