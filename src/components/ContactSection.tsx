@@ -32,6 +32,7 @@ const ContactSection = () => {
     message: ''
   });
   const [formSubmitting, setFormSubmitting] = useState(false);
+  const [is3DActive, setIs3DActive] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const sectionRef = useRef<HTMLElement>(null);
@@ -179,7 +180,7 @@ const ContactSection = () => {
       <div className="absolute top-0 left-0 w-[800px] h-[800px] bg-primary/10 rounded-full blur-[150px] opacity-40 pointer-events-none mix-blend-screen" />
       <div className="absolute bottom-1/4 -right-1/4 w-[600px] h-[600px] bg-accent/10 rounded-full blur-[120px] opacity-30 pointer-events-none mix-blend-screen" />
 
-      <div className="max-w-[85rem] mx-auto px-6 lg:px-8 relative z-10">
+      <div className="max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
         {/* Section Header */}
         <div className={`flex flex-col md:flex-row justify-between items-end mb-16 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
@@ -204,7 +205,7 @@ const ContactSection = () => {
           <div className={`space-y-8 transition-all duration-1000 delay-200 ease-out ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-12'}`}>
 
             {/* 3D Robot Model */}
-            <div className="relative w-full h-[400px] lg:h-[450px] rounded-[2rem] overflow-hidden shadow-[0_0_40px_rgba(0,183,255,0.15)] bg-black/40 border border-white/10 group">
+            <div className="relative w-full h-[320px] sm:h-[400px] lg:h-[450px] rounded-2xl sm:rounded-[2rem] overflow-hidden shadow-[0_0_40px_rgba(0,183,255,0.15)] bg-black/40 border border-white/10 group">
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10 pointer-events-none"></div>
               <iframe
                 src="https://my.spline.design/genkubgreetingrobot-mtRM3XSqB79SaWySckBPgOcq/"
@@ -213,11 +214,33 @@ const ContactSection = () => {
                 height="100%"
                 scrolling="no"
                 loading="lazy"
-                className="scale-105 group-hover:scale-110 transition-transform duration-1000 ease-out"
+                className={`scale-105 group-hover:scale-110 transition-transform duration-1000 ease-out ${is3DActive ? 'pointer-events-auto' : 'pointer-events-none lg:pointer-events-auto'}`}
                 style={{ border: 'none' }}
                 title="3D Greeting Robot"
                 allow="autoplay"
               />
+
+              {/* Mobile interaction button toggle to prevent scroll trap */}
+              <div className="absolute bottom-5 left-1/2 -translate-x-1/2 z-30 lg:hidden">
+                {!is3DActive ? (
+                  <button
+                    type="button"
+                    onClick={() => setIs3DActive(true)}
+                    className="px-4 py-2 rounded-full bg-[#040d1a]/95 border border-primary/50 text-primary text-xs font-syne font-bold shadow-[0_0_20px_rgba(0,212,255,0.4)] flex items-center gap-2 backdrop-blur-xl transition-all active:scale-95"
+                  >
+                    <Bot size={14} className="text-accent" />
+                    <span>Tap to Interact in 3D</span>
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => setIs3DActive(false)}
+                    className="px-4 py-2 rounded-full bg-black/90 border border-white/30 text-white text-xs font-syne font-semibold flex items-center gap-1.5 backdrop-blur-xl shadow-lg transition-all active:scale-95"
+                  >
+                    <span>✕ Exit 3D (Resume Scroll)</span>
+                  </button>
+                )}
+              </div>
 
               {/* Floating indicators */}
               <div className="absolute top-6 right-6 w-3 h-3 bg-accent rounded-full animate-pulse shadow-[0_0_15px_rgba(0,255,150,0.8)] z-20" />
@@ -228,7 +251,7 @@ const ContactSection = () => {
             </div>
 
             {/* Contact Information Bento Box */}
-            <div className="p-8 md:p-10 rounded-[2rem] bg-white/[0.02] border border-white/[0.05] backdrop-blur-xl relative overflow-hidden group">
+            <div className="p-5 sm:p-8 md:p-10 rounded-2xl sm:rounded-[2rem] bg-white/[0.02] border border-white/[0.05] backdrop-blur-xl relative overflow-hidden group">
               <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-gradient-to-br from-primary/10 to-transparent rounded-full blur-[100px] opacity-40 pointer-events-none transform -translate-x-1/2 -translate-y-1/2" />
 
               <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-8 h-full">
@@ -295,7 +318,7 @@ const ContactSection = () => {
           <div className={`space-y-8 flex flex-col h-full transition-all duration-1000 delay-400 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
 
             {/* Chat Interface Bento */}
-            <div className="p-6 md:p-8 rounded-[2.5rem] bg-white/[0.02] border border-white/[0.05] backdrop-blur-xl h-[450px] lg:h-[480px] flex flex-col relative overflow-hidden group/chat">
+            <div className="p-4 sm:p-6 md:p-8 rounded-2xl sm:rounded-[2.5rem] bg-white/[0.02] border border-white/[0.05] backdrop-blur-xl h-[400px] sm:h-[450px] lg:h-[480px] flex flex-col relative overflow-hidden group/chat">
               <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-gradient-to-bl from-accent/5 to-transparent rounded-full blur-[80px] opacity-0 group-hover/chat:opacity-100 transition-opacity duration-1000 pointer-events-none" />
 
               <div className="relative z-10 flex items-center space-x-4 mb-6 pb-6 border-b border-white/[0.05]">
@@ -400,7 +423,7 @@ const ContactSection = () => {
             </div>
 
             {/* Direct Message Form Bento */}
-            <div className="p-8 md:p-10 rounded-[2.5rem] bg-white/[0.02] border border-white/[0.05] backdrop-blur-xl relative overflow-hidden group/form">
+            <div className="p-5 sm:p-8 md:p-10 rounded-2xl sm:rounded-[2.5rem] bg-white/[0.02] border border-white/[0.05] backdrop-blur-xl relative overflow-hidden group/form">
               <div className="absolute top-0 right-0 w-[300px] h-[300px] bg-gradient-to-bl from-primary/5 to-transparent rounded-full blur-[80px] opacity-0 group-hover/form:opacity-100 transition-opacity duration-1000 pointer-events-none" />
 
               <h3 className="text-xl font-bold font-syne text-white mb-6 relative z-10 flex items-center gap-3">

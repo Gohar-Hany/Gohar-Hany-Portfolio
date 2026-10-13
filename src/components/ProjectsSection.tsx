@@ -354,7 +354,7 @@ const ProjectsSection = () => {
             <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px] opacity-60 pointer-events-none mix-blend-screen" />
             <div className="absolute bottom-1/4 left-0 w-[600px] h-[600px] bg-accent/10 rounded-full blur-[150px] opacity-60 pointer-events-none mix-blend-screen" />
 
-            <div className="max-w-[85rem] mx-auto px-6 lg:px-8 relative z-10">
+            <div className="max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
                 {/* Section Header */}
                 <div className={`flex flex-col md:flex-row justify-between items-end mb-16 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
@@ -383,7 +383,7 @@ const ProjectsSection = () => {
                                 key={project.id}
                                 role="button"
                                 tabIndex={0}
-                                className={`group cursor-pointer project-card relative rounded-[1.5rem] sm:rounded-[2.5rem] p-6 sm:p-10 pb-12 sm:pb-16 bg-white/[0.02] border border-white/[0.05] backdrop-blur-xl overflow-hidden transition-all duration-700 ease-out
+                                className={`group cursor-pointer project-card relative rounded-[1.5rem] sm:rounded-[2.5rem] p-5 sm:p-8 md:p-10 pb-8 sm:pb-12 md:pb-16 bg-white/[0.02] border border-white/[0.05] backdrop-blur-xl overflow-hidden transition-all duration-700 ease-out
                                 hover:-translate-y-2 hover:bg-white/[0.03] ${project.borderGlow} hover:shadow-2xl hover:shadow-black/50
                                 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}
                                 `}
@@ -398,7 +398,7 @@ const ProjectsSection = () => {
                                 <div className={`absolute inset-0 bg-gradient-to-br ${project.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-[2rem] -z-10 pointer-events-none`} />
 
                                 {/* Category & Status Tags */}
-                                <div className="flex flex-wrap items-center gap-3 mb-6">
+                                <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 mb-5 sm:mb-6">
                                     <span className="text-[11px] font-bold text-white uppercase tracking-wider px-3 py-1.5 rounded-full bg-white/10 border border-white/20 backdrop-blur-sm">
                                         {project.category}
                                     </span>
@@ -410,52 +410,52 @@ const ProjectsSection = () => {
 
                                 {/* Content */}
                                 <div className="flex flex-col flex-1 justify-between relative z-10">
-                                    <div className="mb-12">
-                                        <div className="flex items-start gap-5 mb-5">
-                                            <div className={`p-4 rounded-2xl bg-white/[0.03] border border-white/[0.05] group-hover:scale-110 transition-transform duration-500 flex-shrink-0 shadow-lg`}>
-                                                <IconComponent className={`w-8 h-8 ${project.iconColor}`} />
+                                    <div className="mb-8 sm:mb-12">
+                                        <div className="flex items-start gap-4 sm:gap-5 mb-4 sm:mb-5">
+                                            <div className={`p-3 sm:p-4 rounded-2xl bg-white/[0.03] border border-white/[0.05] group-hover:scale-110 transition-transform duration-500 flex-shrink-0 shadow-lg`}>
+                                                <IconComponent className={`w-7 h-7 sm:w-8 sm:h-8 ${project.iconColor}`} />
                                             </div>
-                                            <h3 className="text-2xl md:text-3xl font-bold font-syne text-white leading-tight mt-1 group-hover:text-primary transition-colors">
+                                            <h3 className="text-xl sm:text-2xl md:text-3xl font-bold font-syne text-white leading-tight mt-1 group-hover:text-primary transition-colors">
                                                 {project.title}
                                             </h3>
                                         </div>
-                                        <p className="text-[16px] text-white/50 font-dmsans leading-relaxed max-w-lg">
+                                        <p className="text-[15px] sm:text-[16px] text-white/50 font-dmsans leading-relaxed max-w-lg">
                                             {project.subtitle}
                                         </p>
                                     </div>
 
                                     <div className="flex flex-col mt-auto">
                                         {/* Tech Tags */}
-                                        <div className="flex flex-wrap gap-2.5 mb-10">
+                                        <div className="flex flex-wrap gap-2 sm:gap-2.5 mb-8 sm:mb-10">
                                             {project.technologies.slice(0, 3).map((tech) => (
-                                                <span key={tech} className="px-4 py-1.5 rounded-xl text-[12px] font-semibold text-white/70 bg-white/[0.04] border border-white/[0.06] backdrop-blur-md">
+                                                <span key={tech} className="px-3 sm:px-4 py-1.5 rounded-xl text-[11px] sm:text-[12px] font-semibold text-white/70 bg-white/[0.04] border border-white/[0.06] backdrop-blur-md">
                                                     {tech}
                                                 </span>
                                             ))}
                                             {project.technologies.length > 3 && (
-                                                <span className="px-3 py-1.5 rounded-xl text-[12px] font-semibold text-white/40 bg-white/[0.02] border border-white/[0.03]">
+                                                <span className="px-2.5 sm:px-3 py-1.5 rounded-xl text-[11px] sm:text-[12px] font-semibold text-white/40 bg-white/[0.02] border border-white/[0.03]">
                                                     +{project.technologies.length - 3}
                                                 </span>
                                             )}
                                         </div>
 
                                         {/* View Details Action / Metrics Footer */}
-                                        <div className="flex items-center justify-between gap-4 border-t border-white/10 pt-10 mt-2">
-                                            <div className="flex items-center gap-8 sm:gap-12">
+                                        <div className="flex items-center justify-between gap-4 border-t border-white/10 pt-6 sm:pt-10 mt-2">
+                                            <div className="flex items-center gap-4 sm:gap-8 md:gap-12 flex-wrap sm:flex-nowrap">
                                                 {project.metrics.map((m, i) => (
                                                     <div key={i} className="flex flex-col group/metric">
-                                                        <span className={`text-[18px] xl:text-[22px] font-bold font-syne ${project.iconColor} group-hover/metric:text-white transition-colors leading-none mb-2.5`}>
+                                                        <span className={`text-[16px] sm:text-[18px] xl:text-[22px] font-bold font-syne ${project.iconColor} group-hover/metric:text-white transition-colors leading-none mb-1.5 sm:mb-2.5`}>
                                                             {m.value}
                                                         </span>
-                                                        <span className="text-[10px] text-white/30 font-dmsans font-bold uppercase tracking-[0.2em] whitespace-nowrap">
+                                                        <span className="text-[9px] sm:text-[10px] text-white/40 font-dmsans font-bold uppercase tracking-[0.15em] whitespace-nowrap">
                                                             {m.label}
                                                         </span>
                                                     </div>
                                                 ))}
                                             </div>
 
-                                            <div className={`w-14 h-14 rounded-full flex items-center justify-center bg-white/[0.03] border border-white/[0.05] group-hover:bg-primary group-hover:border-primary transition-all duration-500 flex-shrink-0 shadow-2xl group-hover:shadow-primary/20`}>
-                                                <ArrowRight className="w-6 h-6 text-white/60 group-hover:text-white group-hover:-rotate-45 transition-all duration-500" />
+                                            <div className={`w-11 h-11 sm:w-14 sm:h-14 rounded-full flex items-center justify-center bg-white/[0.03] border border-white/[0.05] group-hover:bg-primary group-hover:border-primary transition-all duration-500 flex-shrink-0 shadow-2xl group-hover:shadow-primary/20`}>
+                                                <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6 text-white/60 group-hover:text-white group-hover:-rotate-45 transition-all duration-500" />
                                             </div>
                                         </div>
                                     </div>
@@ -467,7 +467,7 @@ const ProjectsSection = () => {
 
                 {/* CTA Section */}
                 <div className={`mt-16 sm:mt-20 transition-all duration-1000 delay-500 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-                    <div className="relative rounded-[2rem] overflow-hidden bg-white/[0.02] border border-white/[0.05] p-10 md:p-16 text-center group flex flex-col items-center justify-center backdrop-blur-xl hover:bg-white/[0.03] transition-colors duration-500">
+                    <div className="relative rounded-2xl sm:rounded-[2rem] overflow-hidden bg-white/[0.02] border border-white/[0.05] p-6 sm:p-10 md:p-16 text-center group flex flex-col items-center justify-center backdrop-blur-xl hover:bg-white/[0.03] transition-colors duration-500">
                         <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-transparent to-accent/10 opacity-50 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
                         <Activity className="w-12 h-12 text-primary/50 mb-6 group-hover:scale-110 group-hover:text-primary transition-all duration-500" />
                         <h3 className="text-3xl md:text-4xl lg:text-5xl font-bold font-syne text-white mb-6">Ready to Automate?</h3>
@@ -513,14 +513,14 @@ const ProjectsSection = () => {
                             </button>
 
                             {/* Sidebar / Header Details */}
-                            <div className="w-full lg:w-[400px] flex-shrink-0 bg-white/[0.02] border-b lg:border-b-0 lg:border-r border-white/5 p-6 sm:p-8 pt-20 lg:pt-8 flex flex-col relative lg:overflow-y-auto overflow-y-visible custom-scroll">
+                            <div className="w-full lg:w-[400px] flex-shrink-0 bg-white/[0.02] border-b lg:border-b-0 lg:border-r border-white/5 p-5 sm:p-8 pt-16 sm:pt-20 lg:pt-8 flex flex-col relative lg:overflow-y-auto overflow-y-visible custom-scroll">
                                 <div className={`absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b ${currentProject.gradient} opacity-20 pointer-events-none`} />
 
                                 <div className="relative z-10 flex-1 flex flex-col">
                                     {/* Icon & Badges */}
-                                    <div className="flex flex-col gap-6 mb-8">
-                                        <div className={`w-16 h-16 rounded-2xl bg-white/[0.03] border border-white/10 flex items-center justify-center shadow-lg`}>
-                                            {ModalIconComponent && <ModalIconComponent size={32} className={currentProject.iconColor} />}
+                                    <div className="flex flex-col gap-4 sm:gap-6 mb-6 sm:mb-8">
+                                        <div className={`w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-white/[0.03] border border-white/10 flex items-center justify-center shadow-lg`}>
+                                            {ModalIconComponent && <ModalIconComponent size={28} className={currentProject.iconColor} />}
                                         </div>
                                         <div className="flex flex-wrap gap-2">
                                             <span className="text-[10px] font-bold text-white uppercase tracking-widest px-3 py-1.5 rounded-full bg-white/10 border border-white/20">
@@ -533,19 +533,19 @@ const ProjectsSection = () => {
                                         </div>
                                     </div>
 
-                                    <h2 className="text-3xl font-bold font-syne text-white leading-[1.15] mb-4">
+                                    <h2 className="text-2xl sm:text-3xl font-bold font-syne text-white leading-[1.15] mb-3 sm:mb-4">
                                         {currentProject.title}
                                     </h2>
-                                    <p className="text-base text-white/50 font-dmsans leading-relaxed mb-8">
+                                    <p className="text-sm sm:text-base text-white/50 font-dmsans leading-relaxed mb-6 sm:mb-8">
                                         {currentProject.subtitle}
                                     </p>
 
-                                    <div className="space-y-6 mb-10">
+                                    <div className="space-y-6 mb-8 sm:mb-10">
                                         <div>
                                             <h4 className="text-xs font-bold text-white/30 uppercase tracking-widest mb-3">Key Technologies</h4>
                                             <div className="flex flex-wrap gap-2">
                                                 {currentProject.technologies.map((tech) => (
-                                                    <span key={tech} className="px-3 py-1.5 rounded-lg text-[13px] font-medium text-white/70 bg-white/[0.04] border border-white/[0.05]">
+                                                    <span key={tech} className="px-2.5 sm:px-3 py-1.5 rounded-lg text-[12px] sm:text-[13px] font-medium text-white/70 bg-white/[0.04] border border-white/[0.05]">
                                                         {tech}
                                                     </span>
                                                 ))}
@@ -555,7 +555,7 @@ const ProjectsSection = () => {
 
                                     {/* Actions Area */}
                                     <div className="mt-auto pt-6 border-t border-white/5">
-                                        <Button className="w-full bg-white text-black hover:bg-neutral-200 font-syne font-bold py-6 rounded-xl flex items-center justify-center gap-2 transition-colors">
+                                        <Button className="w-full bg-white text-black hover:bg-neutral-200 font-syne font-bold py-5 sm:py-6 rounded-xl flex items-center justify-center gap-2 transition-colors">
                                             <ExternalLink size={18} /> View Live Project
                                         </Button>
                                     </div>
@@ -565,8 +565,8 @@ const ProjectsSection = () => {
                             {/* Main Content Area */}
                             <div className="flex-1 flex flex-col min-h-0 bg-transparent">
 
-                                {/* Tabs Navigation */}
-                                <div className="flex overflow-x-auto gap-1 px-4 sm:px-8 pt-6 sm:pt-8 pb-4 border-b border-white/5 no-scrollbar">
+                                {/* Tabs Navigation - Sticky on mobile and desktop */}
+                                <div className="sticky top-0 z-20 bg-[#0A0A0B]/95 backdrop-blur-xl flex overflow-x-auto gap-2 px-4 sm:px-8 py-3 sm:py-4 border-b border-white/10 no-scrollbar">
                                     {[
                                         { id: 'overview', label: 'Overview' },
                                         { id: 'architecture', label: 'Architecture' },

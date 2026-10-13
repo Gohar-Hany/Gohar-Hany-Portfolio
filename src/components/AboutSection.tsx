@@ -65,7 +65,7 @@ const AboutSection = () => {
       <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px] opacity-60 pointer-events-none mix-blend-screen" />
       <div className="absolute bottom-10 right-1/4 w-[400px] h-[400px] bg-accent/10 rounded-full blur-[100px] opacity-60 pointer-events-none mix-blend-screen" />
 
-      <div className="max-w-[85rem] mx-auto px-6 lg:px-8 relative z-10">
+      <div className="max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
         {/* Section Header */}
         <div className={`flex flex-col md:flex-row justify-between items-end mb-16 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
@@ -87,7 +87,7 @@ const AboutSection = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 auto-rows-min">
 
           {/* Main Biography Card (Span 7) */}
-          <div className={`lg:col-span-7 lg:row-span-2 relative group rounded-[2rem] p-8 md:p-10 bg-white/[0.02] border border-white/[0.05] backdrop-blur-xl transition-all duration-1000 delay-100 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'} hover:bg-white/[0.03] hover:border-white/10`}>
+          <div className={`lg:col-span-7 lg:row-span-2 relative group rounded-2xl sm:rounded-[2rem] p-5 sm:p-8 md:p-10 bg-white/[0.02] border border-white/[0.05] backdrop-blur-xl transition-all duration-1000 delay-100 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'} hover:bg-white/[0.03] hover:border-white/10`}>
             {/* Subtle inner top glow */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-[1px] bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
 
@@ -115,7 +115,7 @@ const AboutSection = () => {
           </div>
 
           {/* Currently Active Card (Span 5) */}
-          <div className={`lg:col-span-5 relative rounded-[2rem] p-8 bg-gradient-to-br from-primary/[0.08] to-transparent border border-primary/20 backdrop-blur-md overflow-hidden transition-all duration-1000 delay-200 ease-out ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-12'} group`}>
+          <div className={`lg:col-span-5 relative rounded-2xl sm:rounded-[2rem] p-5 sm:p-8 bg-gradient-to-br from-primary/[0.08] to-transparent border border-primary/20 backdrop-blur-md overflow-hidden transition-all duration-1000 delay-200 ease-out ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-12'} group`}>
             <div className="absolute -right-10 -bottom-10 w-40 h-40 bg-primary/20 blur-[50px] group-hover:bg-primary/30 transition-colors duration-500" />
 
             <div className="flex items-center gap-3 mb-6">
@@ -140,13 +140,13 @@ const AboutSection = () => {
 
           {/* Academic Profile (Span 5 over 2 cols for smaller screens, 1 col on mid) */}
           <div className={`lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 gap-4 transition-all duration-1000 delay-300 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-            <div className="rounded-[1.5rem] p-6 bg-white/[0.02] border border-white/[0.05] hover:bg-white/[0.04] transition-colors">
+            <div className="rounded-xl sm:rounded-[1.5rem] p-4 sm:p-6 bg-white/[0.02] border border-white/[0.05] hover:bg-white/[0.04] transition-colors">
               <GraduationCap className="w-6 h-6 text-white/40 mb-3" />
               <h4 className="font-syne text-white font-medium mb-1">CS Graduate 2025</h4>
               <p className="text-sm text-white/50 font-dmsans">GPA 3.5/4.0</p>
               <p className="text-xs text-primary/80 mt-2 font-medium">Excellent with Honors</p>
             </div>
-            <div className="rounded-[1.5rem] p-6 bg-white/[0.02] border border-white/[0.05] hover:bg-white/[0.04] transition-colors">
+            <div className="rounded-xl sm:rounded-[1.5rem] p-4 sm:p-6 bg-white/[0.02] border border-white/[0.05] hover:bg-white/[0.04] transition-colors">
               <Briefcase className="w-6 h-6 text-white/40 mb-3" />
               <h4 className="font-syne text-white font-medium mb-1">Graduation Project</h4>
               <p className="text-sm text-white/50 font-dmsans leading-tight">Agentic AI Learning Assistant</p>
@@ -163,25 +163,25 @@ const AboutSection = () => {
               return (
                 <div
                   key={stat.id}
-                  className={`group relative rounded-[2rem] p-6 sm:p-8 bg-white/[0.01] border border-white/[0.03] backdrop-blur-sm overflow-hidden transition-all duration-700 ease-out
+                  className={`group relative rounded-2xl sm:rounded-[2rem] p-4 sm:p-6 md:p-8 bg-white/[0.01] border border-white/[0.03] backdrop-blur-sm overflow-hidden transition-all duration-700 ease-out
                     hover:-translate-y-2 hover:bg-white/[0.03] hover:border-white/10 hover:shadow-2xl hover:shadow-black/50
                     ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
                   style={{ transitionDelay: `${400 + (index * 100)}ms` }}
                 >
                   {/* Subtle Background Gradient on Hover */}
-                  <div className={`absolute inset-0 bg-gradient-to-br ${stat.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-[2rem] -z-10`} />
+                  <div className={`absolute inset-0 bg-gradient-to-br ${stat.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl sm:rounded-[2rem] -z-10`} />
 
                   <div className="flex flex-col items-center sm:items-start text-center sm:text-left h-full">
-                    <div className="p-3 rounded-2xl bg-white/[0.03] border border-white/[0.05] mb-5 group-hover:scale-110 transition-transform duration-500">
-                      <IconComponent className={`w-6 h-6 ${stat.iconColor}`} />
+                    <div className="p-2.5 sm:p-3 rounded-xl sm:rounded-2xl bg-white/[0.03] border border-white/[0.05] mb-4 sm:mb-5 group-hover:scale-110 transition-transform duration-500">
+                      <IconComponent className={`w-5 h-5 sm:w-6 sm:h-6 ${stat.iconColor}`} />
                     </div>
 
                     <div className="mt-auto">
                       <div className="flex items-baseline justify-center sm:justify-start gap-1">
-                        <span className="text-4xl sm:text-5xl font-bold font-syne text-white tracking-tight">
+                        <span className="text-3xl sm:text-4xl md:text-5xl font-bold font-syne text-white tracking-tight">
                           {currentValue}
                         </span>
-                        <span className={`text-2xl font-bold ${stat.iconColor}`}>
+                        <span className={`text-xl sm:text-2xl font-bold ${stat.iconColor}`}>
                           {stat.suffix}
                         </span>
                       </div>

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Navigation from '@/components/Navigation';
 import Preloader from '@/components/Preloader';
 import HeroSection from '@/components/HeroSection';
@@ -11,6 +12,8 @@ import EducationSection from '@/components/EducationSection';
 import PhotoGallerySection from '@/components/PhotoGallerySection';
 import ContactSection from '@/components/ContactSection';
 import Footer from '@/components/Footer';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const Index = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -54,12 +57,7 @@ const Index = () => {
           ease: "power2.out",
           onComplete: () => {
             // Recalculate all ScrollTrigger positions after preloader exits
-            try {
-              const { ScrollTrigger } = require('gsap/ScrollTrigger');
-              ScrollTrigger.refresh();
-            } catch (_) {
-              // ScrollTrigger may not be registered — safe to ignore
-            }
+            ScrollTrigger.refresh();
           }
         }
       );

@@ -128,7 +128,7 @@ const HeroSection = () => {
       </div>
 
       {/* Main Container */}
-      <div className="max-w-[85rem] w-full mx-auto px-6 lg:px-8 relative z-10 h-full flex flex-col justify-center">
+      <div className="max-w-[85rem] w-full mx-auto px-4 sm:px-6 lg:px-8 relative z-10 h-full flex flex-col justify-center">
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 h-full items-center" style={{ minHeight: 'min(600px, 80dvh)' }}>
 
@@ -150,21 +150,21 @@ const HeroSection = () => {
               </h1>
 
               {/* Animated Roles */}
-              <div className="h-[36px] sm:h-[40px] md:h-[50px] overflow-hidden relative">
+              <div className="h-[44px] sm:h-[48px] md:h-[52px] overflow-hidden relative">
                 {roles.map((role, idx) => (
                   <div
                     key={idx}
-                    className={`absolute inset-0 flex items-center transition-all duration-700 ease-in-out font-syne text-lg sm:text-xl md:text-2xl lg:text-3xl text-accent font-medium tracking-wide
+                    className={`absolute inset-0 flex items-center transition-all duration-700 ease-in-out font-syne text-[15px] sm:text-xl md:text-2xl lg:text-3xl text-accent font-medium tracking-wide
                       ${currentRole === idx ? 'opacity-100 translate-y-0' : currentRole > idx ? 'opacity-0 -translate-y-full blur-sm' : 'opacity-0 translate-y-full blur-sm'}`}
                   >
-                    <Sparkles size={20} className="mr-2 sm:mr-3 text-accent/80 flex-shrink-0" />
-                    <span className="truncate">{role}</span>
+                    <Sparkles size={18} className="mr-2 sm:mr-3 text-accent/80 flex-shrink-0" />
+                    <span className="leading-snug">{role}</span>
                   </div>
                 ))}
               </div>
             </div>
 
-            <p className="text-base sm:text-lg md:text-xl text-white/50 max-w-xl mb-8 sm:mb-12 font-dmsans font-light leading-relaxed">
+            <p className="text-sm sm:text-lg md:text-xl text-white/60 max-w-xl mb-8 sm:mb-12 font-dmsans font-light leading-relaxed">
               I turn complex business workflows into production AI systems that automate operations, reduce manual work, and scale reliably with clear ROI.
             </p>
 
@@ -191,25 +191,25 @@ const HeroSection = () => {
             </div>
 
             {/* Inline Stat Cards */}
-            <div className={`grid grid-cols-2 gap-4 max-w-sm transition-all duration-1000 ease-out delay-500 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+            <div className={`grid grid-cols-2 gap-3 sm:gap-4 max-w-sm transition-all duration-1000 ease-out delay-500 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
               {/* Stat 1 */}
-              <div className="rounded-3xl bg-white/[0.04] border border-white/[0.08] backdrop-blur-xl p-5 flex flex-col justify-center relative overflow-hidden group">
+              <div className="rounded-2xl sm:rounded-3xl bg-white/[0.04] border border-white/[0.08] backdrop-blur-xl p-4 sm:p-5 flex flex-col justify-center relative overflow-hidden group">
                 <div className="absolute -right-4 -top-4 w-24 h-24 bg-primary/10 rounded-full blur-[20px] group-hover:bg-primary/20 transition-colors duration-500 pointer-events-none" />
-                <Code2 size={20} className="text-primary mb-3" />
+                <Code2 size={20} className="text-primary mb-2 sm:mb-3" />
                 <h4 className="text-2xl sm:text-3xl font-bold font-syne text-white flex items-end gap-1">
                   15<span className="text-primary text-xl">+</span>
                 </h4>
-                <p className="text-xs sm:text-sm font-dmsans text-white/40 mt-1 uppercase tracking-wider">Projects Shipped</p>
+                <p className="text-[11px] sm:text-sm font-dmsans text-white/40 mt-1 uppercase tracking-wider">Projects Shipped</p>
               </div>
 
               {/* Stat 2 */}
-              <div className={`rounded-3xl bg-white/[0.02] border border-white/[0.05] backdrop-blur-xl p-5 sm:p-6 flex flex-col justify-center relative overflow-hidden group transition-all duration-1000 ease-out delay-700 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+              <div className={`rounded-2xl sm:rounded-3xl bg-white/[0.02] border border-white/[0.05] backdrop-blur-xl p-4 sm:p-6 flex flex-col justify-center relative overflow-hidden group transition-all duration-1000 ease-out delay-700 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
                 <div className="absolute -right-4 -top-4 w-24 h-24 bg-accent/10 rounded-full blur-[20px] group-hover:bg-accent/20 transition-colors duration-500 pointer-events-none" />
-                <Bot size={20} className="text-accent mb-3" />
+                <Bot size={20} className="text-accent mb-2 sm:mb-3" />
                 <h4 className="text-2xl sm:text-3xl font-bold font-syne text-white flex items-end gap-1">
                   50<span className="text-accent text-xl">+</span>
                 </h4>
-                <p className="text-xs sm:text-sm font-dmsans text-white/40 mt-1 uppercase tracking-wider">Workflows Built</p>
+                <p className="text-[11px] sm:text-sm font-dmsans text-white/40 mt-1 uppercase tracking-wider">Workflows Built</p>
               </div>
 
             </div>

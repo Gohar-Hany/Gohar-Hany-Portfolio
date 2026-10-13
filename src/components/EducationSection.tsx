@@ -101,7 +101,7 @@ const EducationSection = () => {
       <div className="absolute top-1/3 left-0 w-[600px] h-[600px] bg-primary/10 rounded-full blur-[150px] opacity-50 pointer-events-none mix-blend-screen" />
       <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-accent/10 rounded-full blur-[120px] opacity-40 pointer-events-none mix-blend-screen" />
 
-      <div className="max-w-[85rem] mx-auto px-6 lg:px-8 relative z-10">
+      <div className="max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
         {/* Section Header */}
         <div className={`flex flex-col md:flex-row justify-between items-end mb-16 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
@@ -121,23 +121,23 @@ const EducationSection = () => {
 
         {/* Education Details - Grand Bento Box */}
         <div className={`mb-8 lg:mb-12 transition-all duration-1000 delay-200 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
-          <div className="relative p-8 md:p-12 lg:p-14 rounded-[2.5rem] bg-white/[0.02] border border-white/[0.05] backdrop-blur-xl overflow-hidden hover:bg-white/[0.03] transition-colors duration-700">
+          <div className="relative p-5 sm:p-8 md:p-12 lg:p-14 rounded-2xl sm:rounded-[2.5rem] bg-white/[0.02] border border-white/[0.05] backdrop-blur-xl overflow-hidden hover:bg-white/[0.03] transition-colors duration-700">
             {/* Decorative internal glow */}
             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-bl from-primary/10 to-transparent rounded-full blur-[100px] opacity-60 pointer-events-none transform translate-x-1/3 -translate-y-1/3" />
 
-            <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 relative z-10">
+            <div className="grid lg:grid-cols-12 gap-8 lg:gap-16 relative z-10">
 
               {/* Left Side: Education Info */}
               <div className="lg:col-span-7 flex flex-col justify-center">
-                <div className="flex flex-col sm:flex-row sm:items-center gap-6 mb-8">
-                  <div className="w-20 h-20 rounded-3xl bg-white/[0.03] border border-white/10 flex items-center justify-center flex-shrink-0 shadow-xl shadow-black/20">
-                    <GraduationCap size={40} className="text-primary" />
+                <div className="flex flex-col sm:flex-row sm:items-center gap-5 sm:gap-6 mb-6 sm:mb-8">
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl sm:rounded-3xl bg-white/[0.03] border border-white/10 flex items-center justify-center flex-shrink-0 shadow-xl shadow-black/20">
+                    <GraduationCap size={32} className="text-primary sm:w-10 sm:h-10" />
                   </div>
                   <div>
-                    <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold font-syne text-white mb-2 leading-tight">
+                    <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold font-syne text-white mb-2 leading-tight">
                       {education.degree}
                     </h3>
-                    <p className="text-lg md:text-xl text-accent font-dmsans font-medium">
+                    <p className="text-base sm:text-lg md:text-xl text-accent font-dmsans font-medium">
                       {education.specialization}
                     </p>
                   </div>
@@ -145,7 +145,7 @@ const EducationSection = () => {
 
                 <div className="space-y-8 font-dmsans">
                   {/* University & Grade Grid */}
-                  <div className="grid sm:grid-cols-2 gap-6 bg-black/20 p-6 rounded-3xl border border-white/[0.03]">
+                  <div className="grid sm:grid-cols-2 gap-4 sm:gap-6 bg-black/20 p-4 sm:p-6 rounded-2xl sm:rounded-3xl border border-white/[0.03]">
                     <div>
                       <h4 className="text-xs font-bold text-white/30 uppercase tracking-widest mb-2">University</h4>
                       <p className="text-white/80 font-medium">{education.university}</p>
@@ -215,7 +215,7 @@ const EducationSection = () => {
               return (
                 <div
                   key={award.id}
-                  className={`group relative p-8 md:p-10 rounded-[2rem] bg-white/[0.02] border border-white/[0.05] backdrop-blur-xl overflow-hidden hover:-translate-y-2 hover:bg-white/[0.03] transition-all duration-500 ${award.borderColor} ${award.shadow}`}
+                  className={`group relative p-5 sm:p-8 md:p-10 rounded-2xl sm:rounded-[2rem] bg-white/[0.02] border border-white/[0.05] backdrop-blur-xl overflow-hidden hover:-translate-y-2 hover:bg-white/[0.03] transition-all duration-500 ${award.borderColor} ${award.shadow}`}
                   style={{ transitionDelay: `${index * 150}ms` }}
                 >
                   <div className={`absolute top-0 right-0 w-[200px] h-[200px] bg-gradient-to-br ${award.bgColor} rounded-full blur-[80px] opacity-0 group-hover:opacity-40 transition-opacity duration-700 pointer-events-none`} />
@@ -289,7 +289,7 @@ const EducationSection = () => {
 
         {/* Bottom Impact Summary Box */}
         <div className={`transition-all duration-1000 delay-700 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          <div className="relative p-8 md:p-10 rounded-[2rem] bg-gradient-to-r from-primary/10 via-black/40 to-accent/10 border border-t-primary/30 border-white/[0.05] text-center overflow-hidden">
+          <div className="relative p-5 sm:p-8 md:p-10 rounded-2xl sm:rounded-[2rem] bg-gradient-to-r from-primary/10 via-black/40 to-accent/10 border border-t-primary/30 border-white/[0.05] text-center overflow-hidden">
             {/* Decorative background rays */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[100px] bg-gradient-to-b from-primary/20 to-transparent blur-[50px] opacity-60 pointer-events-none" />
 

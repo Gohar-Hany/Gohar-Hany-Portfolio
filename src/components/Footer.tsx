@@ -26,7 +26,7 @@ const Footer = () => {
             {/* Background glow effects */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] bg-gradient-to-b from-primary/5 to-transparent blur-[100px] opacity-40 pointer-events-none" />
 
-            <div className="max-w-[85rem] mx-auto px-6 lg:px-8 relative z-10">
+            <div className="max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
                 {/* Main Footer Content */}
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-12 lg:gap-8 mb-16">
@@ -108,7 +108,7 @@ const Footer = () => {
                 </div>
 
                 {/* Bottom Bar Bento */}
-                <div className="relative p-6 md:p-8 rounded-3xl bg-white/[0.02] border border-white/[0.05] backdrop-blur-xl flex flex-col md:flex-row items-center justify-between gap-4 group">
+                <div className="relative p-4 sm:p-6 md:p-8 rounded-2xl sm:rounded-3xl bg-white/[0.02] border border-white/[0.05] backdrop-blur-xl flex flex-col md:flex-row items-center justify-between gap-4 group">
 
                     <div className="flex items-center gap-2 text-white/50 text-[13px] font-dmsans text-center md:text-left">
                         <span>© {currentYear} Gohar Hany. All rights reserved.</span>

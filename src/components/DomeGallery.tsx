@@ -367,8 +367,6 @@ export default function DomeGallery({
 
         const evt = event as PointerEvent;
         pointerTypeRef.current = (evt.pointerType as any) || 'mouse';
-        if (pointerTypeRef.current === 'touch') evt.preventDefault();
-        if (pointerTypeRef.current === 'touch') lockScroll();
         draggingRef.current = true;
         cancelTapRef.current = false;
         movedRef.current = false;
@@ -381,21 +379,25 @@ export default function DomeGallery({
         if (focusedElRef.current || !draggingRef.current || !startPosRef.current) return;
 
         const evt = event as PointerEvent;
-        if (pointerTypeRef.current === 'touch') evt.preventDefault();
-
         const dxTotal = evt.clientX - startPosRef.current.x;
         const dyTotal = evt.clientY - startPosRef.current.y;
+
+        // On touch: only prevent default when user is intentionally swiping horizontally
+        const isHorizontalIntent = Math.abs(dxTotal) > Math.abs(dyTotal);
+        if (pointerTypeRef.current === 'touch' && isHorizontalIntent && Math.abs(dxTotal) > 8) {
+          if (evt.cancelable) evt.preventDefault();
+        }
 
         if (!movedRef.current) {
           const dist2 = dxTotal * dxTotal + dyTotal * dyTotal;
           if (dist2 > 16) movedRef.current = true;
         }
 
-        const nextX = clamp(
-          startRotRef.current.x - dyTotal / effectiveDragSensitivity,
-          -maxVerticalRotationDeg,
-          maxVerticalRotationDeg
-        );
+        // On touch, lock vertical tilt to keep sphere level and prevent confusing disorientation
+        const nextX = pointerTypeRef.current === 'touch'
+          ? startRotRef.current.x
+          : clamp(startRotRef.current.x - dyTotal / effectiveDragSensitivity, -maxVerticalRotationDeg, maxVerticalRotationDeg);
+
         const nextY = startRotRef.current.y + dxTotal / effectiveDragSensitivity;
 
         const cur = rotationRef.current;
@@ -452,7 +454,6 @@ export default function DomeGallery({
           tapTargetRef.current = null;
 
           if (cancelTapRef.current) setTimeout(() => (cancelTapRef.current = false), 120);
-          if (pointerTypeRef.current === 'touch') unlockScroll();
           if (movedRef.current) lastDragEndAt.current = performance.now();
           movedRef.current = false;
         }

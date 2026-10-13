@@ -171,7 +171,7 @@ const Navigation = () => {
       <div
         className="max-w-7xl mx-auto flex items-center justify-between pointer-events-auto h-16 md:h-[4.5rem]"
         style={{
-          padding: isScrolled ? '0 2rem' : '0 0.5rem',
+          padding: isScrolled ? '0 clamp(1rem, 2.5vw, 2rem)' : '0 0.5rem',
           borderRadius: isScrolled ? '2rem' : '0',
           background: isScrolled ? 'rgba(4, 13, 26, 0.55)' : 'transparent',
           backdropFilter: isScrolled ? 'blur(24px) saturate(1.4)' : 'none',
@@ -286,7 +286,7 @@ const Navigation = () => {
       <div
         ref={menuRef}
         id="mobile-menu"
-        className={`absolute top-full left-4 right-4 mt-3 md:hidden overflow-hidden transition-all duration-500 origin-top ${isOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
+        className={`absolute top-full left-3 right-3 sm:left-4 sm:right-4 mt-2 sm:mt-3 md:hidden transition-all duration-500 origin-top max-h-[calc(100dvh-5.5rem)] flex flex-col ${isOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
           }`}
         style={{
           transitionTimingFunction: 'cubic-bezier(0.22, 1, 0.36, 1)',
@@ -296,7 +296,7 @@ const Navigation = () => {
         role="menu"
         aria-hidden={!isOpen}
       >
-        <div className="bg-[#040d1a]/95 backdrop-blur-3xl border border-white/10 shadow-[0_20px_40px_rgba(0,0,0,0.6)] rounded-[2rem] p-5 flex flex-col gap-2 relative overflow-hidden">
+        <div className="bg-[#040d1a]/95 backdrop-blur-3xl border border-white/10 shadow-[0_20px_40px_rgba(0,0,0,0.6)] rounded-[1.75rem] sm:rounded-[2rem] p-4 sm:p-5 flex flex-col gap-1.5 sm:gap-2 relative overflow-y-auto max-h-full custom-scroll" style={{ overscrollBehavior: 'contain' }}>
           <div className="absolute top-0 right-0 w-[200px] h-[200px] bg-primary/20 blur-[60px] pointer-events-none rounded-full" />
 
           {NAV_ITEMS.map((item, index) => (

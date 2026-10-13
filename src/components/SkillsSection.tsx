@@ -46,21 +46,21 @@ const AgentGraphViz = () => {
     if (!svg || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
     const nodes = [
-      { x: 30, y: 50 }, { x: 95, y: 22 }, { x: 95, y: 78 },
-      { x: 175, y: 50 }, { x: 255, y: 22 }, { x: 255, y: 78 }, { x: 340, y: 50 },
+      { x: 32, y: 52 }, { x: 96, y: 24 }, { x: 96, y: 80 },
+      { x: 180, y: 52 }, { x: 264, y: 24 }, { x: 264, y: 80 }, { x: 348, y: 52 },
     ];
     const labels = ['IN', 'PARSE', 'TOOL', 'PLAN', 'ACT', 'MEM', 'OUT'];
     const edges: [number, number][] = [[0,1],[0,2],[1,3],[2,3],[3,4],[3,5],[4,6],[5,6]];
 
     let s = '';
     edges.forEach(([a, b]) => {
-      s += `<line x1="${nodes[a].x}" y1="${nodes[a].y}" x2="${nodes[b].x}" y2="${nodes[b].y}" stroke="#00d4ff" stroke-opacity=".2" stroke-width="1"/>`;
+      s += `<line x1="${nodes[a].x}" y1="${nodes[a].y}" x2="${nodes[b].x}" y2="${nodes[b].y}" stroke="#00d4ff" stroke-opacity=".25" stroke-width="1.2"/>`;
     });
     nodes.forEach((n, i) => {
-      s += `<circle cx="${n.x}" cy="${n.y}" r="5" fill="#090d11" stroke="#00d4ff" stroke-opacity=".5"/>`;
-      s += `<text x="${n.x}" y="${n.y + 16}" text-anchor="middle" fill="rgba(255,255,255,.25)" font-size="7" font-family="DM Sans,sans-serif">${labels[i]}</text>`;
+      s += `<circle cx="${n.x}" cy="${n.y}" r="6" fill="#090d11" stroke="#00d4ff" stroke-opacity=".6" stroke-width="1.5"/>`;
+      s += `<text x="${n.x}" y="${n.y + 19}" text-anchor="middle" fill="rgba(255,255,255,.55)" font-size="9" font-weight="600" font-family="DM Sans,sans-serif">${labels[i]}</text>`;
     });
-    s += `<circle id="agPkt" r="2.5" fill="#00d4ff" opacity="0"/>`;
+    s += `<circle id="agPkt" r="3" fill="#00d4ff" opacity="0"/>`;
     svg.innerHTML = s;
 
     const pkt = svg.querySelector('#agPkt');
@@ -76,13 +76,13 @@ const AgentGraphViz = () => {
       const [ai, bi] = edges[ei];
       pkt.setAttribute('cx', String(nodes[ai].x + (nodes[bi].x - nodes[ai].x) * t));
       pkt.setAttribute('cy', String(nodes[ai].y + (nodes[bi].y - nodes[ai].y) * t));
-      pkt.setAttribute('opacity', String(Math.sin(t * Math.PI) * 0.9));
+      pkt.setAttribute('opacity', String(Math.sin(t * Math.PI) * 0.95));
     };
     raf = requestAnimationFrame(loop);
     return () => { cancelAnimationFrame(raf); obs.disconnect(); };
   }, []);
 
-  return <svg ref={svgRef} viewBox="0 0 370 100" className="w-full h-full" />;
+  return <svg ref={svgRef} viewBox="0 0 380 110" className="w-full h-full" />;
 };
 
 /** 2. Token Bars — vertical bars that randomize heights */
@@ -92,11 +92,12 @@ const TokenBarsViz = () => {
   useEffect(() => {
     const svg = svgRef.current;
     if (!svg) return;
-    const n = 40;
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+    const n = isMobile ? 24 : 36;
     let bars = '';
     for (let i = 0; i < n; i++) {
       const h = 15 + Math.random() * 75;
-      bars += `<rect class="tb" x="${i * (400 / n) + 1}" y="${120 - h}" width="${400 / n - 2}" height="${h}" fill="#c084fc" opacity=".65"/>`;
+      bars += `<rect class="tb" x="${i * (400 / n) + 1}" y="${120 - h}" width="${400 / n - 2}" height="${h}" rx="1" fill="#c084fc" opacity=".65"/>`;
     }
     svg.innerHTML = bars;
 
@@ -114,7 +115,7 @@ const TokenBarsViz = () => {
         r.setAttribute('height', String(h));
         (r as SVGElement).style.transition = 'all .5s cubic-bezier(.16,1,.3,1)';
       });
-    }, 600);
+    }, 800);
 
     return () => { clearInterval(id); obs.disconnect(); };
   }, []);
@@ -122,35 +123,39 @@ const TokenBarsViz = () => {
   return <svg ref={svgRef} viewBox="0 0 400 120" preserveAspectRatio="none" className="w-full h-full" />;
 };
 
-/** 3. Signal Waveform — scrolling sine wave */
+/** 3. Signal Waveform — scrolling sine wave (optimized without innerHTML thrashing) */
 const WaveformViz = () => {
   const svgRef = useRef<SVGSVGElement>(null);
 
   useEffect(() => {
     const svg = svgRef.current;
-    if (!svg || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (!svg) return;
 
-    const n = 80;
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+    const n = isMobile ? 30 : 50;
+    let barsHtml = '';
+    for (let i = 0; i < n; i++) {
+      barsHtml += `<rect class="wf-bar" x="${i * (400 / n) + 1}" y="30" width="${400 / n - 2}" height="60" rx="1" fill="#00ff88" opacity=".7"/>`;
+    }
+    svg.innerHTML = barsHtml;
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const rects = svg.querySelectorAll<SVGRectElement>('.wf-bar');
     let phase = 0, vis = true, raf = 0;
     const obs = new IntersectionObserver(es => { vis = es[0].isIntersecting; });
     obs.observe(svg);
 
-    const build = () => {
-      let bars = '';
-      for (let i = 0; i < n; i++) {
-        const v = Math.abs(Math.sin(i * 0.2 + phase) + Math.sin(i * 0.07 + phase * 0.6)) * 0.45;
-        const h = 6 + v * 100;
-        bars += `<rect x="${i * (400 / n) + 1}" y="${60 - h / 2}" width="${400 / n - 2}" height="${h}" fill="#00ff88" opacity=".7"/>`;
-      }
-      return bars;
-    };
-
-    svg.innerHTML = build();
     const loop = () => {
       raf = requestAnimationFrame(loop);
       if (!vis) return;
-      phase += 0.06;
-      svg.innerHTML = build();
+      phase += 0.05;
+      for (let i = 0; i < n; i++) {
+        const v = Math.abs(Math.sin(i * 0.22 + phase) + Math.sin(i * 0.08 + phase * 0.6)) * 0.45;
+        const h = 6 + v * 95;
+        rects[i]?.setAttribute('y', String(60 - h / 2));
+        rects[i]?.setAttribute('height', String(h));
+      }
     };
     raf = requestAnimationFrame(loop);
     return () => { cancelAnimationFrame(raf); obs.disconnect(); };
@@ -563,7 +568,7 @@ const SkillsSection = () => {
       className="py-16 lg:py-24 relative bg-background overflow-hidden selection:bg-primary/30"
     >
       {/* ═══ HEADER ═══ */}
-      <div className="max-w-[85rem] mx-auto px-6 lg:px-8 relative z-10">
+      <div className="max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className={`mb-10 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           {/* Section number + rule */}
           <div className="flex items-baseline gap-4 mb-5">
@@ -593,7 +598,7 @@ const SkillsSection = () => {
         <div className="absolute top-0 bottom-0 right-0 w-28 z-10 pointer-events-none" style={{ background: 'linear-gradient(to left, #090d11, transparent)' }} />
 
         {/* Track */}
-        <div className="flex gap-12 whitespace-nowrap w-max hover:[animation-play-state:paused]" style={{ animation: 'skills-marquee 55s linear infinite' }}>
+        <div className="flex gap-12 whitespace-nowrap w-max hover:[animation-play-state:paused]" style={{ animation: 'skills-marquee 55s linear infinite', willChange: 'transform', transform: 'translate3d(0, 0, 0)' }}>
           {[...MARQUEE_ITEMS, ...MARQUEE_ITEMS].map((item, i) => (
             <span
               key={`${item}-${i}`}
@@ -609,7 +614,7 @@ const SkillsSection = () => {
       </div>
 
       {/* ═══ BENTO GRID ═══ */}
-      <div className="max-w-[85rem] mx-auto px-6 lg:px-8 relative z-10">
+      <div className="max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-4 lg:gap-5">
           {CATEGORIES.map((cat, i) => (
             <SkillCard key={cat.title} cat={cat} visible={isVisible} index={i} />

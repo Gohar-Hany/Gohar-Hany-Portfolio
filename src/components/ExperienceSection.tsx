@@ -149,6 +149,17 @@ const ExperienceSection = () => {
     }
   ];
 
+  const tabsNavRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (tabsNavRef.current && typeof window !== 'undefined' && window.innerWidth < 1024) {
+      const activeEl = tabsNavRef.current.children[activeExperience] as HTMLElement;
+      if (activeEl) {
+        activeEl.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      }
+    }
+  }, [activeExperience]);
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -170,7 +181,7 @@ const ExperienceSection = () => {
       <div className="absolute top-1/4 right-0 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px] opacity-60 pointer-events-none mix-blend-screen" />
       <div className="absolute bottom-0 left-1/4 w-[600px] h-[600px] bg-accent/10 rounded-full blur-[150px] opacity-60 pointer-events-none mix-blend-screen" />
 
-      <div className="max-w-[85rem] mx-auto px-6 lg:px-8 relative z-10">
+      <div className="max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
         {/* Section Header */}
         <div className={`flex flex-col md:flex-row justify-between items-end mb-16 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
@@ -192,7 +203,13 @@ const ExperienceSection = () => {
 
           {/* Timeline navigation (Left Column) */}
           <div className={`lg:col-span-5 xl:col-span-4 transition-all duration-1000 delay-200 ease-out ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-12'}`}>
-            <div className="lg:sticky lg:top-32 flex flex-row lg:flex-col gap-3 overflow-x-auto pb-4 lg:pb-0 no-scrollbar">
+            {/* Mobile swipe helper */}
+            <div className="flex items-center justify-between text-xs font-dmsans text-white/40 mb-2 px-1 lg:hidden">
+              <span className="font-semibold text-white/70">Role {activeExperience + 1} of {experiences.length}</span>
+              <span className="text-primary/70">← Swipe to explore →</span>
+            </div>
+
+            <div ref={tabsNavRef} className="lg:sticky lg:top-32 flex flex-row lg:flex-col gap-3 overflow-x-auto pb-4 lg:pb-0 no-scrollbar">
               {experiences.map((exp, index) => {
                 const IconComponent = exp.icon;
                 const isActive = index === activeExperience;
@@ -256,7 +273,7 @@ const ExperienceSection = () => {
                     key={exp.id}
                     className="relative lg:absolute lg:inset-0 w-full h-auto lg:h-full animate-in fade-in slide-in-from-bottom-8 duration-700"
                   >
-                    <div className="h-auto lg:h-full rounded-[2rem] p-6 sm:p-8 md:p-10 bg-white/[0.02] border border-white/[0.05] backdrop-blur-xl flex flex-col overflow-hidden group">
+                    <div className="h-auto lg:h-full rounded-[1.75rem] sm:rounded-[2rem] p-5 sm:p-8 md:p-10 bg-white/[0.02] border border-white/[0.05] backdrop-blur-xl flex flex-col overflow-hidden group">
                       {/* Active Background Glow */}
                       <div className={`absolute top-0 right-0 w-[400px] h-[400px] bg-gradient-to-br ${exp.bgColor} rounded-full blur-[100px] opacity-30 pointer-events-none transition-opacity duration-1000`} />
 
