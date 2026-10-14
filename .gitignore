@@ -1,5 +1,26 @@
-# Logs
-logs
+# ── Dependencies ──────────────────────────────
+node_modules/
+
+# ── Build output ──────────────────────────────
+dist/
+dist-ssr/
+*.tsbuildinfo
+.vite/
+
+# ── Environment & secrets ─────────────────────
+.env
+.env.*
+!.env.example
+*.local
+
+# ── Lockfiles (npm is the package manager) ────
+bun.lockb
+bun.lock
+yarn.lock
+pnpm-lock.yaml
+
+# ── Logs ──────────────────────────────────────
+logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
@@ -7,18 +28,35 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
+# ── Deployment ────────────────────────────────
+.vercel/
 
-# Editor directories and files
+# ── Reports & scratch output ──────────────────
+coverage/
+lighthouse*.json
+lighthouse*.html
+*.diff
+diff-output.txt
+
+# ── Private content (kept locally, never published) ──
+# Resume sources, LinkedIn exports, n8n workflow exports and reports.
+# They contain phone numbers, webhook URLs and sheet IDs.
+Gohar Data/
+
+# ── AI agent working files ────────────────────
+.agents/tasks/
+
+# ── Editors ───────────────────────────────────
 .vscode/*
 !.vscode/extensions.json
-.idea
-.DS_Store
+.idea/
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+
+# ── OS ────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini

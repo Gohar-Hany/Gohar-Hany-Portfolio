@@ -28,6 +28,7 @@ My personal developer portfolio — a modern, interactive single-page applicatio
 | **React** + **TypeScript** | UI framework |
 | **Vite** | Build tool |
 | **TailwindCSS** | Styling |
+| **GSAP** | Animations |
 | **Shadcn/UI** | Component library |
 | **Vercel** | Deployment |
 
@@ -37,7 +38,29 @@ My personal developer portfolio — a modern, interactive single-page applicatio
 git clone https://github.com/Gohar-Hany/Gohar-Hany-Portfolio.git
 cd Gohar-Hany-Portfolio
 npm install
-npm run dev
+npm run dev        # http://localhost:8080
+```
+
+| Command | What it does |
+|---|---|
+| `npm run dev` | Start the dev server |
+| `npm run build` | Production build into `dist/` |
+| `npm run preview` | Serve the production build locally |
+| `npm run lint` | Run ESLint |
+| `node scripts/optimize-assets.mjs` | Convert PNG/JPG in `public/` to WebP |
+
+## 📁 Project Structure
+
+```
+public/                 Static assets (hero image, gallery photos, robots.txt, sitemap.xml)
+scripts/                Asset optimization script
+src/
+  components/           Page sections (Hero, About, Skills, Projects, Experience, …)
+    gallery/            Photo gallery data and pieces
+    ui/                 Shadcn/UI primitives in use
+  hooks/                Shared React hooks
+  lib/                  Utilities
+  pages/                Routes (Index, NotFound)
 ```
 
 ---
