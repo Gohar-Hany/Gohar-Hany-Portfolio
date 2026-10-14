@@ -1,3 +1,8 @@
+// MOBILE OPTIMIZED: Fluid typography with CSS variables, intermediate tablet breakpoints (md:grid-cols-2), responsive padding, counter animation with will-change optimization
+// BREAKPOINTS: 320px (mobile), 640px (sm), 768px (md), 1024px (lg)
+// PERFORMANCE: IntersectionObserver with throttle, easeOutExpo easing for smooth counters, GPU-accelerated animations
+// ACCESSIBILITY: Semantic HTML, descriptive ARIA labels, proper heading hierarchy
+
 import { useEffect, useState, useRef } from 'react';
 import { TrendingUp, Users, Briefcase, Trophy, Sparkles, GraduationCap, Target } from 'lucide-react';
 
@@ -74,7 +79,7 @@ const AboutSection = () => {
               <div className="h-[1px] w-8 bg-primary"></div>
               <span className="text-primary font-syne font-semibold tracking-widest uppercase text-sm">Discover</span>
             </div>
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold font-syne text-white leading-tight">
+            <h2 className="font-bold font-syne text-white leading-tight" style={{ fontSize: 'var(--font-section-heading)' }}>
               About <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-blue-400 to-accent">Me</span>
             </h2>
           </div>
@@ -84,21 +89,21 @@ const AboutSection = () => {
         </div>
 
         {/* Bento Grid Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 auto-rows-min">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-4 sm:gap-6 lg:gap-8 auto-rows-min">
 
           {/* Main Biography Card (Span 7) */}
-          <div className={`lg:col-span-7 lg:row-span-2 relative group rounded-2xl sm:rounded-[2rem] p-5 sm:p-8 md:p-10 bg-white/[0.02] border border-white/[0.05] backdrop-blur-xl transition-all duration-1000 delay-100 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'} hover:bg-white/[0.03] hover:border-white/10`}>
+          <div className={`md:col-span-2 lg:col-span-7 lg:row-span-2 relative group rounded-2xl sm:rounded-[2rem] p-4 sm:p-6 md:p-8 bg-white/[0.02] border border-white/[0.05] backdrop-blur-xl transition-all duration-1000 delay-100 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'} hover:bg-white/[0.03] hover:border-white/10`}>
             {/* Subtle inner top glow */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-[1px] bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
 
             <Sparkles className="absolute top-8 right-8 text-primary/30 w-6 h-6" />
 
-            <blockquote className="text-xl md:text-2xl font-medium text-white leading-snug mb-8 relative">
+            <blockquote className="font-medium text-white leading-snug mb-8 relative" style={{ fontSize: 'var(--font-h3)' }}>
               <span className="absolute -left-4 -top-2 text-4xl text-primary/20 font-serif">"</span>
               AI should be agentic, adaptable, and aligned with people.
             </blockquote>
 
-            <div className="space-y-6 text-base md:text-lg text-white/70 font-dmsans font-light leading-relaxed">
+            <div className="space-y-4 sm:space-y-6 font-dmsans font-light leading-relaxed text-white/70" style={{ fontSize: 'var(--font-body)' }}>
               <p>
                 I am an <strong className="text-white font-medium">AI Systems Engineer</strong> focused on building production-ready
                 agentic workflows that <strong className="text-primary font-medium">reason, retrieve context, and execute reliably</strong>.
@@ -115,7 +120,7 @@ const AboutSection = () => {
           </div>
 
           {/* Currently Active Card (Span 5) */}
-          <div className={`lg:col-span-5 relative rounded-2xl sm:rounded-[2rem] p-5 sm:p-8 bg-gradient-to-br from-primary/[0.08] to-transparent border border-primary/20 backdrop-blur-md overflow-hidden transition-all duration-1000 delay-200 ease-out ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-12'} group`}>
+          <div className={`md:col-span-1 lg:col-span-5 relative rounded-2xl sm:rounded-[2rem] p-4 sm:p-6 md:p-8 bg-gradient-to-br from-primary/[0.08] to-transparent border border-primary/20 backdrop-blur-md overflow-hidden transition-all duration-1000 delay-200 ease-out ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-12'} group`}>
             <div className="absolute -right-10 -bottom-10 w-40 h-40 bg-primary/20 blur-[50px] group-hover:bg-primary/30 transition-colors duration-500" />
 
             <div className="flex items-center gap-3 mb-6">
@@ -139,7 +144,7 @@ const AboutSection = () => {
           </div>
 
           {/* Academic Profile (Span 5 over 2 cols for smaller screens, 1 col on mid) */}
-          <div className={`lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 gap-4 transition-all duration-1000 delay-300 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          <div className={`md:col-span-1 lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 transition-all duration-1000 delay-300 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
             <div className="rounded-xl sm:rounded-[1.5rem] p-4 sm:p-6 bg-white/[0.02] border border-white/[0.05] hover:bg-white/[0.04] transition-colors">
               <GraduationCap className="w-6 h-6 text-white/40 mb-3" />
               <h4 className="font-syne text-white font-medium mb-1">CS Graduate 2025</h4>

@@ -1,3 +1,8 @@
+// MOBILE OPTIMIZED: Full-screen mobile modal (100vw/100dvh), independent scroll containers with overscroll containment, fixed close button z-index, proper touch-action
+// BREAKPOINTS: 320px (mobile), 640px (sm), 768px (md), 1024px (lg)
+// PERFORMANCE: Portal-based modal rendering, useScrollLock hook for body scroll prevention, GPU-accelerated animations
+// ACCESSIBILITY: ARIA modal attributes, ESC key support, focus management, keyboard navigation
+
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { X, Utensils, Headphones, Users, BarChart3, Search, MapPin, Palette, Clock, Zap, Shield, Database, Code, ArrowRight, ExternalLink, Activity } from 'lucide-react';
@@ -498,14 +503,14 @@ const ProjectsSection = () => {
                         aria-labelledby="project-modal-title"
                     >
                         <div
-                            className="relative w-full sm:max-w-6xl h-full sm:h-auto sm:max-h-[90vh] lg:max-h-[85vh] flex flex-col lg:flex-row bg-[#0A0A0B] border-0 sm:border border-white/10 rounded-none sm:rounded-[2rem] shadow-2xl lg:overflow-hidden overflow-y-auto animate-in zoom-in-95 duration-300"
-                            style={{ zIndex: 'var(--z-modal, 300)', overscrollBehavior: 'contain' }}
+                            className="relative w-[100vw] sm:max-w-6xl max-h-[100dvh] sm:h-auto sm:max-h-[90vh] lg:max-h-[85vh] flex flex-col lg:flex-row bg-[#0A0A0B] border-0 sm:border border-white/10 rounded-none sm:rounded-[2rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300"
+                            style={{ zIndex: 'var(--z-modal, 300)' }}
                             onClick={(e) => e.stopPropagation()}
                         >
 
                             <button
                                 onClick={closeProject}
-                                className="fixed sm:absolute top-4 right-4 sm:top-6 sm:right-6 w-12 h-12 sm:w-10 sm:h-10 rounded-full bg-black/50 sm:bg-white/5 border border-white/20 sm:border-white/10 hover:bg-white/10 flex items-center justify-center transition-colors text-white hover:text-white backdrop-blur-xl"
+                                className="fixed top-4 right-4 sm:top-6 sm:right-6 w-12 h-12 rounded-full bg-black/80 sm:bg-white/5 border border-white/30 sm:border-white/10 hover:bg-white/10 flex items-center justify-center transition-colors text-white hover:text-white backdrop-blur-xl"
                                 style={{ zIndex: 9999 }}
                                 aria-label="Close modal"
                             >
@@ -513,7 +518,9 @@ const ProjectsSection = () => {
                             </button>
 
                             {/* Sidebar / Header Details */}
-                            <div className="w-full lg:w-[400px] flex-shrink-0 bg-white/[0.02] border-b lg:border-b-0 lg:border-r border-white/5 p-5 sm:p-8 pt-16 sm:pt-20 lg:pt-8 flex flex-col relative lg:overflow-y-auto overflow-y-visible custom-scroll">
+                            <div className="w-full lg:w-[400px] flex-shrink-0 bg-white/[0.02] border-b lg:border-b-0 lg:border-r border-white/5 p-4 sm:p-8 pt-16 sm:pt-20 lg:pt-8 flex flex-col overflow-y-auto modal-scroll"
+                                style={{ overscrollBehavior: 'contain', WebkitOverflowScrolling: 'touch' }}
+                            >
                                 <div className={`absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b ${currentProject.gradient} opacity-20 pointer-events-none`} />
 
                                 <div className="relative z-10 flex-1 flex flex-col">
@@ -587,7 +594,7 @@ const ProjectsSection = () => {
                                 </div>
 
                                 {/* Tab Content */}
-                                <div className="flex-1 lg:overflow-y-auto overflow-y-visible px-4 sm:px-8 py-6 sm:py-8 custom-scroll" style={{ overscrollBehavior: 'contain', WebkitOverflowScrolling: 'touch' }}>
+                                <div className="flex-1 overflow-y-auto px-4 sm:px-8 py-6 sm:py-8 modal-scroll" style={{ overscrollBehavior: 'contain', WebkitOverflowScrolling: 'touch', touchAction: 'pan-y' }}>
                                     <div className="max-w-3xl animate-in slide-in-from-right-4 duration-300">
 
                                         {/* OVERVIEW TAB */}

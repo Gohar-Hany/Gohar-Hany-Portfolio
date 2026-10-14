@@ -1,6 +1,8 @@
-// OPTIMIZED: 100dvh hero height, reduced particles on mobile (60% less), full-width CTA buttons on mobile
+// MOBILE OPTIMIZED: Fluid typography with CSS variables, reduced particles (60% on mobile), prefers-reduced-motion support, 100dvh viewport, full-width CTAs on mobile
 // BREAKPOINTS: 640px (sm), 768px (md), 1024px (lg), 1280px (xl)
-// PERFORMANCE: matchMedia for particle count, GPU-accelerated particle animation
+// PERFORMANCE: Particle count device-aware (6-8 mobile, 12 low-end desktop, 30 full), GPU-accelerated animations, will-change management
+// ACCESSIBILITY: Semantic HTML, focus states, ARIA labels, reduced motion support
+
 import { useState, useEffect } from 'react';
 import { ArrowDown, ArrowUpRight, Sparkles, Code2, Bot } from 'lucide-react';
 
@@ -8,9 +10,17 @@ const ParticleSystem = () => {
   const [particles, setParticles] = useState<Array<{ id: number, size: number, left: number, top: number, dur: number, delay: number }>>([]);
 
   useEffect(() => {
-    // Reduce particle count by 60% on mobile
-    const isMobile = window.matchMedia('(max-width: 768px)').matches;
-    const particleCount = isMobile ? 12 : 30;
+    // Check for reduced motion preference
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) {
+      setParticles([]); // Disable particles entirely
+      return;
+    }
+
+    // Device-aware particle count
+    const isMobile = window.matchMedia('(max-width: 640px)').matches;
+    const isLowEnd = navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4;
+    const particleCount = isMobile ? (isLowEnd ? 6 : 8) : (isLowEnd ? 12 : 30);
 
     const newParticles = Array.from({ length: particleCount }).map((_, i) => ({
       id: i,
@@ -22,6 +32,8 @@ const ParticleSystem = () => {
     }));
     setParticles(newParticles);
   }, []);
+
+  if (particles.length === 0) return null;
 
   return (
     <div className="absolute inset-0 overflow-hidden z-[1] pointer-events-none" id="particles">
@@ -36,7 +48,8 @@ const ParticleSystem = () => {
             top: `${p.top}%`,
             boxShadow: `0 0 ${p.size * 2}px ${p.size}px rgba(255,255,255,0.2)`,
             animation: `float-particle ${p.dur}s linear infinite`,
-            animationDelay: `${p.delay}s`
+            animationDelay: `${p.delay}s`,
+            willChange: 'transform, opacity'
           } as React.CSSProperties}
         />
       ))}
@@ -145,7 +158,7 @@ const HeroSection = () => {
             </div>
 
             <div className="space-y-4 mb-8">
-              <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-[5.5rem] xl:text-[6.5rem] font-bold font-syne text-white leading-[1.05] tracking-tight">
+              <h1 className="font-bold font-syne text-white leading-[1.05] tracking-tight" style={{ fontSize: 'var(--font-hero-title)' }}>
                 Gohar <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-blue-400 to-white/90">Hany</span>
               </h1>
 
@@ -154,8 +167,9 @@ const HeroSection = () => {
                 {roles.map((role, idx) => (
                   <div
                     key={idx}
-                    className={`absolute inset-0 flex items-center transition-all duration-700 ease-in-out font-syne text-[15px] sm:text-xl md:text-2xl lg:text-3xl text-accent font-medium tracking-wide
+                    className={`absolute inset-0 flex items-center transition-all duration-700 ease-in-out font-syne text-accent font-medium tracking-wide
                       ${currentRole === idx ? 'opacity-100 translate-y-0' : currentRole > idx ? 'opacity-0 -translate-y-full blur-sm' : 'opacity-0 translate-y-full blur-sm'}`}
+                    style={{ fontSize: 'var(--font-hero-role)' }}
                   >
                     <Sparkles size={18} className="mr-2 sm:mr-3 text-accent/80 flex-shrink-0" />
                     <span className="leading-snug">{role}</span>
@@ -164,15 +178,15 @@ const HeroSection = () => {
               </div>
             </div>
 
-            <p className="text-sm sm:text-lg md:text-xl text-white/60 max-w-xl mb-8 sm:mb-12 font-dmsans font-light leading-relaxed">
+            <p className="max-w-xl mb-8 sm:mb-12 font-dmsans font-light leading-relaxed text-white/60" style={{ fontSize: 'var(--font-hero-desc)' }}>
               I turn complex business workflows into production AI systems that automate operations, reduce manual work, and scale reliably with clear ROI.
             </p>
 
-            {/* Action Buttons — full-width on mobile */}
+            {/* Action Buttons — full-width on mobile, 48px height */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 sm:gap-6 mb-10">
               <button
                 onClick={() => scrollToSection('projects')}
-                className="group relative h-14 w-full sm:w-48 rounded-xl bg-primary text-white font-syne font-bold uppercase tracking-wider text-sm flex items-center justify-center overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[0_0_30px_rgba(0,183,255,0.4)]"
+                className="group relative h-12 w-full sm:w-48 rounded-xl bg-primary text-white font-syne font-bold uppercase tracking-wider text-sm flex items-center justify-center overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[0_0_30px_rgba(0,183,255,0.4)]"
               >
                 <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-primary via-blue-400 to-primary opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 <span className="relative z-10 flex items-center gap-2">
@@ -183,7 +197,7 @@ const HeroSection = () => {
 
               <button
                 onClick={() => scrollToSection('contact')}
-                className="group h-14 w-full sm:w-auto px-8 rounded-xl bg-white/[0.03] border border-white/10 text-white/90 font-syne font-semibold hover:bg-white/10 hover:border-white/20 transition-all duration-300 backdrop-blur-md flex items-center justify-center gap-2"
+                className="group h-12 w-full sm:w-auto px-8 rounded-xl bg-white/[0.03] border border-white/10 text-white/90 font-syne font-semibold hover:bg-white/10 hover:border-white/20 transition-all duration-300 backdrop-blur-md flex items-center justify-center gap-2"
               >
                 Start a Dialogue
                 <ArrowUpRight size={16} className="text-primary group-hover:-translate-y-1 group-hover:translate-x-1 transition-transform duration-300" />

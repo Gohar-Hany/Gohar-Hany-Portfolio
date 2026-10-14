@@ -1,3 +1,8 @@
+// MOBILE OPTIMIZED: 3D iframe scroll trap fixed with interaction blocker overlay, 44px tap target buttons, improved mobile interaction flow
+// BREAKPOINTS: 320px (mobile), 640px (sm), 1024px (lg)
+// PERFORMANCE: Lazy-loaded iframe, conditional 3D interaction on mobile
+// ACCESSIBILITY: Clear button labels, touch-action optimization, ARIA roles
+
 import { useState, useEffect, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -206,6 +211,11 @@ const ContactSection = () => {
 
             {/* 3D Robot Model */}
             <div className="relative w-full h-[320px] sm:h-[400px] lg:h-[450px] rounded-2xl sm:rounded-[2rem] overflow-hidden shadow-[0_0_40px_rgba(0,183,255,0.15)] bg-black/40 border border-white/10 group">
+              {/* Interaction blocker overlay (mobile only) — prevents scroll trap */}
+              {!is3DActive && (
+                <div className="absolute inset-0 z-20 lg:hidden" />
+              )}
+
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10 pointer-events-none"></div>
               <iframe
                 src="https://my.spline.design/genkubgreetingrobot-mtRM3XSqB79SaWySckBPgOcq/"
@@ -214,8 +224,11 @@ const ContactSection = () => {
                 height="100%"
                 scrolling="no"
                 loading="lazy"
-                className={`scale-105 group-hover:scale-110 transition-transform duration-1000 ease-out ${is3DActive ? 'pointer-events-auto' : 'pointer-events-none lg:pointer-events-auto'}`}
-                style={{ border: 'none' }}
+                className="scale-105 group-hover:scale-110 transition-transform duration-1000 ease-out"
+                style={{
+                  border: 'none',
+                  pointerEvents: is3DActive || window.innerWidth >= 1024 ? 'auto' : 'none'
+                }}
                 title="3D Greeting Robot"
                 allow="autoplay"
               />
@@ -226,16 +239,16 @@ const ContactSection = () => {
                   <button
                     type="button"
                     onClick={() => setIs3DActive(true)}
-                    className="px-4 py-2 rounded-full bg-[#040d1a]/95 border border-primary/50 text-primary text-xs font-syne font-bold shadow-[0_0_20px_rgba(0,212,255,0.4)] flex items-center gap-2 backdrop-blur-xl transition-all active:scale-95"
+                    className="tap-target px-5 py-3 rounded-full bg-[#040d1a]/95 border border-primary/50 text-primary text-sm font-syne font-bold shadow-[0_0_20px_rgba(0,212,255,0.4)] flex items-center gap-2 backdrop-blur-xl transition-all active:scale-95"
                   >
-                    <Bot size={14} className="text-accent" />
+                    <Bot size={16} className="text-accent" />
                     <span>Tap to Interact in 3D</span>
                   </button>
                 ) : (
                   <button
                     type="button"
                     onClick={() => setIs3DActive(false)}
-                    className="px-4 py-2 rounded-full bg-black/90 border border-white/30 text-white text-xs font-syne font-semibold flex items-center gap-1.5 backdrop-blur-xl shadow-lg transition-all active:scale-95"
+                    className="tap-target px-5 py-3 rounded-full bg-black/90 border border-white/30 text-white text-sm font-syne font-semibold flex items-center gap-2 backdrop-blur-xl shadow-lg transition-all active:scale-95"
                   >
                     <span>✕ Exit 3D (Resume Scroll)</span>
                   </button>

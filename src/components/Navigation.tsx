@@ -1,3 +1,8 @@
+// MOBILE OPTIMIZED: 44px tap targets on desktop nav links, 8px min spacing in mobile menu, overscroll containment
+// BREAKPOINTS: 768px (md) for mobile/desktop toggle
+// PERFORMANCE: CSS transitions only (no GSAP overhead), passive scroll listener, stable scroll handler
+// ACCESSIBILITY: Focus trap in mobile menu, ARIA labels, keyboard navigation, auto-close on route change
+
 // OPTIMIZED: Focus trap in mobile menu, auto-close on route change, sticky nav with backdrop blur, 48px tap targets
 // BREAKPOINTS: md (768px) for mobile/desktop toggle
 // PERFORMANCE: CSS transitions only (no GSAP overhead), passive scroll listener
@@ -202,7 +207,7 @@ const Navigation = () => {
               <button
                 key={item.id}
                 onClick={() => scrollToSection(item.id)}
-                className={`relative px-4 lg:px-5 h-10 rounded-xl text-[14px] lg:text-[15px] font-syne font-medium transition-all duration-300 group overflow-hidden ${activeSection === item.id
+                className={`relative px-4 lg:px-5 h-11 rounded-xl text-[14px] lg:text-[15px] font-syne font-medium transition-all duration-300 group overflow-hidden ${activeSection === item.id
                   ? 'text-white'
                   : 'text-white/60 hover:text-white'
                   }`}
@@ -296,7 +301,7 @@ const Navigation = () => {
         role="menu"
         aria-hidden={!isOpen}
       >
-        <div className="bg-[#040d1a]/95 backdrop-blur-3xl border border-white/10 shadow-[0_20px_40px_rgba(0,0,0,0.6)] rounded-[1.75rem] sm:rounded-[2rem] p-4 sm:p-5 flex flex-col gap-1.5 sm:gap-2 relative overflow-y-auto max-h-full custom-scroll" style={{ overscrollBehavior: 'contain' }}>
+        <div className="bg-[#040d1a]/95 backdrop-blur-3xl border border-white/10 shadow-[0_20px_40px_rgba(0,0,0,0.6)] rounded-[1.75rem] sm:rounded-[2rem] p-4 sm:p-5 flex flex-col gap-2 relative overflow-y-auto max-h-full custom-scroll" style={{ overscrollBehavior: 'contain' }}>
           <div className="absolute top-0 right-0 w-[200px] h-[200px] bg-primary/20 blur-[60px] pointer-events-none rounded-full" />
 
           {NAV_ITEMS.map((item, index) => (
