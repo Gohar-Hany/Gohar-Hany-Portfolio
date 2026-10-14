@@ -1,7 +1,6 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
-// import { componentTagger } from "lovable-tagger"; // removed
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
@@ -11,7 +10,6 @@ export default defineConfig(({ mode }) => ({
   },
   plugins: [
     react(),
-    // componentTagger(), // disabled
   ],
   resolve: {
     alias: {
@@ -23,5 +21,14 @@ export default defineConfig(({ mode }) => ({
     cssCodeSplit: true,
     target: "es2020",
     sourcemap: false,
+    rollupOptions: {
+      output: {
+        // Libraries change rarely — separate chunks stay cached across deploys.
+        manualChunks: {
+          react: ["react", "react-dom", "react-router-dom"],
+          gsap: ["gsap"],
+        },
+      },
+    },
   },
 }));

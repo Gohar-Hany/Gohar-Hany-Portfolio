@@ -21,8 +21,8 @@ const CustomCursor = () => {
         const handleMouseMove = (e: MouseEvent) => {
             mx = e.clientX;
             my = e.clientY;
-            cursor.style.left = mx + "px";
-            cursor.style.top = my + "px";
+            // `translate` composites on the GPU; left/top forced a layout every move.
+            cursor.style.translate = `${mx}px ${my}px`;
         };
 
         document.addEventListener("mousemove", handleMouseMove);
@@ -31,8 +31,7 @@ const CustomCursor = () => {
         const loop = () => {
             rx += (mx - rx) * 0.12;
             ry += (my - ry) * 0.12;
-            ring.style.left = rx + "px";
-            ring.style.top = ry + "px";
+            ring.style.translate = `${rx}px ${ry}px`;
             animationFrameId = requestAnimationFrame(loop);
         };
         loop();

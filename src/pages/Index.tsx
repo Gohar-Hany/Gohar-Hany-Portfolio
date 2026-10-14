@@ -3,20 +3,34 @@
 // PERFORMANCE: matchMedia reduces animation complexity on <1024px, ScrollTrigger.refresh() after preloader
 // ACCESSIBILITY: Smooth scroll behavior, proper focus management
 
-import { useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Navigation from '@/components/Navigation';
 import Preloader from '@/components/Preloader';
 import HeroSection from '@/components/HeroSection';
-import AboutSection from '@/components/AboutSection';
-import SkillsSection from '@/components/SkillsSection';
-import ProjectsSection from '@/components/ProjectsSection';
-import ExperienceSection from '@/components/ExperienceSection';
-import EducationSection from '@/components/EducationSection';
-import PhotoGallerySection from '@/components/PhotoGallerySection';
-import ContactSection from '@/components/ContactSection';
-import Footer from '@/components/Footer';
+
+// Below-the-fold sections are split into their own chunks. The imports start
+// immediately, so they download in parallel while the preloader plays and are
+// ready before the page is revealed — the initial bundle just gets smaller.
+const sectionImports = {
+  about: import('@/components/AboutSection'),
+  skills: import('@/components/SkillsSection'),
+  projects: import('@/components/ProjectsSection'),
+  experience: import('@/components/ExperienceSection'),
+  education: import('@/components/EducationSection'),
+  gallery: import('@/components/PhotoGallerySection'),
+  contact: import('@/components/ContactSection'),
+  footer: import('@/components/Footer'),
+};
+const AboutSection = lazy(() => sectionImports.about);
+const SkillsSection = lazy(() => sectionImports.skills);
+const ProjectsSection = lazy(() => sectionImports.projects);
+const ExperienceSection = lazy(() => sectionImports.experience);
+const EducationSection = lazy(() => sectionImports.education);
+const PhotoGallerySection = lazy(() => sectionImports.gallery);
+const ContactSection = lazy(() => sectionImports.contact);
+const Footer = lazy(() => sectionImports.footer);
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -102,16 +116,20 @@ const Index = () => {
 
         <main>
           <HeroSection />
-          <AboutSection />
-          <SkillsSection />
-          <ProjectsSection />
-          <ExperienceSection />
-          <EducationSection />
-          <PhotoGallerySection />
-          <ContactSection />
+          <Suspense fallback={null}>
+            <AboutSection />
+            <SkillsSection />
+            <ProjectsSection />
+            <ExperienceSection />
+            <EducationSection />
+            <PhotoGallerySection />
+            <ContactSection />
+          </Suspense>
         </main>
 
-        <Footer />
+        <Suspense fallback={null}>
+          <Footer />
+        </Suspense>
       </div>
     </>
   );

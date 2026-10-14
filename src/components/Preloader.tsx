@@ -3,7 +3,7 @@
 // PERFORMANCE: GSAP timeline cleanup, reduced-motion detection, fast exit path
 // ACCESSIBILITY: Respects prefers-reduced-motion, provides skip option
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 
 interface PreloaderProps {
@@ -28,11 +28,36 @@ interface PreloaderProps {
  * Green-500:       #22c55e
  */
 
+/*
+ * Fade + scale-down exit, identical to the previous GSAP tween (power2.inOut).
+ * Runs as a Web Animation so it stays on the compositor: a JS-driven transform
+ * on this full-screen layer was being counted as a 0.35 layout shift (CLS).
+ */
+const exitPreloader = (el: HTMLElement, durationMs: number, done: () => void) => {
+  const anim = el.animate(
+    [
+      { opacity: getComputedStyle(el).opacity, transform: 'scale(1)' },
+      { opacity: 0, transform: 'scale(0.95)' },
+    ],
+    { duration: durationMs, easing: 'cubic-bezier(0.45, 0, 0.55, 1)', fill: 'forwards' },
+  );
+  anim.onfinish = () => done();
+};
+
 const Preloader = ({ onComplete }: PreloaderProps) => {
   const preloaderRef = useRef<HTMLDivElement>(null);
   const progressBarRef = useRef<HTMLDivElement>(null);
   const logoRef = useRef<HTMLDivElement>(null);
-  const [progress, setProgress] = useState(0);
+  // Progress text is written straight to the DOM — re-rendering the whole
+  // preloader on every animation frame was the main cost during load.
+  const pctLabelRef = useRef<HTMLSpanElement>(null);
+  const fillBlocksRef = useRef<HTMLSpanElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
+  const setProgress = (progress: number) => {
+    if (pctLabelRef.current) pctLabelRef.current.textContent = `[${progress.toString().padStart(3, '0')}%]`;
+    if (fillBlocksRef.current) fillBlocksRef.current.textContent = '█'.repeat(Math.floor(progress / 5));
+    if (overlayRef.current) overlayRef.current.textContent = `${progress}% ${'█'.repeat(Math.floor((100 - progress) / 10))}`;
+  };
 
   useEffect(() => {
     // Check for reduced motion preference
@@ -61,13 +86,7 @@ const Preloader = ({ onComplete }: PreloaderProps) => {
     const timeoutFallback = setTimeout(() => {
       tl.kill();
       if (preloaderRef.current) {
-        gsap.to(preloaderRef.current, {
-          opacity: 0,
-          scale: 0.95,
-          duration: 0.4,
-          ease: 'power2.inOut',
-          onComplete: () => onComplete(),
-        });
+        exitPreloader(preloaderRef.current, 400, onComplete);
       }
     }, 2500);
 
@@ -92,15 +111,8 @@ const Preloader = ({ onComplete }: PreloaderProps) => {
             opacity: 0,
             duration: 0.3,
             onComplete: () => {
-              gsap.to(preloaderRef.current, {
-                opacity: 0,
-                scale: 0.95,
-                duration: 0.5,
-                ease: 'power2.inOut',
-                onComplete: () => {
-                  onComplete();
-                },
-              });
+              if (preloaderRef.current) exitPreloader(preloaderRef.current, 500, onComplete);
+              else onComplete();
             },
           });
         },
@@ -312,7 +324,7 @@ const Preloader = ({ onComplete }: PreloaderProps) => {
           {/* Header: LOADING_PROGRESS  [097%] */}
           <div className="flex justify-between items-center mb-3 text-xs">
             <span style={{ color: '#00ff88' }}>LOADING_PROGRESS</span>
-            <span className="font-bold" style={{ color: '#00d4ff' }}>[{progress.toString().padStart(3, '0')}%]</span>
+            <span ref={pctLabelRef} className="font-bold" style={{ color: '#00d4ff' }}>[000%]</span>
           </div>
 
           {/* Progress bar */}
@@ -333,14 +345,15 @@ const Preloader = ({ onComplete }: PreloaderProps) => {
                   color: '#090d11',
                 }}
               >
-                {'█'.repeat(Math.floor(progress / 5))}
+                <span ref={fillBlocksRef} />
               </div>
               {/* Overlay: percentage + empty blocks */}
               <div
                 className="absolute inset-0 flex items-center justify-center font-bold"
                 style={{ color: '#fafafa' }}
+                ref={overlayRef}
               >
-                {progress}% {'█'.repeat(Math.floor((100 - progress) / 10))}
+                {`0% ${'█'.repeat(10)}`}
               </div>
             </div>
           </div>
