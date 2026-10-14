@@ -201,7 +201,7 @@ const Navigation = () => {
         </div>
 
         {/* Desktop Navigation Links */}
-        <div className="hidden md:flex flex-1 justify-center">
+        <div className="hidden lg:flex flex-1 justify-center">
           <div className="flex items-center gap-1 lg:gap-2">
             {NAV_ITEMS.map((item) => (
               <button
@@ -229,7 +229,7 @@ const Navigation = () => {
         </div>
 
         {/* Actions Desktop */}
-        <div className="hidden md:flex items-center justify-end basis-[auto] lg:basis-[240px]">
+        <div className="hidden lg:flex items-center justify-end basis-[auto] lg:basis-[240px]">
           <div className="flex items-center gap-2">
             <a
               href="https://github.com/Gohar-Hany"
@@ -263,7 +263,7 @@ const Navigation = () => {
         </div>
 
         {/* Mobile menu hamburger */}
-        <div className="md:hidden flex items-center">
+        <div className="lg:hidden flex items-center">
           <button
             ref={hamburgerRef}
             onClick={() => setIsOpen(!isOpen)}
@@ -291,7 +291,7 @@ const Navigation = () => {
       <div
         ref={menuRef}
         id="mobile-menu"
-        className={`absolute top-full left-3 right-3 sm:left-4 sm:right-4 mt-2 sm:mt-3 md:hidden transition-all duration-500 origin-top max-h-[calc(100dvh-5.5rem)] flex flex-col ${isOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
+        className={`absolute top-full left-3 right-3 sm:left-4 sm:right-4 mt-2 sm:mt-3 lg:hidden transition-all duration-500 origin-top max-h-[calc(100dvh-5.5rem)] flex flex-col ${isOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
           }`}
         style={{
           transitionTimingFunction: 'cubic-bezier(0.22, 1, 0.36, 1)',

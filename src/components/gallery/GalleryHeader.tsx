@@ -1,6 +1,6 @@
 export const GalleryHeader = () => {
   return (
-    <div className="flex flex-col md:flex-row justify-between items-end mb-16 animate-fade-up">
+    <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 animate-fade-up">
       <div className="max-w-2xl">
         <div className="flex items-center gap-3 mb-4">
           <div className="h-[1px] w-8 bg-primary"></div>

@@ -160,7 +160,7 @@ function computeItemBaseRotation(offsetX: number, offsetY: number, sizeX: number
   return { rotateX, rotateY };
 }
 
-export default function DomeGallery({
+function DomeGallery3D({
   images = DEFAULT_IMAGES,
   fit = 0.5,
   fitBasis = 'auto',
@@ -184,50 +184,6 @@ export default function DomeGallery({
   const effectiveSegments = segments === DEFAULTS.segments ? getDeviceSegments() : segments;
   const isTouch = isTouchDevice();
   const effectiveDragSensitivity = isTouch ? dragSensitivity * 2 : dragSensitivity; // Reduce sensitivity 50% on touch
-
-  // Lite Mode detection for low-end devices
-  const [isLiteMode, setIsLiteMode] = useState(false);
-
-  useEffect(() => {
-    const isLowEnd = 
-      (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4) ||
-      ((navigator as any).deviceMemory && (navigator as any).deviceMemory <= 4);
-    
-    setIsLiteMode(isLowEnd);
-  }, []);
-
-  const items = useMemo(() => buildItems(images, effectiveSegments), [images, effectiveSegments]);
-
-  // Lite Mode: Flat CSS Grid Fallback
-  if (isLiteMode) {
-    return (
-      <div className="dome-gallery-lite w-full h-full p-4 overflow-y-auto">
-        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2">
-          {items.map((item, i) => (
-            <div
-              key={i}
-              className="aspect-square overflow-hidden rounded-lg cursor-pointer hover:scale-105 transition-transform duration-300 bg-white/[0.02] border border-white/[0.05]"
-              onClick={() => onImageClick?.(item.originalItem)}
-            >
-              <img
-                src={item.src}
-                alt={item.alt}
-                className="w-full h-full object-cover"
-                loading="lazy"
-                decoding="async"
-              />
-            </div>
-          ))}
-        </div>
-        <button
-          onClick={() => setIsLiteMode(false)}
-          className="mt-6 mx-auto px-4 py-2 bg-primary/20 border border-primary/50 rounded-full text-primary text-sm font-bold hover:bg-primary/30 transition-colors flex items-center gap-2"
-        >
-          Switch to 3D View
-        </button>
-      </div>
-    );
-  }
 
   // Full 3D Dome (existing code continues)
 
@@ -1016,4 +972,51 @@ export default function DomeGallery({
       </div>
     </>
   );
+}
+
+function DomeGalleryLite({ images = DEFAULT_IMAGES, onImageClick, onSwitchTo3D }: DomeGalleryProps & { onSwitchTo3D: () => void }) {
+  const items = useMemo(() => buildItems(images, getDeviceSegments()), [images]);
+    return (
+      <div className="dome-gallery-lite w-full h-full p-4 overflow-y-auto">
+        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2">
+          {items.map((item, i) => (
+            <div
+              key={i}
+              className="aspect-square overflow-hidden rounded-lg cursor-pointer hover:scale-105 transition-transform duration-300 bg-white/[0.02] border border-white/[0.05]"
+              onClick={() => onImageClick?.(item.originalItem)}
+            >
+              <img
+                src={item.src}
+                alt={item.alt}
+                className="w-full h-full object-cover"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+          ))}
+        </div>
+        <button
+          onClick={onSwitchTo3D}
+          className="mt-6 mx-auto px-4 py-2 bg-primary/20 border border-primary/50 rounded-full text-primary text-sm font-bold hover:bg-primary/30 transition-colors flex items-center gap-2"
+        >
+          Switch to 3D View
+        </button>
+      </div>
+    );
+}
+
+// Chooses the flat grid on low-end devices and the 3D dome elsewhere.
+// Kept as separate components so switching modes never changes hook order.
+export default function DomeGallery(props: DomeGalleryProps) {
+  const [isLiteMode, setIsLiteMode] = useState(false);
+
+  useEffect(() => {
+    const isLowEnd =
+      (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4) ||
+      ((navigator as any).deviceMemory && (navigator as any).deviceMemory <= 4);
+    setIsLiteMode(Boolean(isLowEnd));
+  }, []);
+
+  if (isLiteMode) return <DomeGalleryLite {...props} onSwitchTo3D={() => setIsLiteMode(false)} />;
+  return <DomeGallery3D {...props} />;
 }

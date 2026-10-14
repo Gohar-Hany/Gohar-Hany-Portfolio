@@ -362,7 +362,7 @@ const ProjectsSection = () => {
             <div className="max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
                 {/* Section Header */}
-                <div className={`flex flex-col md:flex-row justify-between items-end mb-16 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+                <div className={`flex flex-col md:flex-row justify-between items-start md:items-end mb-16 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
                     <div className="max-w-2xl">
                         <div className="flex items-center gap-3 mb-4">
                             <div className="h-[1px] w-8 bg-primary"></div>
@@ -504,7 +504,7 @@ const ProjectsSection = () => {
                         aria-labelledby="project-modal-title"
                     >
                         <div
-                            className="relative w-[100vw] sm:max-w-6xl max-h-[100dvh] sm:h-auto sm:max-h-[90vh] lg:max-h-[85vh] flex flex-col lg:flex-row bg-[#0A0A0B] border-0 sm:border border-white/10 rounded-none sm:rounded-[2rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300"
+                            className="relative w-[100vw] sm:max-w-6xl max-h-[100dvh] sm:h-auto sm:max-h-[90vh] lg:max-h-[85vh] flex flex-col lg:flex-row bg-[#0A0A0B] border-0 sm:border border-white/10 rounded-none sm:rounded-[2rem] shadow-2xl overflow-y-auto overscroll-contain lg:overflow-hidden animate-in zoom-in-95 duration-300"
                             style={{ zIndex: 'var(--z-modal, 300)' }}
                             onClick={(e) => e.stopPropagation()}
                         >
@@ -519,7 +519,7 @@ const ProjectsSection = () => {
                             </button>
 
                             {/* Sidebar / Header Details */}
-                            <div className="w-full lg:w-[400px] flex-shrink-0 bg-white/[0.02] border-b lg:border-b-0 lg:border-r border-white/5 p-4 sm:p-8 pt-16 sm:pt-20 lg:pt-8 flex flex-col overflow-y-auto modal-scroll"
+                            <div className="w-full lg:w-[400px] flex-shrink-0 bg-white/[0.02] border-b lg:border-b-0 lg:border-r border-white/5 p-4 sm:p-8 pt-16 sm:pt-20 lg:pt-8 flex flex-col lg:overflow-y-auto modal-scroll"
                                 style={{ overscrollBehavior: 'contain', WebkitOverflowScrolling: 'touch' }}
                             >
                                 <div className={`absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b ${currentProject.gradient} opacity-20 pointer-events-none`} />
@@ -571,7 +571,7 @@ const ProjectsSection = () => {
                             </div>
 
                             {/* Main Content Area */}
-                            <div className="flex-1 flex flex-col min-h-0 bg-transparent">
+                            <div className="flex-1 flex flex-col lg:min-h-0 bg-transparent">
 
                                 {/* Tabs Navigation - Sticky on mobile and desktop */}
                                 <div className="sticky top-0 z-20 bg-[#0A0A0B]/95 backdrop-blur-xl flex overflow-x-auto gap-2 px-4 sm:px-8 py-3 sm:py-4 border-b border-white/10 no-scrollbar">
@@ -595,7 +595,7 @@ const ProjectsSection = () => {
                                 </div>
 
                                 {/* Tab Content */}
-                                <div className="flex-1 overflow-y-auto px-4 sm:px-8 py-6 sm:py-8 modal-scroll" style={{ overscrollBehavior: 'contain', WebkitOverflowScrolling: 'touch', touchAction: 'pan-y' }}>
+                                <div className="flex-1 lg:overflow-y-auto px-4 sm:px-8 py-6 sm:py-8 modal-scroll" style={{ overscrollBehavior: 'contain', WebkitOverflowScrolling: 'touch', touchAction: 'pan-y' }}>
                                     <div className="max-w-3xl animate-in slide-in-from-right-4 duration-300">
 
                                         {/* OVERVIEW TAB */}

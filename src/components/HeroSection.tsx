@@ -116,7 +116,7 @@ const HeroSection = () => {
           height="1080"
           decoding="async"
           fetchPriority="high"
-          className="absolute inset-0 w-full h-full object-cover object-center sm:object-[50%_20%] lg:object-[90%_15%] brightness-[0.85] contrast-[1.15] saturate-0 sepia-[0.3] hue-rotate-[190deg]"
+          className="absolute inset-0 w-full h-full object-cover object-[62%_center] sm:object-[75%_20%] lg:object-[90%_15%] brightness-[0.85] contrast-[1.15] saturate-0 sepia-[0.3] hue-rotate-[190deg]"
         />
         {/* Blue steel tint */}
         <div className="absolute inset-0 bg-blue-950/40 mix-blend-screen pointer-events-none" />

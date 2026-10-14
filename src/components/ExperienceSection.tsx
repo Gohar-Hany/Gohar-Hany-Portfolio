@@ -155,7 +155,14 @@ const ExperienceSection = () => {
     if (tabsNavRef.current && typeof window !== 'undefined' && window.innerWidth < 1024) {
       const activeEl = tabsNavRef.current.children[activeExperience] as HTMLElement;
       if (activeEl) {
-        activeEl.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        // Scroll only the tab strip horizontally — scrollIntoView also scrolled the
+        // whole page, yanking mobile visitors down to this section on load.
+        const strip = tabsNavRef.current;
+        const offset = activeEl.getBoundingClientRect().left - strip.getBoundingClientRect().left;
+        strip.scrollTo({
+          left: strip.scrollLeft + offset - (strip.clientWidth - activeEl.offsetWidth) / 2,
+          behavior: 'smooth',
+        });
       }
     }
   }, [activeExperience]);
@@ -184,7 +191,7 @@ const ExperienceSection = () => {
       <div className="max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
         {/* Section Header */}
-        <div className={`flex flex-col md:flex-row justify-between items-end mb-16 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+        <div className={`flex flex-col md:flex-row justify-between items-start md:items-end mb-16 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           <div className="max-w-2xl">
             <div className="flex items-center gap-3 mb-4">
               <div className="h-[1px] w-8 bg-primary"></div>
@@ -202,7 +209,7 @@ const ExperienceSection = () => {
         <div className="grid lg:grid-cols-12 gap-6 lg:gap-10">
 
           {/* Timeline navigation (Left Column) */}
-          <div className={`lg:col-span-5 xl:col-span-4 transition-all duration-1000 delay-200 ease-out ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-12'}`}>
+          <div className={`min-w-0 lg:col-span-5 xl:col-span-4 transition-all duration-1000 delay-200 ease-out ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-12'}`}>
             {/* Mobile swipe helper */}
             <div className="flex items-center justify-between text-xs font-dmsans text-white/40 mb-2 px-1 lg:hidden">
               <span className="font-semibold text-white/70">Role {activeExperience + 1} of {experiences.length}</span>
@@ -219,7 +226,7 @@ const ExperienceSection = () => {
                   <button
                     key={exp.id}
                     onClick={() => setActiveExperience(index)}
-                    className={`group relative w-auto flex-shrink-0 lg:w-full text-left p-4 rounded-[1.25rem] transition-all duration-500 overflow-hidden outline-none
+                    className={`group relative w-auto max-w-[80vw] flex-shrink-0 lg:max-w-none lg:w-full text-left p-4 rounded-[1.25rem] transition-all duration-500 overflow-hidden outline-none
                       ${isActive
                         ? 'bg-white/[0.04] border-white/20 shadow-lg shadow-black/20'
                         : 'bg-white/[0.015] border-white/[0.03] hover:bg-white/[0.03] hover:border-white/10'
@@ -259,7 +266,7 @@ const ExperienceSection = () => {
           </div>
 
           {/* Experience details (Right Column) */}
-          <div className={`lg:col-span-7 xl:col-span-8 transition-all duration-1000 delay-400 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
+          <div className={`min-w-0 lg:col-span-7 xl:col-span-8 transition-all duration-1000 delay-400 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
             <div className="relative w-full h-auto lg:h-full min-h-0 lg:min-h-[600px]">
               {experiences.map((exp, index) => {
                 const IconComponent = exp.icon;
