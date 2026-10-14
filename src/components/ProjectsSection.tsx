@@ -390,6 +390,7 @@ const ProjectsSection = () => {
                                 tabIndex={0}
                                 className={`group cursor-pointer project-card relative rounded-[1.5rem] sm:rounded-[2.5rem] p-5 sm:p-8 md:p-10 pb-8 sm:pb-12 md:pb-16 bg-white/[0.02] border border-white/[0.05] backdrop-blur-xl overflow-hidden transition-all duration-700 ease-out
                                 hover:-translate-y-2 hover:bg-white/[0.03] ${project.borderGlow} hover:shadow-2xl hover:shadow-black/50
+                                active:scale-[0.98] active:bg-white/[0.04]
                                 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}
                                 `}
                                 style={{ transitionDelay: `${200 + delay}ms`, touchAction: 'manipulation' }}

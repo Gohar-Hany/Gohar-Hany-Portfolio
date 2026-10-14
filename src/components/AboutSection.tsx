@@ -92,7 +92,7 @@ const AboutSection = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-4 sm:gap-6 lg:gap-8 auto-rows-min">
 
           {/* Main Biography Card (Span 7) */}
-          <div className={`md:col-span-2 lg:col-span-7 lg:row-span-2 relative group rounded-2xl sm:rounded-[2rem] p-4 sm:p-6 md:p-8 bg-white/[0.02] border border-white/[0.05] backdrop-blur-xl transition-all duration-1000 delay-100 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'} hover:bg-white/[0.03] hover:border-white/10`}>
+          <div className={`md:col-span-2 lg:col-span-7 lg:row-span-2 relative group rounded-2xl sm:rounded-[2rem] p-4 sm:p-6 md:p-8 bg-white/[0.02] border border-white/[0.05] backdrop-blur-xl transition-all duration-1000 delay-100 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'} hover:bg-white/[0.03] hover:border-white/10 active:scale-[0.99]`}>
             {/* Subtle inner top glow */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-[1px] bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
 
