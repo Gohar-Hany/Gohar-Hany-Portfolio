@@ -190,7 +190,7 @@ const ExperienceSection = () => {
               <div className="h-[1px] w-8 bg-primary"></div>
               <span className="text-primary font-syne font-semibold tracking-widest uppercase text-sm">Career</span>
             </div>
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold font-syne text-white leading-tight">
+            <h2 className="font-bold font-syne text-white leading-tight" style={{ fontSize: 'var(--font-section-heading)' }}>
               Professional <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-blue-400 to-accent">Journey</span>
             </h2>
           </div>

@@ -160,7 +160,7 @@ const AboutSection = () => {
           </div>
 
           {/* Stats Grid (Full Width, 4 cols) */}
-          <div className="lg:col-span-12 grid grid-cols-2 lg:grid-cols-4 gap-4 mt-2">
+          <div className="lg:col-span-12 grid grid-cols-2 lg:grid-cols-4 gap-4 mt-2 auto-rows-fr">
             {stats.map((stat, index) => {
               const IconComponent = stat.icon;
               const currentValue = counters[stat.id as keyof typeof counters];

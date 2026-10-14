@@ -368,7 +368,7 @@ const ProjectsSection = () => {
                             <div className="h-[1px] w-8 bg-primary"></div>
                             <span className="text-primary font-syne font-semibold tracking-widest uppercase text-sm">Portfolio</span>
                         </div>
-                        <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold font-syne text-white leading-tight">
+                        <h2 className="font-bold font-syne text-white leading-tight" style={{ fontSize: 'var(--font-section-heading)' }}>
                             Featured <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-blue-400 to-accent">Work</span>
                         </h2>
                     </div>
@@ -512,7 +512,7 @@ const ProjectsSection = () => {
                             <button
                                 onClick={closeProject}
                                 className="fixed top-4 right-4 sm:top-6 sm:right-6 w-12 h-12 rounded-full bg-black/80 sm:bg-white/5 border border-white/30 sm:border-white/10 hover:bg-white/10 flex items-center justify-center transition-colors text-white hover:text-white backdrop-blur-xl"
-                                style={{ zIndex: 9999 }}
+                                style={{ zIndex: 'var(--z-modal)' }}
                                 aria-label="Close modal"
                             >
                                 <X size={20} />

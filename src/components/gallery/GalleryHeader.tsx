@@ -6,7 +6,7 @@ export const GalleryHeader = () => {
           <div className="h-[1px] w-8 bg-primary"></div>
           <span className="text-primary font-syne font-semibold tracking-widest uppercase text-sm">Community & Impact</span>
         </div>
-        <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold font-syne text-white leading-tight">
+        <h2 className="font-bold font-syne text-white leading-tight" style={{ fontSize: 'var(--font-section-heading)' }}>
           Event <span className="text-primary">Highlights</span>
         </h2>
       </div>

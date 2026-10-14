@@ -482,7 +482,7 @@ const SkillCard = ({ cat, visible, index }: { cat: typeof CATEGORIES[0]; visible
       </p>
 
       {/* Skill tags */}
-      <div className="relative z-10 flex flex-wrap gap-[5px] mb-5">
+      <div className="relative z-10 flex flex-wrap gap-2 mb-5">
         {cat.skills.map((skill) => (
           <span
             key={skill}
@@ -573,7 +573,7 @@ const SkillsSection = () => {
           {/* Section number + rule */}
           <div className="flex items-baseline gap-4 mb-5">
             <span className="text-primary font-dmsans text-sm tracking-[0.1em]">/ 03</span>
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold font-syne text-white tracking-tight leading-none">
+            <h2 className="font-bold font-syne text-white tracking-tight leading-none" style={{ fontSize: 'var(--font-section-heading)' }}>
               Skills <span className="text-white/20">&</span> <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">Expertise</span>
             </h2>
             <div className="flex-1 h-[1px] bg-white/[0.06] ml-2.5 relative hidden md:block">
