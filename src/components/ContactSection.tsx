@@ -1,6 +1,6 @@
-// MOBILE OPTIMIZED: 3D iframe scroll trap fixed with interaction blocker overlay, 44px tap target buttons, improved mobile interaction flow
+// MOBILE OPTIMIZED: 3D iframe scroll trap fixed, low-end device fallback with static icon, 44px tap targets
 // BREAKPOINTS: 320px (mobile), 640px (sm), 1024px (lg)
-// PERFORMANCE: Lazy-loaded iframe, conditional 3D interaction on mobile
+// PERFORMANCE: Lazy-loaded iframe, conditional 3D on mobile, hardwareConcurrency/deviceMemory detection for fallback
 // ACCESSIBILITY: Clear button labels, touch-action optimization, ARIA roles
 
 import { useState, useEffect, useRef } from 'react';
@@ -38,9 +38,19 @@ const ContactSection = () => {
   });
   const [formSubmitting, setFormSubmitting] = useState(false);
   const [is3DActive, setIs3DActive] = useState(false);
+  const [showRobotFallback, setShowRobotFallback] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const sectionRef = useRef<HTMLElement>(null);
+
+  // Detect low-end devices for 3D fallback
+  useEffect(() => {
+    const isLowEnd = 
+      (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4) ||
+      ((navigator as any).deviceMemory && (navigator as any).deviceMemory <= 4);
+    
+    setShowRobotFallback(isLowEnd);
+  }, []);
 
   const scrollToBottom = () => {
     if (chatContainerRef.current) {
@@ -211,56 +221,70 @@ const ContactSection = () => {
 
             {/* 3D Robot Model */}
             <div className="relative w-full h-[320px] sm:h-[400px] lg:h-[450px] rounded-2xl sm:rounded-[2rem] overflow-hidden shadow-[0_0_40px_rgba(0,183,255,0.15)] bg-black/40 border border-white/10 group">
-              {/* Interaction blocker overlay (mobile only) — prevents scroll trap */}
-              {!is3DActive && (
-                <div className="absolute inset-0 z-20 lg:hidden" />
+              {showRobotFallback ? (
+                // Static fallback image for low-end devices
+                <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/10 to-black/60">
+                  <div className="text-center space-y-4 p-6">
+                    <Bot size={80} className="text-primary/60 mx-auto" />
+                    <p className="text-white/60 font-dmsans text-sm">
+                      3D model optimized away for better performance
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  {/* Interaction blocker overlay (mobile only) — prevents scroll trap */}
+                  {!is3DActive && (
+                    <div className="absolute inset-0 z-20 lg:hidden" />
+                  )}
+
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10 pointer-events-none"></div>
+                  <iframe
+                    src="https://my.spline.design/genkubgreetingrobot-mtRM3XSqB79SaWySckBPgOcq/"
+                    frameBorder="0"
+                    width="100%"
+                    height="100%"
+                    scrolling="no"
+                    loading="lazy"
+                    className="scale-105 group-hover:scale-110 transition-transform duration-1000 ease-out"
+                    style={{
+                      border: 'none',
+                      pointerEvents: is3DActive || window.innerWidth >= 1024 ? 'auto' : 'none'
+                    }}
+                    title="3D Greeting Robot"
+                    allow="autoplay"
+                  />
+
+                  {/* Mobile interaction button toggle to prevent scroll trap */}
+                  <div className="absolute bottom-5 left-1/2 -translate-x-1/2 z-30 lg:hidden">
+                    {!is3DActive ? (
+                      <button
+                        type="button"
+                        onClick={() => setIs3DActive(true)}
+                        className="tap-target px-5 py-3 rounded-full bg-[#040d1a]/95 border border-primary/50 text-primary text-sm font-syne font-bold shadow-[0_0_20px_rgba(0,212,255,0.4)] flex items-center gap-2 backdrop-blur-xl transition-all active:scale-95"
+                      >
+                        <Bot size={16} className="text-accent" />
+                        <span>Tap to Interact in 3D</span>
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => setIs3DActive(false)}
+                        className="tap-target px-5 py-3 rounded-full bg-black/90 border border-white/30 text-white text-sm font-syne font-semibold flex items-center gap-2 backdrop-blur-xl shadow-lg transition-all active:scale-95"
+                      >
+                        <span>✕ Exit 3D (Resume Scroll)</span>
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Floating indicators */}
+                  <div className="absolute top-6 right-6 w-3 h-3 bg-accent rounded-full animate-pulse shadow-[0_0_15px_rgba(0,255,150,0.8)] z-20" />
+                  <div className="absolute bottom-10 left-8 w-2 h-2 bg-primary rounded-full animate-pulse shadow-[0_0_15px_rgba(0,183,255,0.8)] z-20" style={{ animationDelay: '1s' }} />
+
+                  {/* Watermark cover */}
+                  <div className="absolute bottom-0 right-0 w-48 h-12 bg-black/90 blur-md z-20 pointer-events-none" />
+                </>
               )}
-
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10 pointer-events-none"></div>
-              <iframe
-                src="https://my.spline.design/genkubgreetingrobot-mtRM3XSqB79SaWySckBPgOcq/"
-                frameBorder="0"
-                width="100%"
-                height="100%"
-                scrolling="no"
-                loading="lazy"
-                className="scale-105 group-hover:scale-110 transition-transform duration-1000 ease-out"
-                style={{
-                  border: 'none',
-                  pointerEvents: is3DActive || window.innerWidth >= 1024 ? 'auto' : 'none'
-                }}
-                title="3D Greeting Robot"
-                allow="autoplay"
-              />
-
-              {/* Mobile interaction button toggle to prevent scroll trap */}
-              <div className="absolute bottom-5 left-1/2 -translate-x-1/2 z-30 lg:hidden">
-                {!is3DActive ? (
-                  <button
-                    type="button"
-                    onClick={() => setIs3DActive(true)}
-                    className="tap-target px-5 py-3 rounded-full bg-[#040d1a]/95 border border-primary/50 text-primary text-sm font-syne font-bold shadow-[0_0_20px_rgba(0,212,255,0.4)] flex items-center gap-2 backdrop-blur-xl transition-all active:scale-95"
-                  >
-                    <Bot size={16} className="text-accent" />
-                    <span>Tap to Interact in 3D</span>
-                  </button>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={() => setIs3DActive(false)}
-                    className="tap-target px-5 py-3 rounded-full bg-black/90 border border-white/30 text-white text-sm font-syne font-semibold flex items-center gap-2 backdrop-blur-xl shadow-lg transition-all active:scale-95"
-                  >
-                    <span>✕ Exit 3D (Resume Scroll)</span>
-                  </button>
-                )}
-              </div>
-
-              {/* Floating indicators */}
-              <div className="absolute top-6 right-6 w-3 h-3 bg-accent rounded-full animate-pulse shadow-[0_0_15px_rgba(0,255,150,0.8)] z-20" />
-              <div className="absolute bottom-10 left-8 w-2 h-2 bg-primary rounded-full animate-pulse shadow-[0_0_15px_rgba(0,183,255,0.8)] z-20" style={{ animationDelay: '1s' }} />
-
-              {/* Watermark cover */}
-              <div className="absolute bottom-0 right-0 w-48 h-12 bg-black/90 blur-md z-20 pointer-events-none" />
             </div>
 
             {/* Contact Information Bento Box */}

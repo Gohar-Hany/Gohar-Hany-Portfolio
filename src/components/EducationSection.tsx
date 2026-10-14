@@ -125,10 +125,10 @@ const EducationSection = () => {
             {/* Decorative internal glow */}
             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-bl from-primary/10 to-transparent rounded-full blur-[100px] opacity-60 pointer-events-none transform translate-x-1/3 -translate-y-1/3" />
 
-            <div className="grid lg:grid-cols-12 gap-8 lg:gap-16 relative z-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6 md:gap-8 lg:gap-16 relative z-10">
 
               {/* Left Side: Education Info */}
-              <div className="lg:col-span-7 flex flex-col justify-center">
+              <div className="md:col-span-1 lg:col-span-7 flex flex-col justify-center">
                 <div className="flex flex-col sm:flex-row sm:items-center gap-5 sm:gap-6 mb-6 sm:mb-8">
                   <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl sm:rounded-3xl bg-white/[0.03] border border-white/10 flex items-center justify-center flex-shrink-0 shadow-xl shadow-black/20">
                     <GraduationCap size={32} className="text-primary sm:w-10 sm:h-10" />
@@ -183,7 +183,7 @@ const EducationSection = () => {
               </div>
 
               {/* Right Side: Key Coursework */}
-              <div className="lg:col-span-5 flex flex-col justify-center">
+              <div className="md:col-span-1 lg:col-span-5 flex flex-col justify-center">
                 <h4 className="text-sm font-bold text-white/30 uppercase tracking-widest mb-6">Key Academic Coursework</h4>
                 <div className="grid sm:grid-cols-2 gap-3 md:gap-4 font-dmsans">
                   {education.coursework.map((course, index) => (
@@ -208,7 +208,7 @@ const EducationSection = () => {
 
         {/* Awards & Recognition Section */}
         <div className={`mb-8 lg:mb-12 transition-all duration-1000 delay-300 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
-          <div className="grid lg:grid-cols-3 gap-6 lg:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
             {awards.map((award, index) => {
               const IconComponent = award.icon;
 

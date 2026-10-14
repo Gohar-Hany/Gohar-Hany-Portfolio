@@ -1,7 +1,7 @@
-// MOBILE OPTIMIZED: Fluid typography with CSS variables, intermediate tablet breakpoints (md:grid-cols-2), responsive padding, counter animation with will-change optimization
+// MOBILE OPTIMIZED: Intermediate tablet breakpoints (md:grid-cols-2), responsive gap values, fluid typography
 // BREAKPOINTS: 320px (mobile), 640px (sm), 768px (md), 1024px (lg)
-// PERFORMANCE: IntersectionObserver with throttle, easeOutExpo easing for smooth counters, GPU-accelerated animations
-// ACCESSIBILITY: Semantic HTML, descriptive ARIA labels, proper heading hierarchy
+// PERFORMANCE: IntersectionObserver, easeOutExpo easing, GPU-accelerated animations
+// ACCESSIBILITY: Semantic HTML, ARIA labels, proper heading hierarchy
 
 import { useEffect, useState, useRef } from 'react';
 import { TrendingUp, Users, Briefcase, Trophy, Sparkles, GraduationCap, Target } from 'lucide-react';

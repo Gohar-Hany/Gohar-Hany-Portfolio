@@ -1,3 +1,8 @@
+// MOBILE OPTIMIZED: GSAP matchMedia() for device-aware animations, ScrollTrigger.config with ignoreMobileResize, simplified animations on mobile
+// BREAKPOINTS: 1024px for animation complexity (full on desktop, fade-only on mobile)
+// PERFORMANCE: matchMedia reduces animation complexity on <1024px, ScrollTrigger.refresh() after preloader
+// ACCESSIBILITY: Smooth scroll behavior, proper focus management
+
 import { useEffect, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -14,6 +19,12 @@ import ContactSection from '@/components/ContactSection';
 import Footer from '@/components/Footer';
 
 gsap.registerPlugin(ScrollTrigger);
+
+// Configure ScrollTrigger for better mobile performance
+ScrollTrigger.config({
+  ignoreMobileResize: true,  // Prevents re-calc on mobile keyboard open
+  autoRefreshEvents: "visibilitychange,DOMContentLoaded,load"
+});
 
 const Index = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -44,23 +55,39 @@ const Index = () => {
       window.scrollTo(0, 0); // Double-ensure we're at top
       document.documentElement.style.scrollBehavior = 'smooth';
 
-      // Fade in main content
-      gsap.fromTo('.main-content',
-        {
-          opacity: 0,
-          y: 20,
-        },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 1,
-          ease: "power2.out",
-          onComplete: () => {
-            // Recalculate all ScrollTrigger positions after preloader exits
-            ScrollTrigger.refresh();
+      // Use GSAP matchMedia for device-aware animations
+      const mm = gsap.matchMedia();
+
+      mm.add("(min-width: 1024px)", () => {
+        // Full desktop animation: fade + translate
+        gsap.fromTo('.main-content',
+          { opacity: 0, y: 20 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 1,
+            ease: "power2.out",
+            onComplete: () => {
+              ScrollTrigger.refresh();
+            }
           }
-        }
-      );
+        );
+      });
+
+      mm.add("(max-width: 1023px)", () => {
+        // Mobile/Tablet: simpler fade-only animation
+        gsap.fromTo('.main-content',
+          { opacity: 0 },
+          {
+            opacity: 1,
+            duration: 0.5,
+            ease: "power2.out",
+            onComplete: () => {
+              ScrollTrigger.refresh();
+            }
+          }
+        );
+      });
     }, 100);
   };
 

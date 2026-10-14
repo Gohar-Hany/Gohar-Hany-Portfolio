@@ -1,3 +1,8 @@
+// MOBILE OPTIMIZED: Prefers-reduced-motion check before GSAP animations, 2.5s timeout fallback, simplified exit on reduced motion
+// BREAKPOINTS: N/A (full-screen overlay)
+// PERFORMANCE: GSAP timeline cleanup, reduced-motion detection, fast exit path
+// ACCESSIBILITY: Respects prefers-reduced-motion, provides skip option
+
 import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 
@@ -30,6 +35,22 @@ const Preloader = ({ onComplete }: PreloaderProps) => {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
+    // Check for reduced motion preference
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    
+    if (prefersReducedMotion) {
+      // Skip animations, show preloader briefly then exit
+      const fallbackTimer = setTimeout(() => {
+        setProgress(100);
+        gsap.to(preloaderRef.current, {
+          opacity: 0,
+          duration: 0.3,
+          onComplete: () => onComplete(),
+        });
+      }, 500);
+      return () => clearTimeout(fallbackTimer);
+    }
+
     const tl = gsap.timeline();
 
     gsap.set([preloaderRef.current, progressBarRef.current, logoRef.current], {

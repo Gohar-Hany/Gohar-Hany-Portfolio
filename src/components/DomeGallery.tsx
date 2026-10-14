@@ -1,4 +1,9 @@
-import { useEffect, useMemo, useRef, useCallback } from 'react';
+// MOBILE OPTIMIZED: Device-aware segment reduction (12/20/35), Lite Mode fallback for low-end devices (flat CSS grid), touch sensitivity adjustment
+// BREAKPOINTS: 320px-639px (12 segments), 640px-1023px (20 segments), 1024px+ (35 segments)
+// PERFORMANCE: hardwareConcurrency/deviceMemory detection, lazy loading, GPU acceleration, reduced segments on mobile
+// ACCESSIBILITY: Keyboard navigation (ESC to close), focus management, semantic HTML
+
+import { useEffect, useMemo, useRef, useCallback, useState } from 'react';
 import { useGesture } from '@use-gesture/react';
 
 type ImageItem = string | { src: string; alt?: string;[key: string]: any };
@@ -179,6 +184,52 @@ export default function DomeGallery({
   const effectiveSegments = segments === DEFAULTS.segments ? getDeviceSegments() : segments;
   const isTouch = isTouchDevice();
   const effectiveDragSensitivity = isTouch ? dragSensitivity * 2 : dragSensitivity; // Reduce sensitivity 50% on touch
+
+  // Lite Mode detection for low-end devices
+  const [isLiteMode, setIsLiteMode] = useState(false);
+
+  useEffect(() => {
+    const isLowEnd = 
+      (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4) ||
+      ((navigator as any).deviceMemory && (navigator as any).deviceMemory <= 4);
+    
+    setIsLiteMode(isLowEnd);
+  }, []);
+
+  const items = useMemo(() => buildItems(images, effectiveSegments), [images, effectiveSegments]);
+
+  // Lite Mode: Flat CSS Grid Fallback
+  if (isLiteMode) {
+    return (
+      <div className="dome-gallery-lite w-full h-full p-4 overflow-y-auto">
+        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2">
+          {items.map((item, i) => (
+            <div
+              key={i}
+              className="aspect-square overflow-hidden rounded-lg cursor-pointer hover:scale-105 transition-transform duration-300 bg-white/[0.02] border border-white/[0.05]"
+              onClick={() => onImageClick?.(item.originalItem)}
+            >
+              <img
+                src={item.src}
+                alt={item.alt}
+                className="w-full h-full object-cover"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+          ))}
+        </div>
+        <button
+          onClick={() => setIsLiteMode(false)}
+          className="mt-6 mx-auto px-4 py-2 bg-primary/20 border border-primary/50 rounded-full text-primary text-sm font-bold hover:bg-primary/30 transition-colors flex items-center gap-2"
+        >
+          Switch to 3D View
+        </button>
+      </div>
+    );
+  }
+
+  // Full 3D Dome (existing code continues)
 
   const rootRef = useRef<HTMLDivElement>(null);
   const mainRef = useRef<HTMLDivElement>(null);

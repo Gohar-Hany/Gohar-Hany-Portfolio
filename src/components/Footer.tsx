@@ -1,3 +1,8 @@
+// MOBILE OPTIMIZED: Responsive button text ("Contact" on mobile, "Start a Dialogue" on desktop), consistent padding
+// BREAKPOINTS: 640px (sm) for button text toggle
+// PERFORMANCE: Simple CSS transitions, no heavy animations
+// ACCESSIBILITY: Semantic HTML, proper link/button contrast, 48px tap targets on social icons
+
 import { Code2, Heart, ExternalLink, ArrowUpRight } from 'lucide-react';
 
 const Footer = () => {
@@ -96,9 +101,12 @@ const Footer = () => {
                             <div className="pt-4 mt-4 border-t border-white/[0.05]">
                                 <a
                                     href="mailto:goharhany9@gmail.com"
-                                    className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white/[0.03] border border-white/10 hover:border-primary/50 hover:bg-primary/10 rounded-xl text-white font-medium font-dmsans transition-all duration-300 group"
+                                    className="inline-flex items-center justify-center gap-2 px-4 sm:px-6 py-3 bg-white/[0.03] border border-white/10 hover:border-primary/50 hover:bg-primary/10 rounded-xl text-white font-medium font-dmsans transition-all duration-300 group"
                                 >
-                                    <span className="group-hover:-translate-x-1 transition-transform duration-300">Start a Dialogue</span>
+                                    <span className="group-hover:-translate-x-1 transition-transform duration-300">
+                                        <span className="hidden sm:inline">Start a Dialogue</span>
+                                        <span className="sm:hidden">Contact</span>
+                                    </span>
                                     <ExternalLink size={16} className="text-primary opacity-0 -translate-y-1 translate-x-1 group-hover:opacity-100 group-hover:translate-y-0 group-hover:translate-x-0 transition-all duration-300 absolute right-4" />
                                 </a>
                             </div>
